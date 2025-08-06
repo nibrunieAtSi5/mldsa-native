@@ -210,5 +210,16 @@ static MLD_INLINE void mld_poly_decompose_88_native(int32_t *a1, int32_t *a0,
                                                     const int32_t *a);
 #endif /* MLD_USE_NATIVE_POLY_DECOMPOSE_88 */
 
+#if defined(MLD_USE_NATIVE_POLY_CADDQ)
+/*************************************************
+ * Name:        mld_poly_caddq_native
+ *
+ * Description: For all coefficients of in/out polynomial add Q if
+ *              coefficient is negative.
+ *
+ * Arguments:   - int32_t *a: pointer to input/output polynomial
+ **************************************************/
+static MLD_INLINE void mld_poly_caddq_native(int32_t a[MLDSA_N]);
+#endif /* MLD_USE_NATIVE_POLY_CADDQ */
 
 #endif /* !MLD_NATIVE_API_H */

@@ -19,6 +19,7 @@
 #define MLD_USE_NATIVE_REJ_UNIFORM_ETA4
 #define MLD_USE_NATIVE_POLY_DECOMPOSE_32
 #define MLD_USE_NATIVE_POLY_DECOMPOSE_88
+#define MLD_USE_NATIVE_POLY_CADDQ
 
 #if !defined(__ASSEMBLER__)
 #include <string.h>
@@ -110,6 +111,11 @@ static MLD_INLINE void mld_poly_decompose_88_native(int32_t *a1, int32_t *a0,
                                                     const int32_t *a)
 {
   mld_poly_decompose_88_avx2((__m256i *)a1, (__m256i *)a0, (const __m256i *)a);
+}
+
+static MLD_INLINE void mld_poly_caddq_native(int32_t a[MLDSA_N])
+{
+  mld_poly_caddq_avx2(a);
 }
 
 #endif /* !__ASSEMBLER__ */

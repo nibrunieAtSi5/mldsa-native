@@ -32,6 +32,8 @@ void mld_poly_reduce(mld_poly *a)
   mld_assert_bound(a->coeffs, MLDSA_N, -REDUCE32_RANGE_MAX, REDUCE32_RANGE_MAX);
 }
 
+
+#if !defined(MLD_USE_NATIVE_POLY_CADDQ)
 MLD_INTERNAL_API
 void mld_poly_caddq(mld_poly *a)
 {
@@ -50,6 +52,15 @@ void mld_poly_caddq(mld_poly *a)
 
   mld_assert_bound(a->coeffs, MLDSA_N, 0, MLDSA_Q);
 }
+#else  /* !MLD_USE_NATIVE_POLY_CADDQ */
+MLD_INTERNAL_API
+void mld_poly_caddq(mld_poly *a)
+{
+  mld_assert_abs_bound(a->coeffs, MLDSA_N, MLDSA_Q);
+  mld_poly_caddq_native(a->coeffs);
+  mld_assert_bound(a->coeffs, MLDSA_N, 0, MLDSA_Q);
+}
+#endif /* MLD_USE_NATIVE_POLY_CADDQ */
 
 /* Reference: We use destructive version (output=first input) to avoid
  *            reasoning about aliasing in the CBMC specification */
