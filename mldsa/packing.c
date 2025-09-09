@@ -115,7 +115,7 @@ void mld_pack_sig(uint8_t sig[CRYPTO_BYTES], const uint8_t c[MLDSA_CTILDEBYTES],
    * bytes may not be written, so we initialize all of them to zero
    * to start.
    */
-  memset(sig, 0, MLDSA_POLYVECH_PACKEDBYTES);
+  mld_memset(sig, 0, MLDSA_POLYVECH_PACKEDBYTES);
 
   k = 0;
   /* For each polynomial in h... */
@@ -187,7 +187,7 @@ __contract__(
   /* Set all coefficients of all polynomials to 0.    */
   /* Only those that are actually non-zero hints will */
   /* be overwritten below.                            */
-  memset(h, 0, sizeof(mld_polyveck));
+  mld_memset(h, 0, sizeof(mld_polyveck));
 
   old_hint_count = 0;
   for (i = 0; i < MLDSA_K; ++i)

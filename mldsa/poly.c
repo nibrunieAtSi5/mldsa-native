@@ -751,7 +751,7 @@ void mld_poly_challenge(mld_poly *c, const uint8_t seed[MLDSA_CTILDEBYTES])
   }
   pos = 8;
 
-  memset(c, 0, sizeof(mld_poly));
+  mld_memset(c, 0, sizeof(mld_poly));
 
   for (i = MLDSA_N - MLDSA_TAU; i < MLDSA_N; ++i)
   __loop__(

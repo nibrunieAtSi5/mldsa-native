@@ -519,7 +519,7 @@ int crypto_sign_signature_internal(uint8_t *sig, size_t *siglen,
       /* To be on the safe-side, give well-defined values to *sig and     */
       /* *siglen in case of error.                                        */
       *siglen = 0;
-      memset(sig, 0, CRYPTO_BYTES);
+      mld_memset(sig, 0, CRYPTO_BYTES);
       return -1;
     }
 
@@ -575,7 +575,7 @@ int crypto_sign_signature(uint8_t *sig, size_t *siglen, const uint8_t *m,
   mld_randombytes(rnd, MLDSA_RNDBYTES);
   MLD_CT_TESTING_SECRET(rnd, sizeof(rnd));
 #else
-  memset(rnd, 0, MLDSA_RNDBYTES);
+  mld_memset(rnd, 0, MLDSA_RNDBYTES);
 #endif
 
 
@@ -601,7 +601,7 @@ int crypto_sign_signature_extmu(uint8_t *sig, size_t *siglen,
   mld_randombytes(rnd, MLDSA_RNDBYTES);
   MLD_CT_TESTING_SECRET(rnd, sizeof(rnd));
 #else
-  memset(rnd, 0, MLDSA_RNDBYTES);
+  mld_memset(rnd, 0, MLDSA_RNDBYTES);
 #endif
 
   result = crypto_sign_signature_internal(sig, siglen, mu, MLDSA_CRHBYTES, NULL,
