@@ -75,15 +75,18 @@ __contract__(
 {
   *a1 = (a + 127) >> 7;
   /* We know a >= 0 and a < MLDSA_Q, so... */
+  /* check-magic: 65472 == round((MLDSA_Q-1)/128) */
   mld_assert(*a1 >= 0 && *a1 <= 65472);
 
 #if MLDSA_MODE == 2
+  /* check-magic: 11275 == round((2**24*128) / ((MLDSA_Q - 1) / 44)) */
   *a1 = (*a1 * 11275 + (1 << 23)) >> 24;
   mld_assert(*a1 >= 0 && *a1 <= 44);
 
   *a1 = mld_ct_sel_int32(0, *a1, mld_ct_cmask_neg_i32(43 - *a1));
   mld_assert(*a1 >= 0 && *a1 <= 43);
 #else /* MLDSA_MODE == 2 */
+  /* check-magic: 1025 == round((2**22*128) / ((MLDSA_Q - 1) / 16)) */
   *a1 = (*a1 * 1025 + (1 << 21)) >> 22;
   mld_assert(*a1 >= 0 && *a1 <= 16);
 

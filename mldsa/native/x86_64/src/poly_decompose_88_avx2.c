@@ -32,6 +32,7 @@ void mld_poly_decompose_88_avx2(__m256i *a1, __m256i *a0, const __m256i *a)
   const __m256i q =
       _mm256_load_si256(&mld_qdata.vec[MLD_AVX2_BACKEND_DATA_OFFSET_8XQ / 8]);
   const __m256i hq = _mm256_srli_epi32(q, 1);
+  /* check-magic: 11275 == round((2**24*128) / ((MLDSA_Q - 1) / 44)) */
   const __m256i v = _mm256_set1_epi32(11275);
   const __m256i alpha = _mm256_set1_epi32(2 * MLDSA_GAMMA2);
   const __m256i off = _mm256_set1_epi32(127);

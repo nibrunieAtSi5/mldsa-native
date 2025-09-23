@@ -38,6 +38,7 @@ unsigned int mld_rej_uniform_eta2_avx2(
   const __m256i mask = _mm256_set1_epi8(15);
   const __m256i eta = _mm256_set1_epi8(MLD_AVX2_ETA2);
   const __m256i bound = mask;
+  /* check-magic: -6560 ==  32*round(-2**10 / 5) */
   const __m256i v = _mm256_set1_epi32(-6560);
   const __m256i p = _mm256_set1_epi32(5);
 

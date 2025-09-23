@@ -8,9 +8,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
+/* check-magic: off */
 #define MLD_44_PUBLICKEYBYTES 1312
 #define MLD_44_SECRETKEYBYTES 2560
 #define MLD_44_BYTES 2420
+/* check-magic: on */
 
 #define MLD_44_ref_PUBLICKEYBYTES MLD_44_PUBLICKEYBYTES
 #define MLD_44_ref_SECRETKEYBYTES MLD_44_SECRETKEYBYTES
@@ -32,9 +34,11 @@ int MLD_44_ref_verify(const uint8_t *sig, size_t siglen, const uint8_t *m,
 int MLD_44_ref_open(uint8_t *m, size_t *mlen, const uint8_t *sm, size_t smlen,
                     const uint8_t *ctx, size_t ctxlen, const uint8_t *pk);
 
+/* check-magic: off */
 #define MLD_65_PUBLICKEYBYTES 1952
 #define MLD_65_SECRETKEYBYTES 4032
 #define MLD_65_BYTES 3309
+/* check-magic: on */
 
 #define MLD_65_ref_PUBLICKEYBYTES MLD_65_PUBLICKEYBYTES
 #define MLD_65_ref_SECRETKEYBYTES MLD_65_SECRETKEYBYTES
@@ -56,9 +60,11 @@ int MLD_65_ref_verify(const uint8_t *sig, size_t siglen, const uint8_t *m,
 int MLD_65_ref_open(uint8_t *m, size_t *mlen, const uint8_t *sm, size_t smlen,
                     const uint8_t *ctx, size_t ctxlen, const uint8_t *pk);
 
+/* check-magic: off */
 #define MLD_87_PUBLICKEYBYTES 2592
 #define MLD_87_SECRETKEYBYTES 4896
 #define MLD_87_BYTES 4627
+/* check-magic: on */
 
 #define MLD_87_ref_PUBLICKEYBYTES MLD_87_PUBLICKEYBYTES
 #define MLD_87_ref_SECRETKEYBYTES MLD_87_SECRETKEYBYTES

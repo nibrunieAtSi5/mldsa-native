@@ -11,12 +11,14 @@
 #include "ct.h"
 #include "debug.h"
 
-#define MONT -4186625 /* 2^32 % MLDSA_Q */
+/* check-magic: -4186625 == pow(2,32,MLDSA_Q) */
+#define MONT -4186625
 
 /* Upper bound for domain of mld_reduce32() */
 #define REDUCE32_DOMAIN_MAX (INT32_MAX - (1 << 22))
 
 /* Absolute bound for range of mld_reduce32() */
+/* check-magic: 6283009 == (REDUCE32_DOMAIN_MAX - 255 * MLDSA_Q + 1) */
 #define REDUCE32_RANGE_MAX 6283009
 
 /* Absolute bound for domain of mld_montgomery_reduce() */

@@ -47,7 +47,7 @@ __contract__(
  *
  * Description: Inplace reduction of all coefficients of all polynomial in a
  *              vector of length MLDSA_L to
- *              representative in [-6283008,6283008].
+ *              representative in [-REDUCE32_RANGE_MAX,REDUCE32_RANGE_MAX].
  *
  * Arguments:   - mld_poly *v: pointer to input/output vector
  **************************************************/
@@ -218,7 +218,7 @@ typedef struct
  * Name:        polyveck_reduce
  *
  * Description: Reduce coefficients of polynomials in vector of length MLDSA_K
- *              to representatives in [-6283008,6283008].
+ *              to representatives in [-REDUCE32_RANGE_MAX,REDUCE32_RANGE_MAX].
  *
  * Arguments:   - mld_polyveck *v: pointer to input/output vector
  **************************************************/

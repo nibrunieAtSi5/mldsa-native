@@ -22,7 +22,7 @@ typedef struct
  * Name:        mld_poly_reduce
  *
  * Description: Inplace reduction of all coefficients of polynomial to
- *              representative in [-6283008,6283008].
+ *              representative in [-REDUCE32_RANGE_MAX,REDUCE32_RANGE_MAX].
  *
  * Arguments:   - mld_poly *a: pointer to input/output polynomial
  **************************************************/

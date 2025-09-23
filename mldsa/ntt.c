@@ -24,7 +24,7 @@ __contract__(
  *              multiplication by mont^2/256.
  *              Input is expected to have absolute value smaller than
  *              256 * MLDSA_Q.
- *              Output has absolute value smaller than MLD_INTT_BOUND (4211139).
+ *              Output has absolute value smaller than MLD_INTT_BOUND.
  *
  * Arguments:   - int32_t a: Field element to be scaled.
  **************************************************/
@@ -34,7 +34,8 @@ __contract__(
   ensures(return_value > -MLD_INTT_BOUND && return_value < MLD_INTT_BOUND)
 )
 {
-  const int32_t f = 41978; /* mont^2/256 */
+  /* check-magic: 41978 == pow(2,64-8,MLDSA_Q) */
+  const int32_t f = 41978;
   return mld_montgomery_reduce((int64_t)a * f);
   /* TODO: reason about bounds */
 }
@@ -220,7 +221,7 @@ void mld_invntt_tomont(int32_t a[MLDSA_N])
    * i.e., compute the Montgomery multiplication by mont^2 / 256.
    * mont corrects the mont^-1  factor introduced in the basemul.
    * 1/256 performs that scaling of the inverse NTT.
-   * The reduced value is bounded by  MLD_INTT_BOUND (4211139) in absolute
+   * The reduced value is bounded by  MLD_INTT_BOUND in absolute
    * value.*/
   for (j = 0; j < MLDSA_N; ++j)
   __loop__(
