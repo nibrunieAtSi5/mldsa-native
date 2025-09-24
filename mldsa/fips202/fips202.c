@@ -164,92 +164,14 @@ __contract__(
 }
 
 /*************************************************
- * Name:        keccak_absorb_once
- *
- * Description: Absorb step of Keccak;
- *              non-incremental, starts by zeroeing the state.
- *
- * Arguments:   - uint64_t *s: pointer to (uninitialized) output Keccak state
- *              - const unsigned int r: rate in bytes (e.g., 168 for SHAKE128)
- *              - const uint8_t *in: pointer to input to be absorbed into s
- *              - size_t inlen: length of input in bytes
- *              - uint8_t p: domain-separation byte for different Keccak-derived
- *functions
- **************************************************/
-static void keccak_absorb_once(uint64_t s[MLD_KECCAK_LANES],
-                               const unsigned int r, const uint8_t *in,
-                               size_t inlen, uint8_t p)
-__contract__(
-  requires(inlen <= MLD_MAX_BUFFER_SIZE)
-  requires(r < sizeof(uint64_t) * MLD_KECCAK_LANES)
-  requires((r / 8) >= 1)
-  requires(memory_no_alias(s, sizeof(uint64_t) * MLD_KECCAK_LANES))
-  requires(memory_no_alias(in, inlen))
-  assigns(memory_slice(s, sizeof(uint64_t) * MLD_KECCAK_LANES)))
-{
-  mld_memset(s, 0, sizeof(uint64_t) * MLD_KECCAK_LANES);
-
-  while (inlen >= r)
-  __loop__(
-    assigns(memory_slice(s, sizeof(uint64_t) * MLD_KECCAK_LANES), in, inlen)
-    invariant(inlen <= loop_entry(inlen))
-    invariant(in == loop_entry(in) + (loop_entry(inlen) - inlen)))
-  {
-    mld_keccakf1600_xor_bytes(s, in, 0, r);
-    mld_keccakf1600_permute(s);
-    in += r;
-    inlen -= r;
-  }
-  mld_keccakf1600_xor_bytes(s, in, 0, inlen);
-  keccak_finalize(s, inlen, r, p);
-}
-/*************************************************
- * Name:        keccak_squeezeblocks
- *
- * Description: Squeeze step of Keccak. Squeezes full blocks of r bytes each.
- *              Modifies the state. Can be called multiple times to keep
- *              squeezing, i.e., is incremental. Assumes zero bytes of current
- *              block have already been squeezed.
- *
- * Arguments:   - uint8_t *out: pointer to output blocks
- *              - size_t nblocks: number of blocks to be squeezed (written to
- *out)
- *              - uint64_t *s: pointer to input/output Keccak state
- *              - unsigned int r: rate in bytes (e.g., 168 for SHAKE128)
- **************************************************/
-static void keccak_squeezeblocks(uint8_t *out, size_t nblocks,
-                                 uint64_t s[MLD_KECCAK_LANES], unsigned int r)
-__contract__(
-  requires(r == SHAKE128_RATE || r == SHAKE256_RATE)
-  requires(nblocks <= 8 /* somewhat arbitrary bound */)
-  requires(memory_no_alias(s, sizeof(uint64_t) * MLD_KECCAK_LANES))
-  requires(memory_no_alias(out, nblocks * r))
-  assigns(memory_slice(s, sizeof(uint64_t) * MLD_KECCAK_LANES))
-  assigns(memory_slice(out, nblocks * r)))
-{
-  while (nblocks > 0)
-  __loop__(
-    assigns(out, nblocks, memory_slice(s, sizeof(uint64_t) * MLD_KECCAK_LANES),
-      memory_slice(out, nblocks * r))
-    invariant(nblocks <= loop_entry(nblocks))
-    invariant(out == loop_entry(out) + r * (loop_entry(nblocks) - nblocks))
-  )
-  {
-    mld_keccakf1600_permute(s);
-    mld_keccakf1600_extract_bytes(s, out, 0, r);
-    out += r;
-    nblocks -= 1;
-  }
-}
-
-/*************************************************
  * Name:        shake128_init
  *
  * Description: Initilizes Keccak state for use as SHAKE128 XOF
  *
- * Arguments:   - keccak_state *state: pointer to (uninitialized) Keccak state
+ * Arguments:   - mld_shake128ctx *state: pointer to (uninitialized) Keccak
+ *state
  **************************************************/
-void shake128_init(keccak_state *state)
+void shake128_init(mld_shake128ctx *state)
 {
   keccak_init(state->s);
   state->pos = 0;
@@ -260,12 +182,12 @@ void shake128_init(keccak_state *state)
  *
  * Description: Absorb step of the SHAKE128 XOF; incremental.
  *
- * Arguments:   - keccak_state *state: pointer to (initialized) output Keccak
- *state
+ * Arguments:   - mld_shake128ctx *state: pointer to (initialized) output
+ *Keccak state
  *              - const uint8_t *in: pointer to input to be absorbed into s
  *              - size_t inlen: length of input in bytes
  **************************************************/
-void shake128_absorb(keccak_state *state, const uint8_t *in, size_t inlen)
+void shake128_absorb(mld_shake128ctx *state, const uint8_t *in, size_t inlen)
 {
   state->pos = keccak_absorb(state->s, state->pos, SHAKE128_RATE, in, inlen);
 }
@@ -275,9 +197,9 @@ void shake128_absorb(keccak_state *state, const uint8_t *in, size_t inlen)
  *
  * Description: Finalize absorb step of the SHAKE128 XOF.
  *
- * Arguments:   - keccak_state *state: pointer to Keccak state
+ * Arguments:   - mld_shake128ctx *state: pointer to Keccak state
  **************************************************/
-void shake128_finalize(keccak_state *state)
+void shake128_finalize(mld_shake128ctx *state)
 {
   keccak_finalize(state->s, state->pos, SHAKE128_RATE, 0x1F);
   state->pos = SHAKE128_RATE;
@@ -292,52 +214,17 @@ void shake128_finalize(keccak_state *state)
  * Arguments:   - uint8_t *out: pointer to output blocks
  *              - size_t outlen : number of bytes to be squeezed (written to
  *output)
- *              - keccak_state *s: pointer to input/output Keccak state
+ *              - mld_shake128ctx *s: pointer to input/output Keccak state
  **************************************************/
-void shake128_squeeze(uint8_t *out, size_t outlen, keccak_state *state)
+void shake128_squeeze(uint8_t *out, size_t outlen, mld_shake128ctx *state)
 {
   state->pos = keccak_squeeze(out, outlen, state->s, state->pos, SHAKE128_RATE);
 }
 
-/*************************************************
- * Name:        shake128_absorb_once
- *
- * Description: Initialize, absorb into and finalize SHAKE128 XOF;
- *non-incremental.
- *
- * Arguments:   - keccak_state *state: pointer to (uninitialized) output Keccak
- *state
- *              - const uint8_t *in: pointer to input to be absorbed into s
- *              - size_t inlen: length of input in bytes
- **************************************************/
-void shake128_absorb_once(keccak_state *state, const uint8_t *in, size_t inlen)
-{
-  keccak_absorb_once(state->s, SHAKE128_RATE, in, inlen, 0x1F);
-  state->pos = SHAKE128_RATE;
-}
-
-/*************************************************
- * Name:        shake128_squeezeblocks
- *
- * Description: Squeeze step of SHAKE128 XOF. Squeezes full blocks of
- *              SHAKE128_RATE bytes each. Can be called multiple times
- *              to keep squeezing. Assumes new block has not yet been
- *              started (state->pos = SHAKE128_RATE).
- *
- * Arguments:   - uint8_t *out: pointer to output blocks
- *              - size_t nblocks: number of blocks to be squeezed (written to
- *output)
- *              - keccak_state *s: pointer to input/output Keccak state
- **************************************************/
-void shake128_squeezeblocks(uint8_t *out, size_t nblocks, keccak_state *state)
-{
-  keccak_squeezeblocks(out, nblocks, state->s, SHAKE128_RATE);
-}
-
-void shake128_release(keccak_state *state)
+void shake128_release(mld_shake128ctx *state)
 {
   /* FIPS 204. Section 3.6.3 Destruction of intermediate values. */
-  mld_zeroize(state, sizeof(keccak_state));
+  mld_zeroize(state, sizeof(mld_shake128ctx));
 }
 
 /*************************************************
@@ -345,9 +232,10 @@ void shake128_release(keccak_state *state)
  *
  * Description: Initilizes Keccak state for use as SHAKE256 XOF
  *
- * Arguments:   - keccak_state *state: pointer to (uninitialized) Keccak state
+ * Arguments:   - mld_shake256ctx *state: pointer to (uninitialized) Keccak
+ *state
  **************************************************/
-void shake256_init(keccak_state *state)
+void shake256_init(mld_shake256ctx *state)
 {
   keccak_init(state->s);
   state->pos = 0;
@@ -358,12 +246,12 @@ void shake256_init(keccak_state *state)
  *
  * Description: Absorb step of the SHAKE256 XOF; incremental.
  *
- * Arguments:   - keccak_state *state: pointer to (initialized) output Keccak
- *state
+ * Arguments:   - mld_shake256ctx *state: pointer to (initialized) output
+ *Keccak state
  *              - const uint8_t *in: pointer to input to be absorbed into s
  *              - size_t inlen: length of input in bytes
  **************************************************/
-void shake256_absorb(keccak_state *state, const uint8_t *in, size_t inlen)
+void shake256_absorb(mld_shake256ctx *state, const uint8_t *in, size_t inlen)
 {
   state->pos = keccak_absorb(state->s, state->pos, SHAKE256_RATE, in, inlen);
 }
@@ -373,9 +261,9 @@ void shake256_absorb(keccak_state *state, const uint8_t *in, size_t inlen)
  *
  * Description: Finalize absorb step of the SHAKE256 XOF.
  *
- * Arguments:   - keccak_state *state: pointer to Keccak state
+ * Arguments:   - mld_shake256ctx *state: pointer to Keccak state
  **************************************************/
-void shake256_finalize(keccak_state *state)
+void shake256_finalize(mld_shake256ctx *state)
 {
   keccak_finalize(state->s, state->pos, SHAKE256_RATE, 0x1F);
   state->pos = SHAKE256_RATE;
@@ -390,52 +278,17 @@ void shake256_finalize(keccak_state *state)
  * Arguments:   - uint8_t *out: pointer to output blocks
  *              - size_t outlen : number of bytes to be squeezed (written to
  *output)
- *              - keccak_state *s: pointer to input/output Keccak state
+ *              - mld_shake256ctx *s: pointer to input/output Keccak state
  **************************************************/
-void shake256_squeeze(uint8_t *out, size_t outlen, keccak_state *state)
+void shake256_squeeze(uint8_t *out, size_t outlen, mld_shake256ctx *state)
 {
   state->pos = keccak_squeeze(out, outlen, state->s, state->pos, SHAKE256_RATE);
 }
 
-/*************************************************
- * Name:        shake256_absorb_once
- *
- * Description: Initialize, absorb into and finalize SHAKE256 XOF;
- *non-incremental.
- *
- * Arguments:   - keccak_state *state: pointer to (uninitialized) output Keccak
- *state
- *              - const uint8_t *in: pointer to input to be absorbed into s
- *              - size_t inlen: length of input in bytes
- **************************************************/
-void shake256_absorb_once(keccak_state *state, const uint8_t *in, size_t inlen)
-{
-  keccak_absorb_once(state->s, SHAKE256_RATE, in, inlen, 0x1F);
-  state->pos = SHAKE256_RATE;
-}
-
-/*************************************************
- * Name:        shake256_squeezeblocks
- *
- * Description: Squeeze step of SHAKE256 XOF. Squeezes full blocks of
- *              SHAKE256_RATE bytes each. Can be called multiple times
- *              to keep squeezing. Assumes next block has not yet been
- *              started (state->pos = SHAKE256_RATE).
- *
- * Arguments:   - uint8_t *out: pointer to output blocks
- *              - size_t nblocks: number of blocks to be squeezed (written to
- *output)
- *              - keccak_state *s: pointer to input/output Keccak state
- **************************************************/
-void shake256_squeezeblocks(uint8_t *out, size_t nblocks, keccak_state *state)
-{
-  keccak_squeezeblocks(out, nblocks, state->s, SHAKE256_RATE);
-}
-
-void shake256_release(keccak_state *state)
+void shake256_release(mld_shake256ctx *state)
 {
   /* FIPS 204. Section 3.6.3 Destruction of intermediate values. */
-  mld_zeroize(state, sizeof(keccak_state));
+  mld_zeroize(state, sizeof(mld_shake256ctx));
 }
 
 /*************************************************
@@ -450,16 +303,11 @@ void shake256_release(keccak_state *state)
  **************************************************/
 void shake256(uint8_t *out, size_t outlen, const uint8_t *in, size_t inlen)
 {
-  size_t nblocks;
-  keccak_state state;
+  mld_shake256ctx state;
 
-  shake256_absorb_once(&state, in, inlen);
-  nblocks = outlen / SHAKE256_RATE;
-  shake256_squeezeblocks(out, nblocks, &state);
-  outlen -= nblocks * SHAKE256_RATE;
-  out += nblocks * SHAKE256_RATE;
+  shake256_init(&state);
+  shake256_absorb(&state, in, inlen);
+  shake256_finalize(&state);
   shake256_squeeze(out, outlen, &state);
-
-  /* FIPS 204. Section 3.6.3 Destruction of intermediate values. */
-  mld_zeroize(&state, sizeof(state));
+  shake256_release(&state);
 }

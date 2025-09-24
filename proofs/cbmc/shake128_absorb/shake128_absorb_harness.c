@@ -5,7 +5,7 @@
 
 void harness(void)
 {
-  keccak_state *s;
+  mld_shake128ctx *s;
   const uint8_t *in;
   size_t inlen;
 

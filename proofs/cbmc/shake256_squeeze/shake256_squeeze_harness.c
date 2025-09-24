@@ -7,7 +7,7 @@ void harness(void)
 {
   uint8_t *out;
   size_t outlen;
-  keccak_state *state;
+  mld_shake256ctx *state;
 
   shake256_squeeze(out, outlen, state);
 }

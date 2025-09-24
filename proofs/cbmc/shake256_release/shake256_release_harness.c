@@ -5,9 +5,7 @@
 
 void harness(void)
 {
-  keccak_state *s;
-  const uint8_t *in;
-  size_t inlen;
+  mld_shake256ctx *s;
 
-  shake256_absorb_once(s, in, inlen);
+  shake256_release(s);
 }

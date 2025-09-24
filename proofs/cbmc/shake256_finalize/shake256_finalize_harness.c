@@ -5,7 +5,7 @@
 
 void harness(void)
 {
-  keccak_state *s;
+  mld_shake256ctx *s;
 
   shake256_finalize(s);
 }

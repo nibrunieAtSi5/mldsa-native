@@ -4,11 +4,11 @@
 include ../Makefile_params.common
 
 HARNESS_ENTRY = harness
-HARNESS_FILE = shake256_squeezeblocks_harness
+HARNESS_FILE = shake256_release_harness
 
 # This should be a unique identifier for this proof, and will appear on the
 # Litani dashboard. It can be human-readable and contain spaces if you wish.
-PROOF_UID = shake256_squeezeblocks
+PROOF_UID = shake256_release
 
 DEFINES +=
 INCLUDES +=
@@ -19,8 +19,8 @@ UNWINDSET +=
 PROOF_SOURCES += $(PROOFDIR)/$(HARNESS_FILE).c
 PROJECT_SOURCES += $(SRCDIR)/mldsa/fips202/fips202.c
 
-CHECK_FUNCTION_CONTRACTS=$(FIPS202_NAMESPACE)shake256_squeezeblocks
-USE_FUNCTION_CONTRACTS=keccak_squeezeblocks
+CHECK_FUNCTION_CONTRACTS=$(FIPS202_NAMESPACE)shake256_release
+USE_FUNCTION_CONTRACTS=
 APPLY_LOOP_CONTRACTS=on
 USE_DYNAMIC_FRAMES=1
 
@@ -28,7 +28,7 @@ USE_DYNAMIC_FRAMES=1
 EXTERNAL_SAT_SOLVER=
 CBMCFLAGS=--smt2
 
-FUNCTION_NAME = shake256_squeezeblocks
+FUNCTION_NAME = shake256_release
 
 # If this proof is found to consume huge amounts of RAM, you can set the
 # EXPENSIVE variable. With new enough versions of the proof tools, this will

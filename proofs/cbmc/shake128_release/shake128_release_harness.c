@@ -5,9 +5,7 @@
 
 void harness(void)
 {
-  uint8_t *out;
-  size_t nblocks;
-  keccak_state *state;
+  mld_shake128ctx *s;
 
-  shake128_squeezeblocks(out, nblocks, state);
+  shake128_release(s);
 }

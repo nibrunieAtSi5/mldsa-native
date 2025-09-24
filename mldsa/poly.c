@@ -431,7 +431,7 @@ void mld_poly_uniform(mld_poly *a, const uint8_t seed[MLDSA_SEEDBYTES + 2])
   mld_xof128_ctx state;
 
   mld_xof128_init(&state);
-  mld_xof128_absorb(&state, seed, MLDSA_SEEDBYTES + 2);
+  mld_xof128_absorb_once(&state, seed, MLDSA_SEEDBYTES + 2);
   mld_xof128_squeezeblocks(buf, POLY_UNIFORM_NBLOCKS, &state);
 
   ctr = mld_rej_uniform(a->coeffs, MLDSA_N, 0, buf, buflen);
@@ -440,8 +440,9 @@ void mld_poly_uniform(mld_poly *a, const uint8_t seed[MLDSA_SEEDBYTES + 2])
   __loop__(
     assigns(ctr, state, memory_slice(a, sizeof(mld_poly)), object_whole(buf))
     invariant(ctr <= MLDSA_N)
-    invariant((&state)->pos <= SHAKE128_RATE)
-    invariant(array_bound(a->coeffs, 0, ctr, 0, MLDSA_Q)))
+    invariant(array_bound(a->coeffs, 0, ctr, 0, MLDSA_Q))
+    invariant(state.pos <= SHAKE128_RATE)
+  )
   {
     mld_xof128_squeezeblocks(buf, 1, &state);
     ctr = mld_rej_uniform(a->coeffs, MLDSA_N, ctr, buf, buflen);
@@ -757,7 +758,7 @@ void mld_poly_uniform_gamma1(mld_poly *a, const uint8_t seed[MLDSA_CRHBYTES],
   extseed[MLDSA_CRHBYTES + 1] = nonce >> 8;
 
   mld_xof256_init(&state);
-  mld_xof256_absorb(&state, extseed, MLDSA_CRHBYTES + 2);
+  mld_xof256_absorb_once(&state, extseed, MLDSA_CRHBYTES + 2);
 
   mld_xof256_squeezeblocks(buf, POLY_UNIFORM_GAMMA1_NBLOCKS, &state);
   mld_polyz_unpack(a, buf);
@@ -827,12 +828,12 @@ void mld_poly_challenge(mld_poly *c, const uint8_t seed[MLDSA_CTILDEBYTES])
   uint64_t signs;
   uint64_t offset;
   MLD_ALIGN uint8_t buf[SHAKE256_RATE];
-  keccak_state state;
+  mld_shake256ctx state;
 
   shake256_init(&state);
   shake256_absorb(&state, seed, MLDSA_CTILDEBYTES);
   shake256_finalize(&state);
-  shake256_squeezeblocks(buf, 1, &state);
+  shake256_squeeze(buf, SHAKE256_RATE, &state);
 
   /* Convert the first 8 bytes of buf[] into an unsigned 64-bit value.   */
   /* Each bit of that dictates the sign of the resulting challenge value */
@@ -856,19 +857,19 @@ void mld_poly_challenge(mld_poly *c, const uint8_t seed[MLDSA_CTILDEBYTES])
     invariant(i <= MLDSA_N)
     invariant(pos >= 1)
     invariant(pos <= SHAKE256_RATE)
-    invariant((&state)->pos <= SHAKE256_RATE)
     invariant(array_bound(c->coeffs, 0, MLDSA_N, -1, 2))
+    invariant(state.pos <= SHAKE256_RATE)
   )
   {
     do
     __loop__(
       assigns(j, object_whole(buf), state, pos)
-      invariant((&state)->pos <= SHAKE256_RATE)
+      invariant(state.pos <= SHAKE256_RATE)
     )
     {
       if (pos >= SHAKE256_RATE)
       {
-        shake256_squeezeblocks(buf, 1, &state);
+        shake256_squeeze(buf, SHAKE256_RATE, &state);
         pos = 0;
       }
       j = buf[pos++];
@@ -893,6 +894,7 @@ void mld_poly_challenge(mld_poly *c, const uint8_t seed[MLDSA_CTILDEBYTES])
   }
 
   mld_assert_bound(c->coeffs, MLDSA_N, -1, 2);
+  shake256_release(&state);
 
   /* FIPS 204. Section 3.6.3 Destruction of intermediate values. */
   mld_zeroize(buf, sizeof(buf));

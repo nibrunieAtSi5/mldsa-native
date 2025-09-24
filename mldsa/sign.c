@@ -247,7 +247,7 @@ __contract__(
   assigns(memory_slice(out, outlen))
 )
 {
-  keccak_state state;
+  mld_shake256ctx state;
   shake256_init(&state);
   shake256_absorb(&state, in1, in1len);
   if (in2 != NULL)
@@ -260,6 +260,7 @@ __contract__(
   }
   shake256_finalize(&state);
   shake256_squeeze(out, outlen, &state);
+  shake256_release(&state);
 
   /* FIPS 204. Section 3.6.3 Destruction of intermediate values. */
   mld_zeroize(&state, sizeof(state));
