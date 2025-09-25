@@ -17,7 +17,7 @@
 	build test all \
 	clean quickcheck check-defined-CYCLES \
 	size_44 size_65 size_87 size \
-	run_size_44 run_size_65 run_size_87 run_size 
+	run_size_44 run_size_65 run_size_87 run_size
 
 SHELL := /bin/bash
 .DEFAULT_GOAL := build
@@ -125,12 +125,10 @@ run_bench_65: bench_65
 	$(W) $(MLDSA65_DIR)/bin/bench_mldsa65
 run_bench_87: bench_87
 	$(W) $(MLDSA87_DIR)/bin/bench_mldsa87
-
-# Use .WAIT to prevent parallel execution when -j is passed
-run_bench: \
-	run_bench_44 .WAIT\
-	run_bench_65 .WAIT\
-	run_bench_87
+run_bench: bench
+	$(W) $(MLDSA44_DIR)/bin/bench_mldsa44
+	$(W) $(MLDSA65_DIR)/bin/bench_mldsa65
+	$(W) $(MLDSA87_DIR)/bin/bench_mldsa87
 
 bench_components_44: check-defined-CYCLES \
 	$(MLDSA44_DIR)/bin/bench_components_mldsa44
@@ -146,12 +144,10 @@ run_bench_components_65: bench_components_65
 	$(W) $(MLDSA65_DIR)/bin/bench_components_mldsa65
 run_bench_components_87: bench_components_87
 	$(W) $(MLDSA87_DIR)/bin/bench_components_mldsa87
-
-# Use .WAIT to prevent parallel execution when -j is passed
-run_bench_components: \
-	run_bench_components_44 .WAIT\
-	run_bench_components_65 .WAIT\
-	run_bench_components_87
+run_bench_components: bench_components
+	$(W) $(MLDSA44_DIR)/bin/bench_components_mldsa44
+	$(W) $(MLDSA65_DIR)/bin/bench_components_mldsa65
+	$(W) $(MLDSA87_DIR)/bin/bench_components_mldsa87
 
 
 size_44: $(BUILD_DIR)/libmldsa44.a
