@@ -830,10 +830,10 @@ void mld_poly_challenge(mld_poly *c, const uint8_t seed[MLDSA_CTILDEBYTES])
   MLD_ALIGN uint8_t buf[SHAKE256_RATE];
   mld_shake256ctx state;
 
-  shake256_init(&state);
-  shake256_absorb(&state, seed, MLDSA_CTILDEBYTES);
-  shake256_finalize(&state);
-  shake256_squeeze(buf, SHAKE256_RATE, &state);
+  mld_shake256_init(&state);
+  mld_shake256_absorb(&state, seed, MLDSA_CTILDEBYTES);
+  mld_shake256_finalize(&state);
+  mld_shake256_squeeze(buf, SHAKE256_RATE, &state);
 
   /* Convert the first 8 bytes of buf[] into an unsigned 64-bit value.   */
   /* Each bit of that dictates the sign of the resulting challenge value */
@@ -869,7 +869,7 @@ void mld_poly_challenge(mld_poly *c, const uint8_t seed[MLDSA_CTILDEBYTES])
     {
       if (pos >= SHAKE256_RATE)
       {
-        shake256_squeeze(buf, SHAKE256_RATE, &state);
+        mld_shake256_squeeze(buf, SHAKE256_RATE, &state);
         pos = 0;
       }
       j = buf[pos++];
@@ -894,7 +894,7 @@ void mld_poly_challenge(mld_poly *c, const uint8_t seed[MLDSA_CTILDEBYTES])
   }
 
   mld_assert_bound(c->coeffs, MLDSA_N, -1, 2);
-  shake256_release(&state);
+  mld_shake256_release(&state);
 
   /* FIPS 204. Section 3.6.3 Destruction of intermediate values. */
   mld_zeroize(buf, sizeof(buf));

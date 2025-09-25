@@ -9,5 +9,5 @@ void harness(void)
   size_t outlen;
   mld_shake256ctx *state;
 
-  shake256_squeeze(out, outlen, state);
+  mld_shake256_squeeze(out, outlen, state);
 }

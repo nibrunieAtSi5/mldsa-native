@@ -140,8 +140,8 @@ int crypto_sign_keypair_internal(uint8_t *pk, uint8_t *sk,
   mld_memcpy(inbuf, seed, MLDSA_SEEDBYTES);
   inbuf[MLDSA_SEEDBYTES + 0] = MLDSA_K;
   inbuf[MLDSA_SEEDBYTES + 1] = MLDSA_L;
-  shake256(seedbuf, 2 * MLDSA_SEEDBYTES + MLDSA_CRHBYTES, inbuf,
-           MLDSA_SEEDBYTES + 2);
+  mld_shake256(seedbuf, 2 * MLDSA_SEEDBYTES + MLDSA_CRHBYTES, inbuf,
+               MLDSA_SEEDBYTES + 2);
   rho = seedbuf;
   rhoprime = rho + MLDSA_SEEDBYTES;
   key = rhoprime + MLDSA_CRHBYTES;
@@ -168,7 +168,7 @@ int crypto_sign_keypair_internal(uint8_t *pk, uint8_t *sk,
   mld_pack_pk(pk, rho, &t2);
 
   /* Compute H(rho, t1) and write secret key */
-  shake256(tr, MLDSA_TRBYTES, pk, CRYPTO_PUBLICKEYBYTES);
+  mld_shake256(tr, MLDSA_TRBYTES, pk, CRYPTO_PUBLICKEYBYTES);
   mld_pack_sk(sk, rho, tr, key, &t0, &s1, &s2);
 
   /* FIPS 204. Section 3.6.3 Destruction of intermediate values.  */
@@ -248,19 +248,19 @@ __contract__(
 )
 {
   mld_shake256ctx state;
-  shake256_init(&state);
-  shake256_absorb(&state, in1, in1len);
+  mld_shake256_init(&state);
+  mld_shake256_absorb(&state, in1, in1len);
   if (in2 != NULL)
   {
-    shake256_absorb(&state, in2, in2len);
+    mld_shake256_absorb(&state, in2, in2len);
   }
   if (in3 != NULL)
   {
-    shake256_absorb(&state, in3, in3len);
+    mld_shake256_absorb(&state, in3, in3len);
   }
-  shake256_finalize(&state);
-  shake256_squeeze(out, outlen, &state);
-  shake256_release(&state);
+  mld_shake256_finalize(&state);
+  mld_shake256_squeeze(out, outlen, &state);
+  mld_shake256_release(&state);
 
   /* FIPS 204. Section 3.6.3 Destruction of intermediate values. */
   mld_zeroize(&state, sizeof(state));

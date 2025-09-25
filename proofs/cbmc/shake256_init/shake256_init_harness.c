@@ -7,5 +7,5 @@ void harness(void)
 {
   mld_shake256ctx *s;
 
-  shake256_init(s);
+  mld_shake256_init(s);
 }

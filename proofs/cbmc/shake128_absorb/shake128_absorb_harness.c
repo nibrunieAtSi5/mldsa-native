@@ -9,5 +9,5 @@ void harness(void)
   const uint8_t *in;
   size_t inlen;
 
-  shake128_absorb(s, in, inlen);
+  mld_shake128_absorb(s, in, inlen);
 }

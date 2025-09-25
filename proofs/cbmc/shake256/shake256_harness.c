@@ -10,5 +10,5 @@ void harness(void)
   const uint8_t *in;
   size_t inlen;
 
-  shake256(out, outlen, in, inlen);
+  mld_shake256(out, outlen, in, inlen);
 }

@@ -76,11 +76,11 @@ int main(void)
    * KAT test to only use deterministic randomness derived using SHAKE.
    */
 
-  shake256(coins, sizeof(coins), seed, sizeof(seed));
+  mld_shake256(coins, sizeof(coins), seed, sizeof(seed));
 
   for (i = 0; i < MAXMLEN; i = (i == 0) ? i + 1 : i << 2)
   {
-    shake256(coins, sizeof(coins), coins, sizeof(coins));
+    mld_shake256(coins, sizeof(coins), coins, sizeof(coins));
     m = coins + MLDSA_SEEDBYTES + MLDSA_RNDBYTES;
 
     CHECK(crypto_sign_keypair_internal(pk, sk, coins) == 0);

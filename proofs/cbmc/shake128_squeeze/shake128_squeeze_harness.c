@@ -9,5 +9,5 @@ void harness(void)
   size_t outlen;
   mld_shake128ctx *state;
 
-  shake128_squeeze(out, outlen, state);
+  mld_shake128_squeeze(out, outlen, state);
 }

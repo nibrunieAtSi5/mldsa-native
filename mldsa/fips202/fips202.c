@@ -163,69 +163,71 @@ __contract__(
   return pos;
 }
 
-void shake128_init(mld_shake128ctx *state)
+void mld_shake128_init(mld_shake128ctx *state)
 {
   keccak_init(state->s);
   state->pos = 0;
 }
 
-void shake128_absorb(mld_shake128ctx *state, const uint8_t *in, size_t inlen)
+void mld_shake128_absorb(mld_shake128ctx *state, const uint8_t *in,
+                         size_t inlen)
 {
   state->pos = keccak_absorb(state->s, state->pos, SHAKE128_RATE, in, inlen);
 }
 
-void shake128_finalize(mld_shake128ctx *state)
+void mld_shake128_finalize(mld_shake128ctx *state)
 {
   keccak_finalize(state->s, state->pos, SHAKE128_RATE, 0x1F);
   state->pos = SHAKE128_RATE;
 }
 
-void shake128_squeeze(uint8_t *out, size_t outlen, mld_shake128ctx *state)
+void mld_shake128_squeeze(uint8_t *out, size_t outlen, mld_shake128ctx *state)
 {
   state->pos = keccak_squeeze(out, outlen, state->s, state->pos, SHAKE128_RATE);
 }
 
-void shake128_release(mld_shake128ctx *state)
+void mld_shake128_release(mld_shake128ctx *state)
 {
   /* FIPS 204. Section 3.6.3 Destruction of intermediate values. */
   mld_zeroize(state, sizeof(mld_shake128ctx));
 }
 
-void shake256_init(mld_shake256ctx *state)
+void mld_shake256_init(mld_shake256ctx *state)
 {
   keccak_init(state->s);
   state->pos = 0;
 }
 
-void shake256_absorb(mld_shake256ctx *state, const uint8_t *in, size_t inlen)
+void mld_shake256_absorb(mld_shake256ctx *state, const uint8_t *in,
+                         size_t inlen)
 {
   state->pos = keccak_absorb(state->s, state->pos, SHAKE256_RATE, in, inlen);
 }
 
-void shake256_finalize(mld_shake256ctx *state)
+void mld_shake256_finalize(mld_shake256ctx *state)
 {
   keccak_finalize(state->s, state->pos, SHAKE256_RATE, 0x1F);
   state->pos = SHAKE256_RATE;
 }
 
-void shake256_squeeze(uint8_t *out, size_t outlen, mld_shake256ctx *state)
+void mld_shake256_squeeze(uint8_t *out, size_t outlen, mld_shake256ctx *state)
 {
   state->pos = keccak_squeeze(out, outlen, state->s, state->pos, SHAKE256_RATE);
 }
 
-void shake256_release(mld_shake256ctx *state)
+void mld_shake256_release(mld_shake256ctx *state)
 {
   /* FIPS 204. Section 3.6.3 Destruction of intermediate values. */
   mld_zeroize(state, sizeof(mld_shake256ctx));
 }
 
-void shake256(uint8_t *out, size_t outlen, const uint8_t *in, size_t inlen)
+void mld_shake256(uint8_t *out, size_t outlen, const uint8_t *in, size_t inlen)
 {
   mld_shake256ctx state;
 
-  shake256_init(&state);
-  shake256_absorb(&state, in, inlen);
-  shake256_finalize(&state);
-  shake256_squeeze(out, outlen, &state);
-  shake256_release(&state);
+  mld_shake256_init(&state);
+  mld_shake256_absorb(&state, in, inlen);
+  mld_shake256_finalize(&state);
+  mld_shake256_squeeze(out, outlen, &state);
+  mld_shake256_release(&state);
 }
