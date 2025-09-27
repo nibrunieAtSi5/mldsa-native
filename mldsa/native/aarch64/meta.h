@@ -15,6 +15,7 @@
 #define MLD_USE_NATIVE_REJ_UNIFORM_ETA4
 #define MLD_USE_NATIVE_POLY_DECOMPOSE_32
 #define MLD_USE_NATIVE_POLY_DECOMPOSE_88
+#define MLD_USE_NATIVE_POLY_CADDQ
 
 /* Identifier for this backend so that source and assembly files
  * in the build can be appropriately guarded. */
@@ -105,6 +106,11 @@ static MLD_INLINE void mld_poly_decompose_88_native(int32_t *a1, int32_t *a0,
                                                     const int32_t *a)
 {
   mld_poly_decompose_88_asm(a1, a0, a);
+}
+
+static MLD_INLINE void mld_poly_caddq_native(int32_t a[MLDSA_N])
+{
+  mld_poly_caddq_asm(a);
 }
 
 #endif /* !__ASSEMBLER__ */

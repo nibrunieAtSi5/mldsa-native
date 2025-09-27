@@ -68,4 +68,7 @@ void mld_poly_decompose_32_asm(int32_t *a1, int32_t *a0, const int32_t *a);
 #define mld_poly_decompose_88_asm MLD_NAMESPACE(poly_decompose_88_asm)
 void mld_poly_decompose_88_asm(int32_t *a1, int32_t *a0, const int32_t *a);
 
+#define mld_poly_caddq_asm MLD_NAMESPACE(poly_caddq_asm)
+void mld_poly_caddq_asm(int32_t *a);
+
 #endif /* !MLD_NATIVE_AARCH64_SRC_ARITH_NATIVE_AARCH64_H */
