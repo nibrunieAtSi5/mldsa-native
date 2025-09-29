@@ -20,6 +20,8 @@
 #define MLD_USE_NATIVE_POLY_DECOMPOSE_32
 #define MLD_USE_NATIVE_POLY_DECOMPOSE_88
 #define MLD_USE_NATIVE_POLY_CADDQ
+#define MLD_USE_NATIVE_POLY_USE_HINT_32
+#define MLD_USE_NATIVE_POLY_USE_HINT_88
 
 #if !defined(__ASSEMBLER__)
 #include <string.h>
@@ -116,6 +118,19 @@ static MLD_INLINE void mld_poly_decompose_88_native(int32_t *a1, int32_t *a0,
 static MLD_INLINE void mld_poly_caddq_native(int32_t a[MLDSA_N])
 {
   mld_poly_caddq_avx2(a);
+}
+static MLD_INLINE void mld_poly_use_hint_32_native(int32_t *b, const int32_t *a,
+                                                   const int32_t *h)
+{
+  mld_poly_use_hint_32_avx2((__m256i *)b, (const __m256i *)a,
+                            (const __m256i *)h);
+}
+
+static MLD_INLINE void mld_poly_use_hint_88_native(int32_t *b, const int32_t *a,
+                                                   const int32_t *h)
+{
+  mld_poly_use_hint_88_avx2((__m256i *)b, (const __m256i *)a,
+                            (const __m256i *)h);
 }
 
 #endif /* !__ASSEMBLER__ */

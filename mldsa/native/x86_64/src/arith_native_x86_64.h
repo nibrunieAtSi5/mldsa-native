@@ -63,4 +63,10 @@ void mld_poly_decompose_88_avx2(__m256i *a1, __m256i *a0, const __m256i *a);
 #define mld_poly_caddq_avx2 MLD_NAMESPACE(poly_caddq_avx2)
 void mld_poly_caddq_avx2(int32_t *r);
 
+#define mld_poly_use_hint_32_avx2 MLD_NAMESPACE(mld_poly_use_hint_32_avx2)
+void mld_poly_use_hint_32_avx2(__m256i *b, const __m256i *a, const __m256i *h);
+
+#define mld_poly_use_hint_88_avx2 MLD_NAMESPACE(mld_poly_use_hint_88_avx2)
+void mld_poly_use_hint_88_avx2(__m256i *b, const __m256i *a, const __m256i *h);
+
 #endif /* !MLD_NATIVE_X86_64_SRC_ARITH_NATIVE_X86_64_H */
