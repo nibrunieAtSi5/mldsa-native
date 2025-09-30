@@ -69,4 +69,7 @@ void mld_poly_use_hint_32_avx2(__m256i *b, const __m256i *a, const __m256i *h);
 #define mld_poly_use_hint_88_avx2 MLD_NAMESPACE(mld_poly_use_hint_88_avx2)
 void mld_poly_use_hint_88_avx2(__m256i *b, const __m256i *a, const __m256i *h);
 
+#define mld_poly_chknorm_avx2 MLD_NAMESPACE(mld_poly_chknorm_avx2)
+uint32_t mld_poly_chknorm_avx2(const __m256i *a, int32_t B);
+
 #endif /* !MLD_NATIVE_X86_64_SRC_ARITH_NATIVE_X86_64_H */

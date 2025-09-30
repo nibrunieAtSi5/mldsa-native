@@ -22,6 +22,7 @@
 #define MLD_USE_NATIVE_POLY_CADDQ
 #define MLD_USE_NATIVE_POLY_USE_HINT_32
 #define MLD_USE_NATIVE_POLY_USE_HINT_88
+#define MLD_USE_NATIVE_POLY_CHKNORM
 
 #if !defined(__ASSEMBLER__)
 #include <string.h>
@@ -131,6 +132,11 @@ static MLD_INLINE void mld_poly_use_hint_88_native(int32_t *b, const int32_t *a,
 {
   mld_poly_use_hint_88_avx2((__m256i *)b, (const __m256i *)a,
                             (const __m256i *)h);
+}
+
+static MLD_INLINE uint32_t mld_poly_chknorm_native(const int32_t *a, int32_t B)
+{
+  return mld_poly_chknorm_avx2((const __m256i *)a, B);
 }
 
 #endif /* !__ASSEMBLER__ */

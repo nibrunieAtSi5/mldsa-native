@@ -254,4 +254,20 @@ static MLD_INLINE void mld_poly_use_hint_88_native(int32_t *b, const int32_t *a,
                                                    const int32_t *h);
 #endif /* MLD_USE_NATIVE_POLY_USE_HINT_88 */
 
+#if defined(MLD_USE_NATIVE_POLY_CHKNORM)
+/*************************************************
+ * Name:        mld_poly_chknorm_native
+ *
+ * Description: Check infinity norm of polynomial against given bound.
+ *              Assumes input coefficients were reduced by mld_reduce32().
+ *
+ * Arguments:   - const int32_t *a: pointer to polynomial
+ *              - int32_t B: norm bound
+ *
+ * Returns 0 if norm is strictly smaller than B <= (MLDSA_Q-1)/8 and 0xFFFFFFFF
+ * otherwise.
+ **************************************************/
+static MLD_INLINE uint32_t mld_poly_chknorm_native(const int32_t *a, int32_t B);
+#endif /* MLD_USE_NATIVE_POLY_CHKNORM */
+
 #endif /* !MLD_NATIVE_API_H */

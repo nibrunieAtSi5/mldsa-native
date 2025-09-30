@@ -324,6 +324,11 @@ void mld_poly_use_hint(mld_poly *b, const mld_poly *a, const mld_poly *h)
 MLD_INTERNAL_API
 uint32_t mld_poly_chknorm(const mld_poly *a, int32_t B)
 {
+#if defined(MLD_USE_NATIVE_POLY_CHKNORM)
+  /* TODO: proof */
+  mld_assert_bound(a->coeffs, MLDSA_N, -REDUCE32_RANGE_MAX, REDUCE32_RANGE_MAX);
+  return mld_poly_chknorm_native(a->coeffs, B);
+#else
   unsigned int i;
   uint32_t t = 0;
   mld_assert_bound(a->coeffs, MLDSA_N, -REDUCE32_RANGE_MAX, REDUCE32_RANGE_MAX);
@@ -346,6 +351,7 @@ uint32_t mld_poly_chknorm(const mld_poly *a, int32_t B)
   }
 
   return t;
+#endif /* !MLD_USE_NATIVE_POLY_CHKNORM */
 }
 
 /*************************************************
