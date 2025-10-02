@@ -31,17 +31,29 @@
 #define MLD_CONFIG_FIPS202X4_CUSTOM_HEADER \
   "../integration/liboqs/fips202x4_glue.h"
 
-#ifndef MLDSA_MODE
-#define MLDSA_MODE 2
+/******************************************************************************
+ * Name:        MLD_CONFIG_PARAMETER_SET
+ *
+ * Description: Specifies the parameter set for ML-DSA
+ *              - MLD_CONFIG_PARAMETER_SET=44 corresponds to ML-DSA-44
+ *              - MLD_CONFIG_PARAMETER_SET=65 corresponds to ML-DSA-65
+ *              - MLD_CONFIG_PARAMETER_SET=87 corresponds to ML-DSA-87
+ *
+ *              This can also be set using CFLAGS.
+ *
+ *****************************************************************************/
+#ifndef MLD_CONFIG_PARAMETER_SET
+#define MLD_CONFIG_PARAMETER_SET \
+  44 /* Change this for different security strengths */
 #endif
 
-#if MLDSA_MODE == 2
+#if MLD_CONFIG_PARAMETER_SET == 44
 #define MLD_NAMESPACETOP PQCP_MLDSA_NATIVE_MLDSA44_X86_64_
 #define MLD_NAMESPACE(s) PQCP_MLDSA_NATIVE_MLDSA44_X86_64_##s
-#elif MLDSA_MODE == 3
+#elif MLD_CONFIG_PARAMETER_SET == 65
 #define MLD_NAMESPACETOP PQCP_MLDSA_NATIVE_MLDSA65_X86_64_
 #define MLD_NAMESPACE(s) PQCP_MLDSA_NATIVE_MLDSA65_X86_64_##s
-#elif MLDSA_MODE == 5
+#elif MLD_CONFIG_PARAMETER_SET == 87
 #define MLD_NAMESPACETOP PQCP_MLDSA_NATIVE_MLDSA87_X86_64_
 #define MLD_NAMESPACE(s) PQCP_MLDSA_NATIVE_MLDSA87_X86_64_##s
 #endif
