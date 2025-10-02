@@ -126,7 +126,7 @@
   }
 
 #define array_bound(array_var, qvar_lb, qvar_ub, value_lb, value_ub) \
-  array_bound_core(CBMC_CONCAT(_cbmc_idx, __LINE__), (qvar_lb),      \
+  array_bound_core(CBMC_CONCAT(_cbmc_idx, __COUNTER__), (qvar_lb),      \
       (qvar_ub), (array_var), (value_lb), (value_ub))
 /* clang-format on */
 
