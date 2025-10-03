@@ -22,17 +22,29 @@
 
 #define MLD_RANDOMIZED_SIGNING
 
-#ifndef MLDSA_MODE
-#define MLDSA_MODE 2
+/******************************************************************************
+ * Name:        MLD_CONFIG_PARAMETER_SET
+ *
+ * Description: Specifies the parameter set for ML-DSA
+ *              - MLD_CONFIG_PARAMETER_SET=44 corresponds to ML-DSA-44
+ *              - MLD_CONFIG_PARAMETER_SET=65 corresponds to ML-DSA-65
+ *              - MLD_CONFIG_PARAMETER_SET=87 corresponds to ML-DSA-87
+ *
+ *              This can also be set using CFLAGS.
+ *
+ *****************************************************************************/
+#ifndef MLD_CONFIG_PARAMETER_SET
+#define MLD_CONFIG_PARAMETER_SET \
+  44 /* Change this for different security strengths */
 #endif
 
-#if MLDSA_MODE == 2
+#if MLD_CONFIG_PARAMETER_SET == 44
 #define MLD_NAMESPACETOP MLD_44_ref
 #define MLD_NAMESPACE(s) MLD_44_ref_##s
-#elif MLDSA_MODE == 3
+#elif MLD_CONFIG_PARAMETER_SET == 65
 #define MLD_NAMESPACETOP MLD_65_ref
 #define MLD_NAMESPACE(s) MLD_65_ref_##s
-#elif MLDSA_MODE == 5
+#elif MLD_CONFIG_PARAMETER_SET == 87
 #define MLD_NAMESPACETOP MLD_87_ref
 #define MLD_NAMESPACE(s) MLD_87_ref_##s
 #endif
