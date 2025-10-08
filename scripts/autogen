@@ -1016,7 +1016,9 @@ def get_oqs_shared_sources(backend):
     sources = [
         f"mldsa/{f}"
         for f in os.listdir(mldsa_dir)
-        if os.path.isfile(f"{mldsa_dir}/{f}") and not f.endswith(".o")
+        if os.path.isfile(f"{mldsa_dir}/{f}")
+        and not f.endswith(".o")
+        and not f == "mldsa_native.h"
     ]
 
     if backend != "ref":
@@ -1103,7 +1105,7 @@ def adjust_header_guard_for_filename(content, header_file):
     status_update("header guards", header_file)
 
     content = content.split("\n")
-    exceptions = {}
+    exceptions = {"mldsa/mldsa_native.h": "MLD_H"}
 
     # Use full filename as the header guard, with '/' and '.' replaced by '_'
     guard_name = (
