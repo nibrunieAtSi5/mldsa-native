@@ -461,7 +461,8 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - uses: ./.github/actions/setup-shell
         with:
-          nix-shell: 'ci'
+          nix-shell: 'ci-cross' # Need cross-compiler for ASM simplification
+          nix-cache: 'true'
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            python3 ./scripts/autogen --dry-run
+            python3 ./scripts/autogen --dry-run --force-cross
