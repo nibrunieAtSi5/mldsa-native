@@ -27,36 +27,6 @@
 /* Absolute bound for tight domain of mld_montgomery_reduce() */
 #define MONTGOMERY_REDUCE_STRONG_DOMAIN_MAX ((int64_t)INT32_MIN * -MLDSA_Q)
 
-
-
-/*************************************************
- * Name:        mld_cast_uint32_to_int32
- *
- * Description: Cast uint32 value to int32
- *
- * Returns:
- *   input x in     0 .. 2^31-1: returns value unchanged
- *   input x in  2^31 .. 2^32-1: returns (x - 2^32)
- **************************************************/
-#ifdef CBMC
-#pragma CPROVER check push
-#pragma CPROVER check disable "conversion"
-#endif
-static MLD_INLINE int32_t mld_cast_uint32_to_int32(uint32_t x)
-{
-  /*
-   * PORTABILITY: This relies on uint32_t -> int32_t
-   * being implemented as the inverse of int32_t -> uint32_t,
-   * which is implementation-defined (C99 6.3.1.3 (3))
-   * CBMC (correctly) fails to prove this conversion is OK,
-   * so we have to suppress that check here
-   */
-  return (int32_t)x;
-}
-#ifdef CBMC
-#pragma CPROVER check pop
-#endif
-
 /*************************************************
  * Name:        mld_montgomery_reduce
  *
