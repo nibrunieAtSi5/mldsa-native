@@ -201,6 +201,7 @@ class TEST_TYPES(Enum):
     STACK = 6
     SIZE = 7
     BASIC = 8
+    BRING_YOUR_OWN_FIPS202 = 9
 
     def is_benchmark(self):
         return self in [TEST_TYPES.BENCH, TEST_TYPES.BENCH_COMPONENTS]
@@ -210,7 +211,7 @@ class TEST_TYPES(Enum):
 
     @staticmethod
     def examples():
-        return [TEST_TYPES.BASIC]
+        return [TEST_TYPES.BASIC, TEST_TYPES.BRING_YOUR_OWN_FIPS202]
 
     @staticmethod
     def from_string(s):
@@ -241,10 +242,14 @@ class TEST_TYPES(Enum):
             return "Measurement Code Size"
         if self == TEST_TYPES.BASIC:
             return "Example (mldsa-native as code package)"
+        if self == TEST_TYPES.BRING_YOUR_OWN_FIPS202:
+            return "Example (bring your own FIPS-202 implementation)"
 
     def make_dir(self):
         if self == TEST_TYPES.BASIC:
             return "examples/basic"
+        if self == TEST_TYPES.BRING_YOUR_OWN_FIPS202:
+            return "examples/bring_your_own_fips202"
         return ""
 
     def make_target(self):
@@ -263,6 +268,8 @@ class TEST_TYPES(Enum):
         if self == TEST_TYPES.SIZE:
             return "size"
         if self == TEST_TYPES.BASIC:
+            return ""
+        if self == TEST_TYPES.BRING_YOUR_OWN_FIPS202:
             return ""
         return ""
 
@@ -946,7 +953,7 @@ def cli():
     examples_parser.add_argument(
         "-l",
         help="Explicitly list the examples to run; can be called multiple times",
-        choices=["basic"],
+        choices=["basic", "bring_your_own_fips202"],
         action="append",
     )
 

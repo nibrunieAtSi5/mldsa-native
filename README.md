@@ -62,10 +62,11 @@ offers backends for C, AArch64, and x86_64 - if you'd like contribute new backen
 
 Once mldsa-native reaches production readiness, you will be able to import [mldsa](mldsa) into your project's source tree and build using your preferred build system. The build system provided in this repository is for development purposes only.
 
-### Will I be able to bring my own FIPS-202?
+### Can I bring my own FIPS-202?
 
 mldsa-native relies on and comes with an implementation of FIPS-202[^FIPS202]. If your library has its own FIPS-202 implementation, you
-can use it instead of the one shipped with mldsa-native.
+can use it instead of the one shipped with mldsa-native. See [FIPS202.md](FIPS202.md), and [examples/bring_your_own_fips202](examples/bring_your_own_fips202)
+for an example using tiny_sha3[^tiny_sha3].
 
 ### Will I need to use the assembly backends?
 
@@ -124,3 +125,4 @@ through the [PQCA Discord](https://discord.com/invite/xyVnwzfg5R).
 [^NIST_FAQ]: National Institute of Standards and Technology: Post-Quantum Cryptography FAQs, [https://csrc.nist.gov/Projects/post-quantum-cryptography/faqs#Rdc7](https://csrc.nist.gov/Projects/post-quantum-cryptography/faqs#Rdc7)
 [^NIST_FIPS204_SEC6]: National Institute of Standards and Technology: FIPS 204 Section 6 Guidance, [https://csrc.nist.gov/csrc/media/Projects/post-quantum-cryptography/documents/faq/fips204-sec6-03192025.pdf](https://csrc.nist.gov/csrc/media/Projects/post-quantum-cryptography/documents/faq/fips204-sec6-03192025.pdf)
 [^REF]: Bai, Ducas, Kiltz, Lepoint, Lyubashevsky, Schwabe, Seiler, Stehlé: CRYSTALS-Dilithium reference implementation, [https://github.com/pq-crystals/dilithium/tree/master/ref](https://github.com/pq-crystals/dilithium/tree/master/ref)
+[^tiny_sha3]: Markku-Juhani O. Saarinen: tiny_sha3, [https://github.com/mjosaarinen/tiny_sha3](https://github.com/mjosaarinen/tiny_sha3)
