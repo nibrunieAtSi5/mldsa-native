@@ -89,7 +89,7 @@ __contract__(
 /* Reference: Embedded in `ntt()` in the reference implementation @[REF]. */
 static void mld_ntt_butterfly_block(int32_t r[MLDSA_N], const int32_t zeta,
                                     const unsigned start, const unsigned len,
-                                    const int32_t bound)
+                                    const unsigned bound)
 __contract__(
   requires(start < MLDSA_N)
   requires(1 <= len && len <= MLDSA_N / 2 && start + 2 * len <= MLDSA_N)
@@ -145,7 +145,7 @@ __contract__(
   unsigned start, k, len;
   /* Twiddle factors for layer n are at indices 2^(n-1)..2^n-1. */
   k = 1u << (layer - 1);
-  len = MLDSA_N >> layer;
+  len = (unsigned)MLDSA_N >> layer;
   for (start = 0; start < MLDSA_N; start += 2 * len)
   __loop__(
     invariant(start < MLDSA_N + 2 * len)
@@ -189,7 +189,7 @@ __contract__(
   ensures(array_abs_bound(r, 0, MLDSA_N, (MLDSA_N >> (layer - 1)) * MLDSA_Q)))
 {
   unsigned start, k, len;
-  len = (MLDSA_N >> layer);
+  len = (unsigned)MLDSA_N >> layer;
   k = (1u << layer) - 1;
   for (start = 0; start < MLDSA_N; start += 2 * len)
   __loop__(

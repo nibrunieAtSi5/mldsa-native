@@ -93,13 +93,13 @@ unsigned int mld_rej_uniform_avx2(
     pos += 24;
 
     tmp = _mm256_sub_epi32(d, bound);
-    good = _mm256_movemask_ps((__m256)tmp);
+    good = (uint32_t)_mm256_movemask_ps((__m256)tmp);
     tmp = _mm256_cvtepu8_epi32(
         _mm_loadl_epi64((__m128i *)&mld_rej_uniform_table[good]));
     d = _mm256_permutevar8x32_epi32(d, tmp);
 
     _mm256_storeu_si256((__m256i *)&r[ctr], d);
-    ctr += _mm_popcnt_u32(good);
+    ctr += (unsigned)_mm_popcnt_u32(good);
   }
 
   while (ctr < MLDSA_N && pos <= MLD_AVX2_REJ_UNIFORM_BUFLEN - 3)
@@ -111,7 +111,8 @@ unsigned int mld_rej_uniform_avx2(
 
     if (t < MLDSA_Q)
     {
-      r[ctr++] = t;
+      /* Safe because t < MLDSA_Q. */
+      r[ctr++] = (int32_t)t;
     }
   }
 

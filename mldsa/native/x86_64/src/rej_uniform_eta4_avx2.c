@@ -58,14 +58,14 @@ unsigned int mld_rej_uniform_eta4_avx2(
 
     f1 = _mm256_sub_epi8(f0, bound);
     f0 = _mm256_sub_epi8(eta, f0);
-    good = _mm256_movemask_epi8(f1);
+    good = (uint32_t)_mm256_movemask_epi8(f1);
 
     g0 = _mm256_castsi256_si128(f0);
     g1 = _mm_loadl_epi64((__m128i *)&mld_rej_uniform_table[good & 0xFF]);
     g1 = _mm_shuffle_epi8(g0, g1);
     f1 = _mm256_cvtepi8_epi32(g1);
     _mm256_storeu_si256((__m256i *)&r[ctr], f1);
-    ctr += _mm_popcnt_u32(good & 0xFF);
+    ctr += (unsigned)_mm_popcnt_u32(good & 0xFF);
     good >>= 8;
     pos += 4;
 
@@ -78,7 +78,7 @@ unsigned int mld_rej_uniform_eta4_avx2(
     g1 = _mm_shuffle_epi8(g0, g1);
     f1 = _mm256_cvtepi8_epi32(g1);
     _mm256_storeu_si256((__m256i *)&r[ctr], f1);
-    ctr += _mm_popcnt_u32(good & 0xFF);
+    ctr += (unsigned)_mm_popcnt_u32(good & 0xFF);
     good >>= 8;
     pos += 4;
 
@@ -91,7 +91,7 @@ unsigned int mld_rej_uniform_eta4_avx2(
     g1 = _mm_shuffle_epi8(g0, g1);
     f1 = _mm256_cvtepi8_epi32(g1);
     _mm256_storeu_si256((__m256i *)&r[ctr], f1);
-    ctr += _mm_popcnt_u32(good & 0xFF);
+    ctr += (unsigned)_mm_popcnt_u32(good & 0xFF);
     good >>= 8;
     pos += 4;
 
@@ -104,7 +104,7 @@ unsigned int mld_rej_uniform_eta4_avx2(
     g1 = _mm_shuffle_epi8(g0, g1);
     f1 = _mm256_cvtepi8_epi32(g1);
     _mm256_storeu_si256((__m256i *)&r[ctr], f1);
-    ctr += _mm_popcnt_u32(good);
+    ctr += (unsigned)_mm_popcnt_u32(good);
     pos += 4;
   }
 
@@ -115,11 +115,11 @@ unsigned int mld_rej_uniform_eta4_avx2(
 
     if (t0 < 9)
     {
-      r[ctr++] = 4 - t0;
+      r[ctr++] = (int32_t)(4 - t0);
     }
     if (t1 < 9 && ctr < MLDSA_N)
     {
-      r[ctr++] = 4 - t1;
+      r[ctr++] = (int32_t)(4 - t1);
     }
   }
 

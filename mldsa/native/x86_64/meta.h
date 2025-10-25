@@ -59,6 +59,7 @@ static MLD_INLINE int mld_rej_uniform_native(int32_t *r, unsigned len,
     return -1;
   }
 
+  /* Safety: outlen is at most MLDSA_N and, hence, this cast is safe. */
   return (int)mld_rej_uniform_avx2(r, buf);
 }
 
@@ -66,7 +67,7 @@ static MLD_INLINE int mld_rej_uniform_eta2_native(int32_t *r, unsigned len,
                                                   const uint8_t *buf,
                                                   unsigned buflen)
 {
-  int outlen;
+  unsigned int outlen;
   /* AVX2 implementation assumes specific buffer lengths */
   if (len != MLDSA_N || buflen != MLD_AVX2_REJ_UNIFORM_ETA2_BUFLEN)
   {
@@ -81,16 +82,17 @@ static MLD_INLINE int mld_rej_uniform_eta2_native(int32_t *r, unsigned len,
    * We declassify prior the input data and mark the outputs as secret.
    */
   MLD_CT_TESTING_DECLASSIFY(buf, buflen);
-  outlen = (int)mld_rej_uniform_eta2_avx2(r, buf);
+  outlen = mld_rej_uniform_eta2_avx2(r, buf);
   MLD_CT_TESTING_SECRET(r, sizeof(int32_t) * outlen);
-  return outlen;
+  /* Safety: outlen is at most MLDSA_N and, hence, this cast is safe. */
+  return (int)outlen;
 }
 
 static MLD_INLINE int mld_rej_uniform_eta4_native(int32_t *r, unsigned len,
                                                   const uint8_t *buf,
                                                   unsigned buflen)
 {
-  int outlen;
+  unsigned int outlen;
   /* AVX2 implementation assumes specific buffer lengths */
   if (len != MLDSA_N || buflen != MLD_AVX2_REJ_UNIFORM_ETA4_BUFLEN)
   {
@@ -105,9 +107,10 @@ static MLD_INLINE int mld_rej_uniform_eta4_native(int32_t *r, unsigned len,
    * We declassify prior the input data and mark the outputs as secret.
    */
   MLD_CT_TESTING_DECLASSIFY(buf, buflen);
-  outlen = (int)mld_rej_uniform_eta4_avx2(r, buf);
+  outlen = mld_rej_uniform_eta4_avx2(r, buf);
   MLD_CT_TESTING_SECRET(r, sizeof(int32_t) * outlen);
-  return outlen;
+  /* Safety: outlen is at most MLDSA_N and, hence, this cast is safe. */
+  return (int)outlen;
 }
 
 static MLD_INLINE void mld_poly_decompose_32_native(int32_t *a1, int32_t *a0,

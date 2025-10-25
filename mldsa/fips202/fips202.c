@@ -94,9 +94,12 @@ __contract__(
     mld_keccakf1600_permute(s);
     pos = 0;
   }
-  mld_keccakf1600_xor_bytes(s, in, pos, inlen);
+  /* Safety: At this point, inlen < r, so the truncation to unsigned is safe. */
+  mld_keccakf1600_xor_bytes(s, in, pos, (unsigned)inlen);
 
-  return pos + inlen;
+  /* Safety: At this point, inlen < r and pos <= r so the truncation to unsigned
+   * is safe. */
+  return (unsigned)(pos + inlen);
 }
 
 /*************************************************
@@ -177,7 +180,8 @@ __contract__(
       mld_keccakf1600_permute(s);
       pos = 0;
     }
-    i = bytes_to_go < r - pos ? bytes_to_go : r - pos;
+    /* Safety: If bytes_to_go < r - pos, truncation to unsigned is safe. */
+    i = bytes_to_go < r - pos ? (unsigned)bytes_to_go : r - pos;
     mld_keccakf1600_extract_bytes(s, out + out_offset, pos, i);
     bytes_to_go -= i;
     pos += i;

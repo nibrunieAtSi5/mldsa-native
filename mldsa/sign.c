@@ -588,7 +588,8 @@ int crypto_sign_signature(uint8_t *sig, size_t *siglen, const uint8_t *m,
 
   /* Prepare pre = (0, ctxlen, ctx) */
   pre[0] = 0;
-  pre[1] = ctxlen;
+  /* Safety: Truncation is safe due to the check above. */
+  pre[1] = (uint8_t)ctxlen;
   for (i = 0; i < ctxlen; i++)
   __loop__(
     assigns(i, object_whole(pre))
@@ -789,7 +790,8 @@ int crypto_sign_verify(const uint8_t *sig, size_t siglen, const uint8_t *m,
   }
 
   pre[0] = 0;
-  pre[1] = ctxlen;
+  /* Safety: Truncation is safe due to the check above. */
+  pre[1] = (uint8_t)ctxlen;
   for (i = 0; i < ctxlen; i++)
   __loop__(
     invariant(i <= ctxlen)

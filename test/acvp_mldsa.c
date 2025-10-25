@@ -74,11 +74,11 @@ static unsigned char decode_hex_char(char hex)
   }
   else if (hex >= 'A' && hex <= 'F')
   {
-    return 10 + (unsigned char)(hex - 'A');
+    return (unsigned char)(10 + (unsigned char)(hex - 'A'));
   }
   else if (hex >= 'a' && hex <= 'f')
   {
-    return 10 + (unsigned char)(hex - 'a');
+    return (unsigned char)(10 + (unsigned char)(hex - 'a'));
   }
   else
   {
@@ -120,7 +120,7 @@ static int decode_hex(const char *prefix, unsigned char *out, size_t out_len,
       goto hex_usage;
     }
 
-    *out = (hex0 << 4) | hex1;
+    *out = ((hex0 << 4) | hex1) & 0XFF;
   }
 
   return 0;
@@ -250,11 +250,12 @@ static void acvp_mldsa_sigGen_AFT(const unsigned char *message, size_t mlen,
 {
   unsigned char sig[CRYPTO_BYTES];
   size_t siglen;
-
-  /* TODO: shouldn't this be moved to be in the internal function? */
   unsigned char pre[MAX_CTX_LENGTH + 2];
+
+  CHECK(ctxlen <= 255);
   pre[0] = 0;
-  pre[1] = ctxlen;
+  /* Safety: Truncation is safe due to the check above. */
+  pre[1] = (uint8_t)ctxlen;
   memcpy(pre + 2, context, ctxlen);
 
   CHECK(crypto_sign_signature_internal(sig, &siglen, message, mlen, pre,

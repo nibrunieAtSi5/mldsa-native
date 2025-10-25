@@ -78,7 +78,7 @@ unsigned int mld_poly_make_hint(mld_poly *h, const mld_poly *a0,
   )
   {
     const unsigned int hint_bit = mld_make_hint(a0->coeffs[i], a1->coeffs[i]);
-    h->coeffs[i] = hint_bit;
+    h->coeffs[i] = (int32_t)hint_bit;
     s += hint_bit;
   }
 
@@ -414,8 +414,8 @@ void mld_poly_uniform_gamma1(mld_poly *a, const uint8_t seed[MLDSA_CRHBYTES],
   mld_xof256_ctx state;
 
   mld_memcpy(extseed, seed, MLDSA_CRHBYTES);
-  extseed[MLDSA_CRHBYTES] = nonce & 0xFF;
-  extseed[MLDSA_CRHBYTES + 1] = nonce >> 8;
+  extseed[MLDSA_CRHBYTES] = (uint8_t)(nonce & 0xFF);
+  extseed[MLDSA_CRHBYTES + 1] = (uint8_t)(nonce >> 8);
 
   mld_xof256_init(&state);
   mld_xof256_absorb_once(&state, extseed, MLDSA_CRHBYTES + 2);
@@ -452,14 +452,14 @@ void mld_poly_uniform_gamma1_4x(mld_poly *r0, mld_poly *r1, mld_poly *r2,
   mld_memcpy(extseed[1], seed, MLDSA_CRHBYTES);
   mld_memcpy(extseed[2], seed, MLDSA_CRHBYTES);
   mld_memcpy(extseed[3], seed, MLDSA_CRHBYTES);
-  extseed[0][MLDSA_CRHBYTES] = nonce0 & 0xFF;
-  extseed[1][MLDSA_CRHBYTES] = nonce1 & 0xFF;
-  extseed[2][MLDSA_CRHBYTES] = nonce2 & 0xFF;
-  extseed[3][MLDSA_CRHBYTES] = nonce3 & 0xFF;
-  extseed[0][MLDSA_CRHBYTES + 1] = nonce0 >> 8;
-  extseed[1][MLDSA_CRHBYTES + 1] = nonce1 >> 8;
-  extseed[2][MLDSA_CRHBYTES + 1] = nonce2 >> 8;
-  extseed[3][MLDSA_CRHBYTES + 1] = nonce3 >> 8;
+  extseed[0][MLDSA_CRHBYTES] = (uint8_t)(nonce0 & 0xFF);
+  extseed[1][MLDSA_CRHBYTES] = (uint8_t)(nonce1 & 0xFF);
+  extseed[2][MLDSA_CRHBYTES] = (uint8_t)(nonce2 & 0xFF);
+  extseed[3][MLDSA_CRHBYTES] = (uint8_t)(nonce3 & 0xFF);
+  extseed[0][MLDSA_CRHBYTES + 1] = (uint8_t)(nonce0 >> 8);
+  extseed[1][MLDSA_CRHBYTES + 1] = (uint8_t)(nonce1 >> 8);
+  extseed[2][MLDSA_CRHBYTES + 1] = (uint8_t)(nonce2 >> 8);
+  extseed[3][MLDSA_CRHBYTES + 1] = (uint8_t)(nonce3 >> 8);
 
   mld_xof256_x4_init(&state);
   mld_xof256_x4_absorb(&state, extseed, MLDSA_CRHBYTES + 2);
@@ -574,28 +574,33 @@ void mld_polyeta_pack(uint8_t *r, const mld_poly *a)
   __loop__(
     invariant(i <= MLDSA_N/8))
   {
-    t[0] = MLDSA_ETA - a->coeffs[8 * i + 0];
-    t[1] = MLDSA_ETA - a->coeffs[8 * i + 1];
-    t[2] = MLDSA_ETA - a->coeffs[8 * i + 2];
-    t[3] = MLDSA_ETA - a->coeffs[8 * i + 3];
-    t[4] = MLDSA_ETA - a->coeffs[8 * i + 4];
-    t[5] = MLDSA_ETA - a->coeffs[8 * i + 5];
-    t[6] = MLDSA_ETA - a->coeffs[8 * i + 6];
-    t[7] = MLDSA_ETA - a->coeffs[8 * i + 7];
+    /* The casts are safe since we assume that the coefficients
+     * of a are <= MLDSA_ETA in absolute value. */
+    t[0] = (uint8_t)(MLDSA_ETA - a->coeffs[8 * i + 0]);
+    t[1] = (uint8_t)(MLDSA_ETA - a->coeffs[8 * i + 1]);
+    t[2] = (uint8_t)(MLDSA_ETA - a->coeffs[8 * i + 2]);
+    t[3] = (uint8_t)(MLDSA_ETA - a->coeffs[8 * i + 3]);
+    t[4] = (uint8_t)(MLDSA_ETA - a->coeffs[8 * i + 4]);
+    t[5] = (uint8_t)(MLDSA_ETA - a->coeffs[8 * i + 5]);
+    t[6] = (uint8_t)(MLDSA_ETA - a->coeffs[8 * i + 6]);
+    t[7] = (uint8_t)(MLDSA_ETA - a->coeffs[8 * i + 7]);
 
-    r[3 * i + 0] = ((t[0] >> 0) | (t[1] << 3) | (t[2] << 6)) & 0xFF;
+    r[3 * i + 0] = (uint8_t)(((t[0] >> 0) | (t[1] << 3) | (t[2] << 6)) & 0xFF);
     r[3 * i + 1] =
-        ((t[2] >> 2) | (t[3] << 1) | (t[4] << 4) | (t[5] << 7)) & 0xFF;
-    r[3 * i + 2] = ((t[5] >> 1) | (t[6] << 2) | (t[7] << 5)) & 0xFF;
+        (uint8_t)(((t[2] >> 2) | (t[3] << 1) | (t[4] << 4) | (t[5] << 7)) &
+                  0xFF);
+    r[3 * i + 2] = (uint8_t)(((t[5] >> 1) | (t[6] << 2) | (t[7] << 5)) & 0xFF);
   }
 #elif MLDSA_ETA == 4
   for (i = 0; i < MLDSA_N / 2; ++i)
   __loop__(
     invariant(i <= MLDSA_N/2))
   {
-    t[0] = MLDSA_ETA - a->coeffs[2 * i + 0];
-    t[1] = MLDSA_ETA - a->coeffs[2 * i + 1];
-    r[i] = t[0] | (t[1] << 4);
+    /* The casts are safe since we assume that the coefficients
+     * of a are <= MLDSA_ETA in absolute value. */
+    t[0] = (uint8_t)(MLDSA_ETA - a->coeffs[2 * i + 0]);
+    t[1] = (uint8_t)(MLDSA_ETA - a->coeffs[2 * i + 1]);
+    r[i] = (uint8_t)(t[0] | (t[1] << 4));
   }
 #else /* MLDSA_ETA == 4 */
 #error "Invalid value of MLDSA_ETA"
@@ -663,38 +668,40 @@ void mld_polyz_pack(uint8_t *r, const mld_poly *a)
   __loop__(
     invariant(i <= MLDSA_N/4))
   {
-    t[0] = MLDSA_GAMMA1 - a->coeffs[4 * i + 0];
-    t[1] = MLDSA_GAMMA1 - a->coeffs[4 * i + 1];
-    t[2] = MLDSA_GAMMA1 - a->coeffs[4 * i + 2];
-    t[3] = MLDSA_GAMMA1 - a->coeffs[4 * i + 3];
+    /* Safety: a->coeffs[i] <= MLDSA_GAMMA1, hence, these casts are safe. */
+    t[0] = (uint32_t)(MLDSA_GAMMA1 - a->coeffs[4 * i + 0]);
+    t[1] = (uint32_t)(MLDSA_GAMMA1 - a->coeffs[4 * i + 1]);
+    t[2] = (uint32_t)(MLDSA_GAMMA1 - a->coeffs[4 * i + 2]);
+    t[3] = (uint32_t)(MLDSA_GAMMA1 - a->coeffs[4 * i + 3]);
 
-    r[9 * i + 0] = (t[0]) & 0xFF;
-    r[9 * i + 1] = (t[0] >> 8) & 0xFF;
-    r[9 * i + 2] = (t[0] >> 16) & 0xFF;
-    r[9 * i + 2] |= (t[1] << 2) & 0xFF;
-    r[9 * i + 3] = (t[1] >> 6) & 0xFF;
-    r[9 * i + 4] = (t[1] >> 14) & 0xFF;
-    r[9 * i + 4] |= (t[2] << 4) & 0xFF;
-    r[9 * i + 5] = (t[2] >> 4) & 0xFF;
-    r[9 * i + 6] = (t[2] >> 12) & 0xFF;
-    r[9 * i + 6] |= (t[3] << 6) & 0xFF;
-    r[9 * i + 7] = (t[3] >> 2) & 0xFF;
-    r[9 * i + 8] = (t[3] >> 10) & 0xFF;
+    r[9 * i + 0] = (uint8_t)((t[0]) & 0xFF);
+    r[9 * i + 1] = (uint8_t)((t[0] >> 8) & 0xFF);
+    r[9 * i + 2] = (uint8_t)((t[0] >> 16) & 0xFF);
+    r[9 * i + 2] |= (uint8_t)((t[1] << 2) & 0xFF);
+    r[9 * i + 3] = (uint8_t)((t[1] >> 6) & 0xFF);
+    r[9 * i + 4] = (uint8_t)((t[1] >> 14) & 0xFF);
+    r[9 * i + 4] |= (uint8_t)((t[2] << 4) & 0xFF);
+    r[9 * i + 5] = (uint8_t)((t[2] >> 4) & 0xFF);
+    r[9 * i + 6] = (uint8_t)((t[2] >> 12) & 0xFF);
+    r[9 * i + 6] |= (uint8_t)((t[3] << 6) & 0xFF);
+    r[9 * i + 7] = (uint8_t)((t[3] >> 2) & 0xFF);
+    r[9 * i + 8] = (uint8_t)((t[3] >> 10) & 0xFF);
   }
 #else  /* MLD_CONFIG_PARAMETER_SET == 44 */
   for (i = 0; i < MLDSA_N / 2; ++i)
   __loop__(
     invariant(i <= MLDSA_N/2))
   {
-    t[0] = MLDSA_GAMMA1 - a->coeffs[2 * i + 0];
-    t[1] = MLDSA_GAMMA1 - a->coeffs[2 * i + 1];
+    /* Safety: a->coeffs[i] <= MLDSA_GAMMA1, hence, these casts are safe. */
+    t[0] = (uint32_t)(MLDSA_GAMMA1 - a->coeffs[2 * i + 0]);
+    t[1] = (uint32_t)(MLDSA_GAMMA1 - a->coeffs[2 * i + 1]);
 
-    r[5 * i + 0] = (t[0]) & 0xFF;
-    r[5 * i + 1] = (t[0] >> 8) & 0xFF;
-    r[5 * i + 2] = (t[0] >> 16) & 0xFF;
-    r[5 * i + 2] |= (t[1] << 4) & 0xFF;
-    r[5 * i + 3] = (t[1] >> 4) & 0xFF;
-    r[5 * i + 4] = (t[1] >> 12) & 0xFF;
+    r[5 * i + 0] = (uint8_t)((t[0]) & 0xFF);
+    r[5 * i + 1] = (uint8_t)((t[0] >> 8) & 0xFF);
+    r[5 * i + 2] = (uint8_t)((t[0] >> 16) & 0xFF);
+    r[5 * i + 2] |= (uint8_t)((t[1] << 4) & 0xFF);
+    r[5 * i + 3] = (uint8_t)((t[1] >> 4) & 0xFF);
+    r[5 * i + 4] = (uint8_t)((t[1] >> 12) & 0xFF);
   }
 #endif /* MLD_CONFIG_PARAMETER_SET != 44 */
 }
@@ -717,23 +724,23 @@ void mld_polyz_unpack(mld_poly *r, const uint8_t *a)
     invariant(array_bound(r->coeffs, 0, i*4, -(MLDSA_GAMMA1 - 1), MLDSA_GAMMA1 + 1)))
   {
     r->coeffs[4 * i + 0] = a[9 * i + 0];
-    r->coeffs[4 * i + 0] |= (uint32_t)a[9 * i + 1] << 8;
-    r->coeffs[4 * i + 0] |= (uint32_t)a[9 * i + 2] << 16;
+    r->coeffs[4 * i + 0] |= (int32_t)a[9 * i + 1] << 8;
+    r->coeffs[4 * i + 0] |= (int32_t)a[9 * i + 2] << 16;
     r->coeffs[4 * i + 0] &= 0x3FFFF;
 
     r->coeffs[4 * i + 1] = a[9 * i + 2] >> 2;
-    r->coeffs[4 * i + 1] |= (uint32_t)a[9 * i + 3] << 6;
-    r->coeffs[4 * i + 1] |= (uint32_t)a[9 * i + 4] << 14;
+    r->coeffs[4 * i + 1] |= (int32_t)a[9 * i + 3] << 6;
+    r->coeffs[4 * i + 1] |= (int32_t)a[9 * i + 4] << 14;
     r->coeffs[4 * i + 1] &= 0x3FFFF;
 
     r->coeffs[4 * i + 2] = a[9 * i + 4] >> 4;
-    r->coeffs[4 * i + 2] |= (uint32_t)a[9 * i + 5] << 4;
-    r->coeffs[4 * i + 2] |= (uint32_t)a[9 * i + 6] << 12;
+    r->coeffs[4 * i + 2] |= (int32_t)a[9 * i + 5] << 4;
+    r->coeffs[4 * i + 2] |= (int32_t)a[9 * i + 6] << 12;
     r->coeffs[4 * i + 2] &= 0x3FFFF;
 
     r->coeffs[4 * i + 3] = a[9 * i + 6] >> 6;
-    r->coeffs[4 * i + 3] |= (uint32_t)a[9 * i + 7] << 2;
-    r->coeffs[4 * i + 3] |= (uint32_t)a[9 * i + 8] << 10;
+    r->coeffs[4 * i + 3] |= (int32_t)a[9 * i + 7] << 2;
+    r->coeffs[4 * i + 3] |= (int32_t)a[9 * i + 8] << 10;
     r->coeffs[4 * i + 3] &= 0x3FFFF;
 
     r->coeffs[4 * i + 0] = MLDSA_GAMMA1 - r->coeffs[4 * i + 0];
@@ -752,13 +759,13 @@ void mld_polyz_unpack(mld_poly *r, const uint8_t *a)
     invariant(array_bound(r->coeffs, 0, i*2, -(MLDSA_GAMMA1 - 1), MLDSA_GAMMA1 + 1)))
   {
     r->coeffs[2 * i + 0] = a[5 * i + 0];
-    r->coeffs[2 * i + 0] |= (uint32_t)a[5 * i + 1] << 8;
-    r->coeffs[2 * i + 0] |= (uint32_t)a[5 * i + 2] << 16;
+    r->coeffs[2 * i + 0] |= (int32_t)a[5 * i + 1] << 8;
+    r->coeffs[2 * i + 0] |= (int32_t)a[5 * i + 2] << 16;
     r->coeffs[2 * i + 0] &= 0xFFFFF;
 
     r->coeffs[2 * i + 1] = a[5 * i + 2] >> 4;
-    r->coeffs[2 * i + 1] |= (uint32_t)a[5 * i + 3] << 4;
-    r->coeffs[2 * i + 1] |= (uint32_t)a[5 * i + 4] << 12;
+    r->coeffs[2 * i + 1] |= (int32_t)a[5 * i + 3] << 4;
+    r->coeffs[2 * i + 1] |= (int32_t)a[5 * i + 4] << 12;
     /* r->coeffs[2*i+1] &= 0xFFFFF; */ /* No effect, since we're anyway at 20
                                           bits */
 
@@ -785,19 +792,20 @@ void mld_polyw1_pack(uint8_t r[MLDSA_POLYW1_PACKEDBYTES], const mld_poly *a)
   __loop__(
     invariant(i <= MLDSA_N/4))
   {
-    r[3 * i + 0] = (a->coeffs[4 * i + 0]) & 0xFF;
-    r[3 * i + 0] |= (a->coeffs[4 * i + 1] << 6) & 0xFF;
-    r[3 * i + 1] = (a->coeffs[4 * i + 1] >> 2) & 0xFF;
-    r[3 * i + 1] |= (a->coeffs[4 * i + 2] << 4) & 0xFF;
-    r[3 * i + 2] = (a->coeffs[4 * i + 2] >> 4) & 0xFF;
-    r[3 * i + 2] |= (a->coeffs[4 * i + 3] << 2) & 0xFF;
+    r[3 * i + 0] = (uint8_t)((a->coeffs[4 * i + 0]) & 0xFF);
+    r[3 * i + 0] |= (uint8_t)((a->coeffs[4 * i + 1] << 6) & 0xFF);
+    r[3 * i + 1] = (uint8_t)((a->coeffs[4 * i + 1] >> 2) & 0xFF);
+    r[3 * i + 1] |= (uint8_t)((a->coeffs[4 * i + 2] << 4) & 0xFF);
+    r[3 * i + 2] = (uint8_t)((a->coeffs[4 * i + 2] >> 4) & 0xFF);
+    r[3 * i + 2] |= (uint8_t)((a->coeffs[4 * i + 3] << 2) & 0xFF);
   }
 #else  /* MLD_CONFIG_PARAMETER_SET == 44 */
   for (i = 0; i < MLDSA_N / 2; ++i)
   __loop__(
     invariant(i <= MLDSA_N/2))
   {
-    r[i] = a->coeffs[2 * i + 0] | (a->coeffs[2 * i + 1] << 4);
+    r[i] =
+        (uint8_t)((a->coeffs[2 * i + 0] | (a->coeffs[2 * i + 1] << 4)) & 0xFF);
   }
 #endif /* MLD_CONFIG_PARAMETER_SET != 44 */
 }

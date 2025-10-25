@@ -41,7 +41,7 @@ uint32_t mld_poly_chknorm_avx2(const __m256i *a, int32_t B)
     t = _mm256_or_si256(t, f);
   }
 
-  return _mm256_testz_si256(t, t) - 1;
+  return (uint32_t)(_mm256_testz_si256(t, t) - 1);
 }
 
 #else /* MLD_ARITH_BACKEND_X86_64_DEFAULT && !MLD_CONFIG_MULTILEVEL_NO_SHARED \

@@ -152,13 +152,13 @@ void mld_pack_sig(uint8_t sig[CRYPTO_BYTES], const uint8_t c[MLDSA_CTILDEBYTES],
         /* The enclosing if condition AND the loop invariant infer  */
         /* that k < MLDSA_OMEGA, so writing to sig[k] is safe and k */
         /* can be incremented.                                      */
-        sig[k++] = j;
+        sig[k++] = (uint8_t)j;
       }
     }
     /* Having recorded all the hints for this polynomial, also   */
     /* record the running tally into the correct "slot" for that */
     /* coefficient in the final K bytes                          */
-    sig[MLDSA_OMEGA + i] = k;
+    sig[MLDSA_OMEGA + i] = (uint8_t)k;
   }
 }
 

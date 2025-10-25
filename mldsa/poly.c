@@ -303,7 +303,7 @@ __contract__(
 
     if (t < MLDSA_Q)
     {
-      a[ctr++] = t;
+      a[ctr++] = (int32_t)t;
     }
   }
 
@@ -427,14 +427,17 @@ void mld_polyt1_pack(uint8_t *r, const mld_poly *a)
   __loop__(
     invariant(i <= MLDSA_N/4))
   {
-    r[5 * i + 0] = (a->coeffs[4 * i + 0] >> 0) & 0xFF;
+    r[5 * i + 0] = (uint8_t)((a->coeffs[4 * i + 0] >> 0) & 0xFF);
     r[5 * i + 1] =
-        ((a->coeffs[4 * i + 0] >> 8) | (a->coeffs[4 * i + 1] << 2)) & 0xFF;
+        (uint8_t)(((a->coeffs[4 * i + 0] >> 8) | (a->coeffs[4 * i + 1] << 2)) &
+                  0xFF);
     r[5 * i + 2] =
-        ((a->coeffs[4 * i + 1] >> 6) | (a->coeffs[4 * i + 2] << 4)) & 0xFF;
+        (uint8_t)(((a->coeffs[4 * i + 1] >> 6) | (a->coeffs[4 * i + 2] << 4)) &
+                  0xFF);
     r[5 * i + 3] =
-        ((a->coeffs[4 * i + 2] >> 4) | (a->coeffs[4 * i + 3] << 6)) & 0xFF;
-    r[5 * i + 4] = (a->coeffs[4 * i + 3] >> 2) & 0xFF;
+        (uint8_t)(((a->coeffs[4 * i + 2] >> 4) | (a->coeffs[4 * i + 3] << 6)) &
+                  0xFF);
+    r[5 * i + 4] = (uint8_t)((a->coeffs[4 * i + 3] >> 2) & 0xFF);
   }
 }
 
@@ -449,13 +452,13 @@ void mld_polyt1_unpack(mld_poly *r, const uint8_t *a)
     invariant(array_bound(r->coeffs, 0, i*4, 0, 1 << 10)))
   {
     r->coeffs[4 * i + 0] =
-        ((a[5 * i + 0] >> 0) | ((uint32_t)a[5 * i + 1] << 8)) & 0x3FF;
+        ((a[5 * i + 0] >> 0) | ((int32_t)a[5 * i + 1] << 8)) & 0x3FF;
     r->coeffs[4 * i + 1] =
-        ((a[5 * i + 1] >> 2) | ((uint32_t)a[5 * i + 2] << 6)) & 0x3FF;
+        ((a[5 * i + 1] >> 2) | ((int32_t)a[5 * i + 2] << 6)) & 0x3FF;
     r->coeffs[4 * i + 2] =
-        ((a[5 * i + 2] >> 4) | ((uint32_t)a[5 * i + 3] << 4)) & 0x3FF;
+        ((a[5 * i + 2] >> 4) | ((int32_t)a[5 * i + 3] << 4)) & 0x3FF;
     r->coeffs[4 * i + 3] =
-        ((a[5 * i + 3] >> 6) | ((uint32_t)a[5 * i + 4] << 2)) & 0x3FF;
+        ((a[5 * i + 3] >> 6) | ((int32_t)a[5 * i + 4] << 2)) & 0x3FF;
   }
 
   mld_assert_bound(r->coeffs, MLDSA_N, 0, 1 << 10);
@@ -474,35 +477,37 @@ void mld_polyt0_pack(uint8_t *r, const mld_poly *a)
   __loop__(
     invariant(i <= MLDSA_N/8))
   {
-    t[0] = (1 << (MLDSA_D - 1)) - a->coeffs[8 * i + 0];
-    t[1] = (1 << (MLDSA_D - 1)) - a->coeffs[8 * i + 1];
-    t[2] = (1 << (MLDSA_D - 1)) - a->coeffs[8 * i + 2];
-    t[3] = (1 << (MLDSA_D - 1)) - a->coeffs[8 * i + 3];
-    t[4] = (1 << (MLDSA_D - 1)) - a->coeffs[8 * i + 4];
-    t[5] = (1 << (MLDSA_D - 1)) - a->coeffs[8 * i + 5];
-    t[6] = (1 << (MLDSA_D - 1)) - a->coeffs[8 * i + 6];
-    t[7] = (1 << (MLDSA_D - 1)) - a->coeffs[8 * i + 7];
+    /* Safety: a->coeffs[i] <= (1 << (MLDSA_D - 1) as they are output of
+     * power2round, hence, these casts are safe. */
+    t[0] = (uint32_t)((1 << (MLDSA_D - 1)) - a->coeffs[8 * i + 0]);
+    t[1] = (uint32_t)((1 << (MLDSA_D - 1)) - a->coeffs[8 * i + 1]);
+    t[2] = (uint32_t)((1 << (MLDSA_D - 1)) - a->coeffs[8 * i + 2]);
+    t[3] = (uint32_t)((1 << (MLDSA_D - 1)) - a->coeffs[8 * i + 3]);
+    t[4] = (uint32_t)((1 << (MLDSA_D - 1)) - a->coeffs[8 * i + 4]);
+    t[5] = (uint32_t)((1 << (MLDSA_D - 1)) - a->coeffs[8 * i + 5]);
+    t[6] = (uint32_t)((1 << (MLDSA_D - 1)) - a->coeffs[8 * i + 6]);
+    t[7] = (uint32_t)((1 << (MLDSA_D - 1)) - a->coeffs[8 * i + 7]);
 
-    r[13 * i + 0] = (t[0]) & 0xFF;
-    r[13 * i + 1] = (t[0] >> 8) & 0xFF;
-    r[13 * i + 1] |= (t[1] << 5) & 0xFF;
-    r[13 * i + 2] = (t[1] >> 3) & 0xFF;
-    r[13 * i + 3] = (t[1] >> 11) & 0xFF;
-    r[13 * i + 3] |= (t[2] << 2) & 0xFF;
-    r[13 * i + 4] = (t[2] >> 6) & 0xFF;
-    r[13 * i + 4] |= (t[3] << 7) & 0xFF;
-    r[13 * i + 5] = (t[3] >> 1) & 0xFF;
-    r[13 * i + 6] = (t[3] >> 9) & 0xFF;
-    r[13 * i + 6] |= (t[4] << 4) & 0xFF;
-    r[13 * i + 7] = (t[4] >> 4) & 0xFF;
-    r[13 * i + 8] = (t[4] >> 12) & 0xFF;
-    r[13 * i + 8] |= (t[5] << 1) & 0xFF;
-    r[13 * i + 9] = (t[5] >> 7) & 0xFF;
-    r[13 * i + 9] |= (t[6] << 6) & 0xFF;
-    r[13 * i + 10] = (t[6] >> 2) & 0xFF;
-    r[13 * i + 11] = (t[6] >> 10) & 0xFF;
-    r[13 * i + 11] |= (t[7] << 3) & 0xFF;
-    r[13 * i + 12] = (t[7] >> 5) & 0xFF;
+    r[13 * i + 0] = (uint8_t)((t[0]) & 0xFF);
+    r[13 * i + 1] = (uint8_t)((t[0] >> 8) & 0xFF);
+    r[13 * i + 1] |= (uint8_t)((t[1] << 5) & 0xFF);
+    r[13 * i + 2] = (uint8_t)((t[1] >> 3) & 0xFF);
+    r[13 * i + 3] = (uint8_t)((t[1] >> 11) & 0xFF);
+    r[13 * i + 3] |= (uint8_t)((t[2] << 2) & 0xFF);
+    r[13 * i + 4] = (uint8_t)((t[2] >> 6) & 0xFF);
+    r[13 * i + 4] |= (uint8_t)((t[3] << 7) & 0xFF);
+    r[13 * i + 5] = (uint8_t)((t[3] >> 1) & 0xFF);
+    r[13 * i + 6] = (uint8_t)((t[3] >> 9) & 0xFF);
+    r[13 * i + 6] |= (uint8_t)((t[4] << 4) & 0xFF);
+    r[13 * i + 7] = (uint8_t)((t[4] >> 4) & 0xFF);
+    r[13 * i + 8] = (uint8_t)((t[4] >> 12) & 0xFF);
+    r[13 * i + 8] |= (uint8_t)((t[5] << 1) & 0xFF);
+    r[13 * i + 9] = (uint8_t)((t[5] >> 7) & 0xFF);
+    r[13 * i + 9] |= (uint8_t)((t[6] << 6) & 0xFF);
+    r[13 * i + 10] = (uint8_t)((t[6] >> 2) & 0xFF);
+    r[13 * i + 11] = (uint8_t)((t[6] >> 10) & 0xFF);
+    r[13 * i + 11] |= (uint8_t)((t[7] << 3) & 0xFF);
+    r[13 * i + 12] = (uint8_t)((t[7] >> 5) & 0xFF);
   }
 }
 
@@ -517,39 +522,39 @@ void mld_polyt0_unpack(mld_poly *r, const uint8_t *a)
     invariant(array_bound(r->coeffs, 0, i*8, -(1<<(MLDSA_D-1)) + 1, (1<<(MLDSA_D-1)) + 1)))
   {
     r->coeffs[8 * i + 0] = a[13 * i + 0];
-    r->coeffs[8 * i + 0] |= (uint32_t)a[13 * i + 1] << 8;
+    r->coeffs[8 * i + 0] |= (int32_t)a[13 * i + 1] << 8;
     r->coeffs[8 * i + 0] &= 0x1FFF;
 
     r->coeffs[8 * i + 1] = a[13 * i + 1] >> 5;
-    r->coeffs[8 * i + 1] |= (uint32_t)a[13 * i + 2] << 3;
-    r->coeffs[8 * i + 1] |= (uint32_t)a[13 * i + 3] << 11;
+    r->coeffs[8 * i + 1] |= (int32_t)a[13 * i + 2] << 3;
+    r->coeffs[8 * i + 1] |= (int32_t)a[13 * i + 3] << 11;
     r->coeffs[8 * i + 1] &= 0x1FFF;
 
     r->coeffs[8 * i + 2] = a[13 * i + 3] >> 2;
-    r->coeffs[8 * i + 2] |= (uint32_t)a[13 * i + 4] << 6;
+    r->coeffs[8 * i + 2] |= (int32_t)a[13 * i + 4] << 6;
     r->coeffs[8 * i + 2] &= 0x1FFF;
 
     r->coeffs[8 * i + 3] = a[13 * i + 4] >> 7;
-    r->coeffs[8 * i + 3] |= (uint32_t)a[13 * i + 5] << 1;
-    r->coeffs[8 * i + 3] |= (uint32_t)a[13 * i + 6] << 9;
+    r->coeffs[8 * i + 3] |= (int32_t)a[13 * i + 5] << 1;
+    r->coeffs[8 * i + 3] |= (int32_t)a[13 * i + 6] << 9;
     r->coeffs[8 * i + 3] &= 0x1FFF;
 
     r->coeffs[8 * i + 4] = a[13 * i + 6] >> 4;
-    r->coeffs[8 * i + 4] |= (uint32_t)a[13 * i + 7] << 4;
-    r->coeffs[8 * i + 4] |= (uint32_t)a[13 * i + 8] << 12;
+    r->coeffs[8 * i + 4] |= (int32_t)a[13 * i + 7] << 4;
+    r->coeffs[8 * i + 4] |= (int32_t)a[13 * i + 8] << 12;
     r->coeffs[8 * i + 4] &= 0x1FFF;
 
     r->coeffs[8 * i + 5] = a[13 * i + 8] >> 1;
-    r->coeffs[8 * i + 5] |= (uint32_t)a[13 * i + 9] << 7;
+    r->coeffs[8 * i + 5] |= (int32_t)a[13 * i + 9] << 7;
     r->coeffs[8 * i + 5] &= 0x1FFF;
 
     r->coeffs[8 * i + 6] = a[13 * i + 9] >> 6;
-    r->coeffs[8 * i + 6] |= (uint32_t)a[13 * i + 10] << 2;
-    r->coeffs[8 * i + 6] |= (uint32_t)a[13 * i + 11] << 10;
+    r->coeffs[8 * i + 6] |= (int32_t)a[13 * i + 10] << 2;
+    r->coeffs[8 * i + 6] |= (int32_t)a[13 * i + 11] << 10;
     r->coeffs[8 * i + 6] &= 0x1FFF;
 
     r->coeffs[8 * i + 7] = a[13 * i + 11] >> 3;
-    r->coeffs[8 * i + 7] |= (uint32_t)a[13 * i + 12] << 5;
+    r->coeffs[8 * i + 7] |= (int32_t)a[13 * i + 12] << 5;
     r->coeffs[8 * i + 7] &= 0x1FFF;
 
     r->coeffs[8 * i + 0] = (1 << (MLDSA_D - 1)) - r->coeffs[8 * i + 0];

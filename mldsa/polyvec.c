@@ -73,8 +73,8 @@ void mld_polyvec_matrix_expand(mld_polyvecl mat[MLDSA_K],
       invariant(j <= 4)
     )
     {
-      uint8_t x = (i + j) / MLDSA_L;
-      uint8_t y = (i + j) % MLDSA_L;
+      uint8_t x = (uint8_t)((i + j) / MLDSA_L);
+      uint8_t y = (uint8_t)((i + j) % MLDSA_L);
 
       seed_ext[j][MLDSA_SEEDBYTES + 0] = y;
       seed_ext[j][MLDSA_SEEDBYTES + 1] = x;
@@ -100,8 +100,8 @@ void mld_polyvec_matrix_expand(mld_polyvecl mat[MLDSA_K],
       array_bound(mat[k2].vec[l2].coeffs, 0, MLDSA_N, 0, MLDSA_Q))))
   )
   {
-    uint8_t x = i / MLDSA_L;
-    uint8_t y = i % MLDSA_L;
+    uint8_t x = (uint8_t)(i / MLDSA_L);
+    uint8_t y = (uint8_t)(i % MLDSA_L);
     mld_poly *this_poly = &mat[i / MLDSA_L].vec[i % MLDSA_L];
 
     seed_ext[0][MLDSA_SEEDBYTES + 0] = y;
@@ -157,20 +157,27 @@ void mld_polyvecl_uniform_gamma1(mld_polyvecl *v,
                                  const uint8_t seed[MLDSA_CRHBYTES],
                                  uint16_t nonce)
 {
-  nonce = MLDSA_L * nonce;
+  /* Safety: nonce is at most ((UINT16_MAX - MLDSA_L) / MLDSA_L), and, hence,
+   * this cast is safe. See NONCE_UB comment in sign.c. */
+  nonce = (uint16_t)(MLDSA_L * nonce);
+  /* Now, nonce <= UINT16_MAX - (MLDSA_L - 1), so the casts below are safe. */
 #if MLDSA_L == 4
   mld_poly_uniform_gamma1_4x(&v->vec[0], &v->vec[1], &v->vec[2], &v->vec[3],
-                             seed, nonce, nonce + 1, nonce + 2, nonce + 3);
+                             seed, nonce, (uint16_t)(nonce + 1),
+                             (uint16_t)(nonce + 2), (uint16_t)(nonce + 3));
 #elif MLDSA_L == 5
   mld_poly_uniform_gamma1_4x(&v->vec[0], &v->vec[1], &v->vec[2], &v->vec[3],
-                             seed, nonce, nonce + 1, nonce + 2, nonce + 3);
-  mld_poly_uniform_gamma1(&v->vec[4], seed, nonce + 4);
+                             seed, nonce, (uint16_t)(nonce + 1),
+                             (uint16_t)(nonce + 2), (uint16_t)(nonce + 3));
+  mld_poly_uniform_gamma1(&v->vec[4], seed, (uint16_t)(nonce + 4));
 #elif MLDSA_L == 7
   mld_poly_uniform_gamma1_4x(&v->vec[0], &v->vec[1], &v->vec[2],
                              &v->vec[3 /* irrelevant */], seed, nonce,
-                             nonce + 1, nonce + 2, 0xFF /* irrelevant */);
+                             (uint16_t)(nonce + 1), (uint16_t)(nonce + 2),
+                             0xFF /* irrelevant */);
   mld_poly_uniform_gamma1_4x(&v->vec[3], &v->vec[4], &v->vec[5], &v->vec[6],
-                             seed, nonce + 3, nonce + 4, nonce + 5, nonce + 6);
+                             seed, (uint16_t)(nonce + 3), (uint16_t)(nonce + 4),
+                             (uint16_t)(nonce + 5), (uint16_t)(nonce + 6));
 #endif /* MLDSA_L == 7 */
 
   mld_assert_bound_2d(v->vec, MLDSA_L, MLDSA_N, -(MLDSA_GAMMA1 - 1),

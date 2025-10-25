@@ -141,11 +141,11 @@ __contract__(
  * Description: Correct high bits according to hint.
  *
  * Arguments:   - int32_t a: input element
- *              - unsigned int hint: hint bit
+ *              - int32_t hint: hint bit
  *
  * Returns corrected high bits.
  **************************************************/
-static MLD_INLINE int32_t mld_use_hint(int32_t a, unsigned int hint)
+static MLD_INLINE int32_t mld_use_hint(int32_t a, int32_t hint)
 __contract__(
   requires(hint >= 0 && hint <= 1)
   requires(a >= 0 && a < MLDSA_Q)
