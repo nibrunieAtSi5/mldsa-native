@@ -72,6 +72,9 @@ source code and documentation.
   - Matthias J. Kannwischer
 * URL: https://eprint.iacr.org/2022/1243
 * Referenced from:
+  - [dev/fips202/aarch64/auto.h](dev/fips202/aarch64/auto.h)
+  - [dev/fips202/aarch64/src/keccak_f1600_x1_v84a_asm.S](dev/fips202/aarch64/src/keccak_f1600_x1_v84a_asm.S)
+  - [dev/fips202/aarch64/src/keccak_f1600_x2_v84a_asm.S](dev/fips202/aarch64/src/keccak_f1600_x2_v84a_asm.S)
   - [mldsa/fips202/native/aarch64/auto.h](mldsa/fips202/native/aarch64/auto.h)
   - [mldsa/fips202/native/aarch64/src/keccak_f1600_x1_v84a_asm.S](mldsa/fips202/native/aarch64/src/keccak_f1600_x1_v84a_asm.S)
   - [mldsa/fips202/native/aarch64/src/keccak_f1600_x2_v84a_asm.S](mldsa/fips202/native/aarch64/src/keccak_f1600_x2_v84a_asm.S)
@@ -145,6 +148,27 @@ source code and documentation.
   - Damien Stehlé
 * URL: https://github.com/pq-crystals/dilithium/tree/master/avx2
 * Referenced from:
+  - [dev/x86_64/src/align.h](dev/x86_64/src/align.h)
+  - [dev/x86_64/src/consts.c](dev/x86_64/src/consts.c)
+  - [dev/x86_64/src/consts.h](dev/x86_64/src/consts.h)
+  - [dev/x86_64/src/intt.S](dev/x86_64/src/intt.S)
+  - [dev/x86_64/src/ntt.S](dev/x86_64/src/ntt.S)
+  - [dev/x86_64/src/nttunpack.S](dev/x86_64/src/nttunpack.S)
+  - [dev/x86_64/src/pointwise.S](dev/x86_64/src/pointwise.S)
+  - [dev/x86_64/src/pointwise_acc_l4.S](dev/x86_64/src/pointwise_acc_l4.S)
+  - [dev/x86_64/src/pointwise_acc_l5.S](dev/x86_64/src/pointwise_acc_l5.S)
+  - [dev/x86_64/src/pointwise_acc_l7.S](dev/x86_64/src/pointwise_acc_l7.S)
+  - [dev/x86_64/src/poly_caddq_avx2.c](dev/x86_64/src/poly_caddq_avx2.c)
+  - [dev/x86_64/src/poly_chknorm_avx2.c](dev/x86_64/src/poly_chknorm_avx2.c)
+  - [dev/x86_64/src/poly_decompose_32_avx2.c](dev/x86_64/src/poly_decompose_32_avx2.c)
+  - [dev/x86_64/src/poly_decompose_88_avx2.c](dev/x86_64/src/poly_decompose_88_avx2.c)
+  - [dev/x86_64/src/poly_use_hint_32_avx2.c](dev/x86_64/src/poly_use_hint_32_avx2.c)
+  - [dev/x86_64/src/poly_use_hint_88_avx2.c](dev/x86_64/src/poly_use_hint_88_avx2.c)
+  - [dev/x86_64/src/polyz_unpack_17_avx2.c](dev/x86_64/src/polyz_unpack_17_avx2.c)
+  - [dev/x86_64/src/polyz_unpack_19_avx2.c](dev/x86_64/src/polyz_unpack_19_avx2.c)
+  - [dev/x86_64/src/rej_uniform_avx2.c](dev/x86_64/src/rej_uniform_avx2.c)
+  - [dev/x86_64/src/rej_uniform_eta2_avx2.c](dev/x86_64/src/rej_uniform_eta2_avx2.c)
+  - [dev/x86_64/src/rej_uniform_eta4_avx2.c](dev/x86_64/src/rej_uniform_eta4_avx2.c)
   - [mldsa/native/x86_64/src/align.h](mldsa/native/x86_64/src/align.h)
   - [mldsa/native/x86_64/src/consts.c](mldsa/native/x86_64/src/consts.c)
   - [mldsa/native/x86_64/src/consts.h](mldsa/native/x86_64/src/consts.h)

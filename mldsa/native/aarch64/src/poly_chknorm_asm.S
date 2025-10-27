@@ -6,57 +6,42 @@
 
 #if defined(MLD_ARITH_BACKEND_AARCH64) && !defined(MLD_CONFIG_MULTILEVEL_NO_SHARED)
 
-.macro chknorm a
-        abs \a\().4s, \a\().4s
-        cmge \a\().4s, \a\().4s, bound.4s
-        orr flags.16b, flags.16b, \a\().16b
-.endm
+/*
+ * WARNING: This file is auto-derived from the mldsa-native source file
+ *   dev/aarch64_clean/src/poly_chknorm_asm.S using scripts/simpasm. Do not modify it directly.
+ */
 
-        /* Parameters */
-        a_ptr           .req x0     // Input polynomial
-        B               .req w1     // Input norm bound
-
-        count           .req x2
-
-        /* Constant register assignments */
-        bound           .req v20
-        flags           .req v21
 
 .text
-.global MLD_ASM_NAMESPACE(poly_chknorm_asm)
 .balign 4
+.global MLD_ASM_NAMESPACE(poly_chknorm_asm)
 MLD_ASM_FN_SYMBOL(poly_chknorm_asm)
-        // Load constants
-        dup bound.4s, B
 
-        movi flags.4s, 0
-
-        mov count, #(64/4)
+        dup	v20.4s, w1
+        movi	v21.4s, #0x0
+        mov	x2, #0x10               // =16
 
 poly_chknorm_loop:
-        ldr q1, [a_ptr, #1*16]
-        ldr q2, [a_ptr, #2*16]
-        ldr q3, [a_ptr, #3*16]
-        ldr q0, [a_ptr], #4*16
-
-        chknorm v1
-        chknorm v2
-        chknorm v3
-        chknorm v0
-
-        subs count, count, #1
-        bne poly_chknorm_loop
-
-        // Return 0xffffffff if any of the 4 lanes is 0xffffffff
-        umaxv s21, flags.4s
-        fmov w0, s21
-
+        ldr	q1, [x0, #0x10]
+        ldr	q2, [x0, #0x20]
+        ldr	q3, [x0, #0x30]
+        ldr	q0, [x0], #0x40
+        abs	v1.4s, v1.4s
+        cmge	v1.4s, v1.4s, v20.4s
+        orr	v21.16b, v21.16b, v1.16b
+        abs	v2.4s, v2.4s
+        cmge	v2.4s, v2.4s, v20.4s
+        orr	v21.16b, v21.16b, v2.16b
+        abs	v3.4s, v3.4s
+        cmge	v3.4s, v3.4s, v20.4s
+        orr	v21.16b, v21.16b, v3.16b
+        abs	v0.4s, v0.4s
+        cmge	v0.4s, v0.4s, v20.4s
+        orr	v21.16b, v21.16b, v0.16b
+        subs	x2, x2, #0x1
+        b.ne	poly_chknorm_loop
+        umaxv	s21, v21.4s
+        fmov	w0, s21
         ret
-
-        .unreq a_ptr
-        .unreq B
-        .unreq count
-        .unreq bound
-        .unreq flags
 
 #endif /* MLD_ARITH_BACKEND_AARCH64 && !MLD_CONFIG_MULTILEVEL_NO_SHARED */

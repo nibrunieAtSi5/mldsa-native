@@ -26,280 +26,269 @@
 #include "../../../common.h"
 #if defined(MLD_ARITH_BACKEND_AARCH64)
 
-.macro mulmodq dst, src, const, idx0, idx1
-        sqrdmulh t2.4s,      \src\().4s, \const\().s[\idx1\()]
-        mul      \dst\().4s, \src\().4s, \const\().s[\idx0\()]
-        mls      \dst\().4s, t2.4s,      consts.s[0]
-.endm
+/*
+ * WARNING: This file is auto-derived from the mldsa-native source file
+ *   dev/aarch64_clean/src/ntt.S using scripts/simpasm. Do not modify it directly.
+ */
 
-.macro mulmod dst, src, const, const_twisted
-        sqrdmulh t2.4s,   \src\().4s, \const_twisted\().4s
-        mul      \dst\().4s, \src\().4s, \const\().4s
-        mls      \dst\().4s, t2.4s,   consts.s[0]
-.endm
-
-.macro ct_butterfly a, b, root, idx0, idx1
-        mulmodq  tmp, \b, \root, \idx0, \idx1
-        sub     \b\().4s,    \a\().4s, tmp.4s
-        add     \a\().4s,    \a\().4s, tmp.4s
-.endm
-
-.macro ct_butterfly_v a, b, root, root_twisted
-        mulmod  tmp, \b, \root, \root_twisted
-        sub    \b\().4s,    \a\().4s, tmp.4s
-        add    \a\().4s,    \a\().4s, tmp.4s
-.endm
-
-.macro load_roots_123
-        ldr q_root0, [r012345_ptr], #64
-        ldr q_root1, [r012345_ptr, #(-64 + 16)]
-        ldr q_root2, [r012345_ptr, #(-64 + 32)]
-        ldr q_root3, [r012345_ptr, #(-64 + 48)]
-.endm
-
-.macro load_roots_456
-        ldr q_root0, [r012345_ptr], #64
-        ldr q_root1, [r012345_ptr, #(-64 + 16)]
-        ldr q_root2, [r012345_ptr, #(-64 + 32)]
-        ldr q_root3, [r012345_ptr, #(-64 + 48)]
-.endm
-
-.macro load_roots_78_part1
-        ldr q_root0,    [r67_ptr], #(12*16)
-        ldr q_root0_tw, [r67_ptr, #(-12*16 + 1*16)]
-        ldr q_root1,    [r67_ptr, #(-12*16 + 2*16)]
-        ldr q_root1_tw, [r67_ptr, #(-12*16 + 3*16)]
-        ldr q_root2,    [r67_ptr, #(-12*16 + 4*16)]
-        ldr q_root2_tw, [r67_ptr, #(-12*16 + 5*16)]
-.endm
-
-.macro load_roots_78_part2
-        ldr q_root0,    [r67_ptr, (-12*16 +  6*16)]
-        ldr q_root0_tw, [r67_ptr, (-12*16 +  7*16)]
-        ldr q_root1,    [r67_ptr, (-12*16 +  8*16)]
-        ldr q_root1_tw, [r67_ptr, (-12*16 +  9*16)]
-        ldr q_root2,    [r67_ptr, (-12*16 + 10*16)]
-        ldr q_root2_tw, [r67_ptr, (-12*16 + 11*16)]
-.endm
-
-.macro transpose4 data0, data1, data2, data3
-        trn1 t0.4s, \data0\().4s, \data1\().4s
-        trn2 t1.4s, \data0\().4s, \data1\().4s
-        trn1 t2.4s, \data2\().4s, \data3\().4s
-        trn2 t3.4s, \data2\().4s, \data3\().4s
-
-        trn2 \data2\().2d, t0.2d, t2.2d
-        trn2 \data3\().2d, t1.2d, t3.2d
-        trn1 \data0\().2d, t0.2d, t2.2d
-        trn1 \data1\().2d, t1.2d, t3.2d
-.endm
-
-.macro save_vregs
-        sub sp, sp, #(16*4)
-        stp  d8,  d9, [sp, #16*0]
-        stp d10, d11, [sp, #16*1]
-        stp d12, d13, [sp, #16*2]
-        stp d14, d15, [sp, #16*3]
-.endm
-
-.macro restore_vregs
-        ldp  d8,  d9, [sp, #16*0]
-        ldp d10, d11, [sp, #16*1]
-        ldp d12, d13, [sp, #16*2]
-        ldp d14, d15, [sp, #16*3]
-        add sp, sp, #(16*4)
-.endm
-
-.macro push_stack
-        save_vregs
-.endm
-
-.macro pop_stack
-        restore_vregs
-.endm
-
-        // Inputs
-        in           .req x0 // Input/output buffer
-        r012345_ptr  .req x1 // twiddles for layer 0,1,2,3,4,5
-        r67_ptr      .req x2 // twiddles for layer 6,7
-
-        count   .req x3
-        inp     .req x4
-        inpp    .req x5
-        xtmp    .req x6
-        wtmp    .req w6
-
-        data0  .req v9
-        data1  .req v10
-        data2  .req v11
-        data3  .req v12
-        data4  .req v13
-        data5  .req v14
-        data6  .req v15
-        data7  .req v16
-
-        q_data0  .req q9
-        q_data1  .req q10
-        q_data2  .req q11
-        q_data3  .req q12
-        q_data4  .req q13
-        q_data5  .req q14
-        q_data6  .req q15
-        q_data7  .req q16
-
-        root0 .req v0
-        root1 .req v1
-        root2 .req v2
-        root3 .req v3
-
-        q_root0 .req q0
-        q_root1 .req q1
-        q_root2 .req q2
-        q_root3 .req q3
-
-        root0_tw .req v4
-        root1_tw .req v5
-        root2_tw .req v6
-        root3_tw .req v7
-
-        q_root0_tw .req q4
-        q_root1_tw .req q5
-        q_root2_tw .req q6
-        q_root3_tw .req q7
-
-        tmp .req v24
-        t0  .req v25
-        t1  .req v26
-        t2  .req v27
-        t3  .req v28
-        consts .req v8
-        q_consts .req q8
 
 .text
-.global MLD_ASM_NAMESPACE(ntt_asm)
 .balign 4
+.global MLD_ASM_NAMESPACE(ntt_asm)
 MLD_ASM_FN_SYMBOL(ntt_asm)
-        push_stack
 
-        // load q = 8380417
-        movz wtmp, #57345
-        movk wtmp, #127, lsl #16
-        dup consts.4s, wtmp
+        sub	sp, sp, #0x40
+        stp	d8, d9, [sp]
+        stp	d10, d11, [sp, #0x10]
+        stp	d12, d13, [sp, #0x20]
+        stp	d14, d15, [sp, #0x30]
+        mov	w6, #0xe001             // =57345
+        movk	w6, #0x7f, lsl #16
+        dup	v8.4s, w6
+        mov	x4, x0
+        mov	x3, #0x8                // =8
+        ldr	q0, [x1], #0x40
+        ldur	q1, [x1, #-0x30]
+        ldur	q2, [x1, #-0x20]
+        ldur	q3, [x1, #-0x10]
 
-        mov inp, in
-        mov count, #8
-
-        load_roots_123
-
-        .p2align 2
 layer123_start:
-        ldr q_data0, [in, #(0*(1024/8))]
-        ldr q_data1, [in, #(1*(1024/8))]
-        ldr q_data2, [in, #(2*(1024/8))]
-        ldr q_data3, [in, #(3*(1024/8))]
-        ldr q_data4, [in, #(4*(1024/8))]
-        ldr q_data5, [in, #(5*(1024/8))]
-        ldr q_data6, [in, #(6*(1024/8))]
-        ldr q_data7, [in, #(7*(1024/8))]
+        ldr	q9, [x0]
+        ldr	q10, [x0, #0x80]
+        ldr	q11, [x0, #0x100]
+        ldr	q12, [x0, #0x180]
+        ldr	q13, [x0, #0x200]
+        ldr	q14, [x0, #0x280]
+        ldr	q15, [x0, #0x300]
+        ldr	q16, [x0, #0x380]
+        sqrdmulh	v27.4s, v13.4s, v0.s[1]
+        mul	v24.4s, v13.4s, v0.s[0]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v13.4s, v9.4s, v24.4s
+        add	v9.4s, v9.4s, v24.4s
+        sqrdmulh	v27.4s, v14.4s, v0.s[1]
+        mul	v24.4s, v14.4s, v0.s[0]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v14.4s, v10.4s, v24.4s
+        add	v10.4s, v10.4s, v24.4s
+        sqrdmulh	v27.4s, v15.4s, v0.s[1]
+        mul	v24.4s, v15.4s, v0.s[0]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v15.4s, v11.4s, v24.4s
+        add	v11.4s, v11.4s, v24.4s
+        sqrdmulh	v27.4s, v16.4s, v0.s[1]
+        mul	v24.4s, v16.4s, v0.s[0]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v16.4s, v12.4s, v24.4s
+        add	v12.4s, v12.4s, v24.4s
+        sqrdmulh	v27.4s, v11.4s, v0.s[3]
+        mul	v24.4s, v11.4s, v0.s[2]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v11.4s, v9.4s, v24.4s
+        add	v9.4s, v9.4s, v24.4s
+        sqrdmulh	v27.4s, v12.4s, v0.s[3]
+        mul	v24.4s, v12.4s, v0.s[2]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v12.4s, v10.4s, v24.4s
+        add	v10.4s, v10.4s, v24.4s
+        sqrdmulh	v27.4s, v15.4s, v1.s[1]
+        mul	v24.4s, v15.4s, v1.s[0]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v15.4s, v13.4s, v24.4s
+        add	v13.4s, v13.4s, v24.4s
+        sqrdmulh	v27.4s, v16.4s, v1.s[1]
+        mul	v24.4s, v16.4s, v1.s[0]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v16.4s, v14.4s, v24.4s
+        add	v14.4s, v14.4s, v24.4s
+        sqrdmulh	v27.4s, v10.4s, v1.s[3]
+        mul	v24.4s, v10.4s, v1.s[2]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v10.4s, v9.4s, v24.4s
+        add	v9.4s, v9.4s, v24.4s
+        sqrdmulh	v27.4s, v12.4s, v2.s[1]
+        mul	v24.4s, v12.4s, v2.s[0]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v12.4s, v11.4s, v24.4s
+        add	v11.4s, v11.4s, v24.4s
+        sqrdmulh	v27.4s, v14.4s, v2.s[3]
+        mul	v24.4s, v14.4s, v2.s[2]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v14.4s, v13.4s, v24.4s
+        add	v13.4s, v13.4s, v24.4s
+        sqrdmulh	v27.4s, v16.4s, v3.s[1]
+        mul	v24.4s, v16.4s, v3.s[0]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v16.4s, v15.4s, v24.4s
+        add	v15.4s, v15.4s, v24.4s
+        str	q9, [x0], #0x10
+        str	q10, [x0, #0x70]
+        str	q11, [x0, #0xf0]
+        str	q12, [x0, #0x170]
+        str	q13, [x0, #0x1f0]
+        str	q14, [x0, #0x270]
+        str	q15, [x0, #0x2f0]
+        str	q16, [x0, #0x370]
+        subs	x3, x3, #0x1
+        cbnz	x3, layer123_start
+        mov	x0, x4
+        add	x5, x0, #0x40
+        mov	x3, #0x8                // =8
+        sub	x0, x0, #0x40
+        sub	x5, x5, #0x40
 
-        ct_butterfly data0, data4, root0, 0, 1
-        ct_butterfly data1, data5, root0, 0, 1
-        ct_butterfly data2, data6, root0, 0, 1
-        ct_butterfly data3, data7, root0, 0, 1
-
-        ct_butterfly data0, data2, root0, 2, 3
-        ct_butterfly data1, data3, root0, 2, 3
-        ct_butterfly data4, data6, root1, 0, 1
-        ct_butterfly data5, data7, root1, 0, 1
-
-        ct_butterfly data0, data1, root1, 2, 3
-        ct_butterfly data2, data3, root2, 0, 1
-        ct_butterfly data4, data5, root2, 2, 3
-        ct_butterfly data6, data7, root3, 0, 1
-
-        str q_data0, [in], #16
-        str q_data1, [in, #(-16 + 1*(1024/8))]
-        str q_data2, [in, #(-16 + 2*(1024/8))]
-        str q_data3, [in, #(-16 + 3*(1024/8))]
-        str q_data4, [in, #(-16 + 4*(1024/8))]
-        str q_data5, [in, #(-16 + 5*(1024/8))]
-        str q_data6, [in, #(-16 + 6*(1024/8))]
-        str q_data7, [in, #(-16 + 7*(1024/8))]
-
-        subs count, count, #1
-        cbnz count, layer123_start
-
-        mov in, inp
-        add inpp, in, #64
-        mov count, #8
-
-        // Use two data pointers and carefully arrange
-        // increments to facilitate reordering of loads
-        // and stores by SLOTHY.
-        //
-        // TODO: Think of alternatives here -- the start with `in`
-        // pointing to 64 byte below the actual data, which in theory
-        // could underflow. It's unclear how the CPU would behave in this case.
-        sub in, in, #64
-        sub inpp, inpp, #64
-
-        .p2align 2
 layer45678_start:
-        ldr q_data0, [in, #(64 + 16*0)]
-        ldr q_data1, [in, #(64 + 16*1)]
-        ldr q_data2, [in, #(64 + 16*2)]
-        ldr q_data3, [in, #(64 + 16*3)]
-        ldr q_data4, [inpp, #(64 + 16*0)]
-        ldr q_data5, [inpp, #(64 + 16*1)]
-        ldr q_data6, [inpp, #(64 + 16*2)]
-        ldr q_data7, [inpp, #(64 + 16*3)]
-
-        add in, in, #64
-        add inpp, inpp, #64
-
-        load_roots_456
-
-        ct_butterfly data0, data4, root0, 0, 1
-        ct_butterfly data1, data5, root0, 0, 1
-        ct_butterfly data2, data6, root0, 0, 1
-        ct_butterfly data3, data7, root0, 0, 1
-
-        ct_butterfly data0, data2, root0, 2, 3
-        ct_butterfly data1, data3, root0, 2, 3
-        ct_butterfly data4, data6, root1, 0, 1
-        ct_butterfly data5, data7, root1, 0, 1
-
-        ct_butterfly data0, data1, root1, 2, 3
-        ct_butterfly data2, data3, root2, 0, 1
-        ct_butterfly data4, data5, root2, 2, 3
-        ct_butterfly data6, data7, root3, 0, 1
-
-        // Transpose using trn
-        transpose4 data0, data1, data2, data3
-        transpose4 data4, data5, data6, data7
-
-        load_roots_78_part1
-
-        ct_butterfly_v data0, data2, root0, root0_tw
-        ct_butterfly_v data1, data3, root0, root0_tw
-        ct_butterfly_v data0, data1, root1, root1_tw
-        ct_butterfly_v data2, data3, root2, root2_tw
-
-        load_roots_78_part2
-
-        ct_butterfly_v data4, data6, root0, root0_tw
-        ct_butterfly_v data5, data7, root0, root0_tw
-        ct_butterfly_v data4, data5, root1, root1_tw
-        ct_butterfly_v data6, data7, root2, root2_tw
-
-        // Transpose as part of st4
-        st4 {data0.4S, data1.4S, data2.4S, data3.4S}, [in], #64
-        st4 {data4.4S, data5.4S, data6.4S, data7.4S}, [inpp], #64
-
-        subs count, count, #1
-        cbnz count, layer45678_start
-
-       pop_stack
-       ret
+        ldr	q9, [x0, #0x40]
+        ldr	q10, [x0, #0x50]
+        ldr	q11, [x0, #0x60]
+        ldr	q12, [x0, #0x70]
+        ldr	q13, [x5, #0x40]
+        ldr	q14, [x5, #0x50]
+        ldr	q15, [x5, #0x60]
+        ldr	q16, [x5, #0x70]
+        add	x0, x0, #0x40
+        add	x5, x5, #0x40
+        ldr	q0, [x1], #0x40
+        ldur	q1, [x1, #-0x30]
+        ldur	q2, [x1, #-0x20]
+        ldur	q3, [x1, #-0x10]
+        sqrdmulh	v27.4s, v13.4s, v0.s[1]
+        mul	v24.4s, v13.4s, v0.s[0]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v13.4s, v9.4s, v24.4s
+        add	v9.4s, v9.4s, v24.4s
+        sqrdmulh	v27.4s, v14.4s, v0.s[1]
+        mul	v24.4s, v14.4s, v0.s[0]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v14.4s, v10.4s, v24.4s
+        add	v10.4s, v10.4s, v24.4s
+        sqrdmulh	v27.4s, v15.4s, v0.s[1]
+        mul	v24.4s, v15.4s, v0.s[0]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v15.4s, v11.4s, v24.4s
+        add	v11.4s, v11.4s, v24.4s
+        sqrdmulh	v27.4s, v16.4s, v0.s[1]
+        mul	v24.4s, v16.4s, v0.s[0]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v16.4s, v12.4s, v24.4s
+        add	v12.4s, v12.4s, v24.4s
+        sqrdmulh	v27.4s, v11.4s, v0.s[3]
+        mul	v24.4s, v11.4s, v0.s[2]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v11.4s, v9.4s, v24.4s
+        add	v9.4s, v9.4s, v24.4s
+        sqrdmulh	v27.4s, v12.4s, v0.s[3]
+        mul	v24.4s, v12.4s, v0.s[2]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v12.4s, v10.4s, v24.4s
+        add	v10.4s, v10.4s, v24.4s
+        sqrdmulh	v27.4s, v15.4s, v1.s[1]
+        mul	v24.4s, v15.4s, v1.s[0]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v15.4s, v13.4s, v24.4s
+        add	v13.4s, v13.4s, v24.4s
+        sqrdmulh	v27.4s, v16.4s, v1.s[1]
+        mul	v24.4s, v16.4s, v1.s[0]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v16.4s, v14.4s, v24.4s
+        add	v14.4s, v14.4s, v24.4s
+        sqrdmulh	v27.4s, v10.4s, v1.s[3]
+        mul	v24.4s, v10.4s, v1.s[2]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v10.4s, v9.4s, v24.4s
+        add	v9.4s, v9.4s, v24.4s
+        sqrdmulh	v27.4s, v12.4s, v2.s[1]
+        mul	v24.4s, v12.4s, v2.s[0]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v12.4s, v11.4s, v24.4s
+        add	v11.4s, v11.4s, v24.4s
+        sqrdmulh	v27.4s, v14.4s, v2.s[3]
+        mul	v24.4s, v14.4s, v2.s[2]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v14.4s, v13.4s, v24.4s
+        add	v13.4s, v13.4s, v24.4s
+        sqrdmulh	v27.4s, v16.4s, v3.s[1]
+        mul	v24.4s, v16.4s, v3.s[0]
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v16.4s, v15.4s, v24.4s
+        add	v15.4s, v15.4s, v24.4s
+        trn1	v25.4s, v9.4s, v10.4s
+        trn2	v26.4s, v9.4s, v10.4s
+        trn1	v27.4s, v11.4s, v12.4s
+        trn2	v28.4s, v11.4s, v12.4s
+        trn2	v11.2d, v25.2d, v27.2d
+        trn2	v12.2d, v26.2d, v28.2d
+        trn1	v9.2d, v25.2d, v27.2d
+        trn1	v10.2d, v26.2d, v28.2d
+        trn1	v25.4s, v13.4s, v14.4s
+        trn2	v26.4s, v13.4s, v14.4s
+        trn1	v27.4s, v15.4s, v16.4s
+        trn2	v28.4s, v15.4s, v16.4s
+        trn2	v15.2d, v25.2d, v27.2d
+        trn2	v16.2d, v26.2d, v28.2d
+        trn1	v13.2d, v25.2d, v27.2d
+        trn1	v14.2d, v26.2d, v28.2d
+        ldr	q0, [x2], #0xc0
+        ldur	q4, [x2, #-0xb0]
+        ldur	q1, [x2, #-0xa0]
+        ldur	q5, [x2, #-0x90]
+        ldur	q2, [x2, #-0x80]
+        ldur	q6, [x2, #-0x70]
+        sqrdmulh	v27.4s, v11.4s, v4.4s
+        mul	v24.4s, v11.4s, v0.4s
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v11.4s, v9.4s, v24.4s
+        add	v9.4s, v9.4s, v24.4s
+        sqrdmulh	v27.4s, v12.4s, v4.4s
+        mul	v24.4s, v12.4s, v0.4s
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v12.4s, v10.4s, v24.4s
+        add	v10.4s, v10.4s, v24.4s
+        sqrdmulh	v27.4s, v10.4s, v5.4s
+        mul	v24.4s, v10.4s, v1.4s
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v10.4s, v9.4s, v24.4s
+        add	v9.4s, v9.4s, v24.4s
+        sqrdmulh	v27.4s, v12.4s, v6.4s
+        mul	v24.4s, v12.4s, v2.4s
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v12.4s, v11.4s, v24.4s
+        add	v11.4s, v11.4s, v24.4s
+        ldur	q0, [x2, #-0x60]
+        ldur	q4, [x2, #-0x50]
+        ldur	q1, [x2, #-0x40]
+        ldur	q5, [x2, #-0x30]
+        ldur	q2, [x2, #-0x20]
+        ldur	q6, [x2, #-0x10]
+        sqrdmulh	v27.4s, v15.4s, v4.4s
+        mul	v24.4s, v15.4s, v0.4s
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v15.4s, v13.4s, v24.4s
+        add	v13.4s, v13.4s, v24.4s
+        sqrdmulh	v27.4s, v16.4s, v4.4s
+        mul	v24.4s, v16.4s, v0.4s
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v16.4s, v14.4s, v24.4s
+        add	v14.4s, v14.4s, v24.4s
+        sqrdmulh	v27.4s, v14.4s, v5.4s
+        mul	v24.4s, v14.4s, v1.4s
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v14.4s, v13.4s, v24.4s
+        add	v13.4s, v13.4s, v24.4s
+        sqrdmulh	v27.4s, v16.4s, v6.4s
+        mul	v24.4s, v16.4s, v2.4s
+        mls	v24.4s, v27.4s, v8.s[0]
+        sub	v16.4s, v15.4s, v24.4s
+        add	v15.4s, v15.4s, v24.4s
+        st4	{ v9.4s, v10.4s, v11.4s, v12.4s }, [x0], #64
+        st4	{ v13.4s, v14.4s, v15.4s, v16.4s }, [x5], #64
+        subs	x3, x3, #0x1
+        cbnz	x3, layer45678_start
+        ldp	d8, d9, [sp]
+        ldp	d10, d11, [sp, #0x10]
+        ldp	d12, d13, [sp, #0x20]
+        ldp	d14, d15, [sp, #0x30]
+        add	sp, sp, #0x40
+        ret
 
 #endif /* MLD_ARITH_BACKEND_AARCH64 */

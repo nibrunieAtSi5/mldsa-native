@@ -218,6 +218,34 @@ jobs:
       - name: make lib
         run: |
           make lib
+  simpasm:
+    strategy:
+      fail-fast: false
+      matrix: 
+        backend:
+           - arg: '--aarch64-clean'
+             name: Clean
+          # TODO: add backend option after we have optimized/clean seperation
+          #  - arg: ''
+          #    name: Optimized
+        simplify:
+           - arg: ''
+             name: Simplified
+           - arg: '--no-simplify'
+             name: Unmodified
+    runs-on: pqcp-arm64
+    name: AArch64 dev backend (${{ matrix.simplify.name }})
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Reinstate and test backend
+        uses: ./.github/actions/setup-shell
+        with:
+          nix-shell: 'ci'
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            ./scripts/autogen ${{ matrix.simplify.arg }}
+            make clean
+            OPT=1 make quickcheck
   scan-build:
     strategy:
       fail-fast: false
