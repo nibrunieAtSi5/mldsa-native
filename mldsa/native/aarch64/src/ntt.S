@@ -37,11 +37,21 @@
 .global MLD_ASM_NAMESPACE(ntt_asm)
 MLD_ASM_FN_SYMBOL(ntt_asm)
 
+        .cfi_startproc
         sub	sp, sp, #0x40
+        .cfi_adjust_cfa_offset 0x40
         stp	d8, d9, [sp]
+        .cfi_rel_offset d8, 0x0
+        .cfi_rel_offset d9, 0x8
         stp	d10, d11, [sp, #0x10]
+        .cfi_rel_offset d10, 0x10
+        .cfi_rel_offset d11, 0x18
         stp	d12, d13, [sp, #0x20]
+        .cfi_rel_offset d12, 0x20
+        .cfi_rel_offset d13, 0x28
         stp	d14, d15, [sp, #0x30]
+        .cfi_rel_offset d14, 0x30
+        .cfi_rel_offset d15, 0x38
         mov	w6, #0xe001             // =57345
         movk	w6, #0x7f, lsl #16
         dup	v8.4s, w6
@@ -52,7 +62,7 @@ MLD_ASM_FN_SYMBOL(ntt_asm)
         ldur	q2, [x1, #-0x20]
         ldur	q3, [x1, #-0x10]
 
-layer123_start:
+Llayer123_start:
         ldr	q9, [x0]
         ldr	q10, [x0, #0x80]
         ldr	q11, [x0, #0x100]
@@ -130,14 +140,14 @@ layer123_start:
         str	q15, [x0, #0x2f0]
         str	q16, [x0, #0x370]
         subs	x3, x3, #0x1
-        cbnz	x3, layer123_start
+        cbnz	x3, Llayer123_start
         mov	x0, x4
         add	x5, x0, #0x40
         mov	x3, #0x8                // =8
         sub	x0, x0, #0x40
         sub	x5, x5, #0x40
 
-layer45678_start:
+Llayer45678_start:
         ldr	q9, [x0, #0x40]
         ldr	q10, [x0, #0x50]
         ldr	q11, [x0, #0x60]
@@ -283,12 +293,22 @@ layer45678_start:
         st4	{ v9.4s, v10.4s, v11.4s, v12.4s }, [x0], #64
         st4	{ v13.4s, v14.4s, v15.4s, v16.4s }, [x5], #64
         subs	x3, x3, #0x1
-        cbnz	x3, layer45678_start
+        cbnz	x3, Llayer45678_start
         ldp	d8, d9, [sp]
+        .cfi_restore d8
+        .cfi_restore d9
         ldp	d10, d11, [sp, #0x10]
+        .cfi_restore d10
+        .cfi_restore d11
         ldp	d12, d13, [sp, #0x20]
+        .cfi_restore d12
+        .cfi_restore d13
         ldp	d14, d15, [sp, #0x30]
+        .cfi_restore d14
+        .cfi_restore d15
         add	sp, sp, #0x40
+        .cfi_adjust_cfa_offset -0x40
         ret
+        .cfi_endproc
 
 #endif /* MLD_ARITH_BACKEND_AARCH64 */

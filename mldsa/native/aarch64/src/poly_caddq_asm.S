@@ -17,12 +17,13 @@
 .global MLD_ASM_NAMESPACE(poly_caddq_asm)
 MLD_ASM_FN_SYMBOL(poly_caddq_asm)
 
+        .cfi_startproc
         mov	w9, #0xe001             // =57345
         movk	w9, #0x7f, lsl #16
         dup	v4.4s, w9
         mov	x1, #0x10               // =16
 
-poly_caddq_loop:
+Lpoly_caddq_loop:
         ldr	q0, [x0]
         ldr	q1, [x0, #0x10]
         ldr	q2, [x0, #0x20]
@@ -40,7 +41,8 @@ poly_caddq_loop:
         str	q3, [x0, #0x30]
         str	q0, [x0], #0x40
         subs	x1, x1, #0x1
-        b.ne	poly_caddq_loop
+        b.ne	Lpoly_caddq_loop
         ret
+        .cfi_endproc
 
 #endif /* MLD_ARITH_BACKEND_AARCH64 && !MLD_CONFIG_MULTILEVEL_NO_SHARED */

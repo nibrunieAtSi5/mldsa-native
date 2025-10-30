@@ -18,6 +18,7 @@
 .global MLD_ASM_NAMESPACE(polyz_unpack_17_asm)
 MLD_ASM_FN_SYMBOL(polyz_unpack_17_asm)
 
+        .cfi_startproc
         ldr	q24, [x2]
         ldr	q25, [x2, #0x10]
         ldr	q26, [x2, #0x20]
@@ -31,7 +32,7 @@ MLD_ASM_FN_SYMBOL(polyz_unpack_17_asm)
         movi	v30.4s, #0x2, lsl #16
         mov	x9, #0x10               // =16
 
-polyz_unpack_17_loop:
+Lpolyz_unpack_17_loop:
         ldr	q1, [x1, #0x10]
         ldr	q2, [x1, #0x20]
         ldr	q0, [x1], #0x24
@@ -56,7 +57,8 @@ polyz_unpack_17_loop:
         str	q7, [x0, #0x30]
         str	q4, [x0], #0x40
         subs	x9, x9, #0x1
-        b.ne	polyz_unpack_17_loop
+        b.ne	Lpolyz_unpack_17_loop
         ret
+        .cfi_endproc
 
 #endif /* MLD_ARITH_BACKEND_AARCH64 && !MLD_CONFIG_MULTILEVEL_NO_SHARED */

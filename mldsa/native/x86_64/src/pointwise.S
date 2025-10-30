@@ -32,11 +32,12 @@
 .global MLD_ASM_NAMESPACE(pointwise_avx2)
 MLD_ASM_FN_SYMBOL(pointwise_avx2)
 
+        .cfi_startproc
         vmovdqa	0x20(%rcx), %ymm0
         vmovdqa	(%rcx), %ymm1
         xorl	%eax, %eax
 
-_looptop1:
+L_looptop1:
         vmovdqa	(%rsi), %ymm2
         vmovdqa	0x20(%rsi), %ymm4
         vmovdqa	0x40(%rsi), %ymm6
@@ -87,7 +88,7 @@ _looptop1:
         addq	$0x60, %rdx
         addl	$0x1, %eax
         cmpl	$0xa, %eax
-        jb	_looptop1
+        jb	L_looptop1
         vmovdqa	(%rsi), %ymm2
         vmovdqa	0x20(%rsi), %ymm4
         vmovdqa	(%rdx), %ymm10
@@ -119,6 +120,7 @@ _looptop1:
         vmovdqa	%ymm2, (%rdi)
         vmovdqa	%ymm4, 0x20(%rdi)
         retq
+        .cfi_endproc
 
 #endif /* MLD_ARITH_BACKEND_X86_64_DEFAULT && !MLD_CONFIG_MULTILEVEL_NO_SHARED \
         */

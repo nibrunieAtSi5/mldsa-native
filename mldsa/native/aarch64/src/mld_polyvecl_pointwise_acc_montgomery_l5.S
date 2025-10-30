@@ -16,6 +16,7 @@
 .global MLD_ASM_NAMESPACE(polyvecl_pointwise_acc_montgomery_l5_asm)
 MLD_ASM_FN_SYMBOL(polyvecl_pointwise_acc_montgomery_l5_asm)
 
+        .cfi_startproc
         mov	w3, #0xe001             // =57345
         movk	w3, #0x7f, lsl #16
         dup	v0.4s, w3
@@ -24,7 +25,7 @@ MLD_ASM_FN_SYMBOL(polyvecl_pointwise_acc_montgomery_l5_asm)
         dup	v1.4s, w3
         mov	x3, #0x40               // =64
 
-l5_loop_start:
+Ll5_loop_start:
         ldr	q17, [x1, #0x10]
         ldr	q18, [x1, #0x20]
         ldr	q19, [x1, #0x30]
@@ -130,7 +131,8 @@ l5_loop_start:
         str	q19, [x0, #0x30]
         str	q16, [x0], #0x40
         subs	x3, x3, #0x4
-        cbnz	x3, l5_loop_start
+        cbnz	x3, Ll5_loop_start
         ret
+        .cfi_endproc
 
 #endif /* MLD_ARITH_BACKEND_AARCH64 */

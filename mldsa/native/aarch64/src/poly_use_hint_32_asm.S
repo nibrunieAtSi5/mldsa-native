@@ -17,6 +17,7 @@
 .global MLD_ASM_NAMESPACE(poly_use_hint_32_asm)
 MLD_ASM_FN_SYMBOL(poly_use_hint_32_asm)
 
+        .cfi_startproc
         mov	w4, #0xe001             // =57345
         movk	w4, #0x7f, lsl #16
         dup	v20.4s, w4
@@ -32,7 +33,7 @@ MLD_ASM_FN_SYMBOL(poly_use_hint_32_asm)
         movi	v24.4s, #0xf
         mov	x3, #0x10               // =16
 
-poly_use_hint_32_loop:
+Lpoly_use_hint_32_loop:
         ldr	q1, [x1, #0x10]
         ldr	q2, [x1, #0x20]
         ldr	q3, [x1, #0x30]
@@ -86,7 +87,8 @@ poly_use_hint_32_loop:
         str	q19, [x0, #0x30]
         str	q16, [x0], #0x40
         subs	x3, x3, #0x1
-        b.ne	poly_use_hint_32_loop
+        b.ne	Lpoly_use_hint_32_loop
         ret
+        .cfi_endproc
 
 #endif /* MLD_ARITH_BACKEND_AARCH64 && !MLD_CONFIG_MULTILEVEL_NO_SHARED */

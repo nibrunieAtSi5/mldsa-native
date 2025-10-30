@@ -34,6 +34,7 @@
 .global MLD_ASM_NAMESPACE(nttunpack_avx2)
 MLD_ASM_FN_SYMBOL(nttunpack_avx2)
 
+        .cfi_startproc
         vmovdqa	(%rdi), %ymm4
         vmovdqa	0x20(%rdi), %ymm5
         vmovdqa	0x40(%rdi), %ymm6
@@ -227,6 +228,7 @@ MLD_ASM_FN_SYMBOL(nttunpack_avx2)
         vmovdqa	%ymm3, 0x3c0(%rdi)
         vmovdqa	%ymm11, 0x3e0(%rdi)
         retq
+        .cfi_endproc
 
 #endif /* MLD_ARITH_BACKEND_X86_64_DEFAULT && !MLD_CONFIG_MULTILEVEL_NO_SHARED \
         */

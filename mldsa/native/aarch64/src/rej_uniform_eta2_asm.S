@@ -19,7 +19,9 @@
 .global MLD_ASM_NAMESPACE(rej_uniform_eta2_asm)
 MLD_ASM_FN_SYMBOL(rej_uniform_eta2_asm)
 
+        .cfi_startproc
         sub	sp, sp, #0x240
+        .cfi_adjust_cfa_offset 0x240
         mov	x7, #0x1                // =1
         movk	x7, #0x2, lsl #16
         movk	x7, #0x4, lsl #32
@@ -36,21 +38,21 @@ MLD_ASM_FN_SYMBOL(rej_uniform_eta2_asm)
         mov	x11, #0x0               // =0
         eor	v16.16b, v16.16b, v16.16b
 
-rej_uniform_eta2_initial_zero:
+Lrej_uniform_eta2_initial_zero:
         str	q16, [x7], #0x40
         stur	q16, [x7, #-0x30]
         stur	q16, [x7, #-0x20]
         stur	q16, [x7, #-0x10]
         add	x11, x11, #0x20
         cmp	x11, #0x100
-        b.lt	rej_uniform_eta2_initial_zero
+        b.lt	Lrej_uniform_eta2_initial_zero
         mov	x7, x8
         mov	x9, #0x0                // =0
         mov	x4, #0x100              // =256
 
-rej_uniform_eta2_loop8:
+Lrej_uniform_eta2_loop8:
         cmp	x9, x4
-        b.hs	rej_uniform_eta2_memory_copy
+        b.hs	Lrej_uniform_eta2_memory_copy
         sub	x2, x2, #0x8
         ld1	{ v0.8b }, [x1], #8
         movi	v26.8b, #0xf
@@ -85,9 +87,9 @@ rej_uniform_eta2_loop8:
         add	x12, x12, x13
         add	x9, x9, x12
         cmp	x2, #0x8
-        b.hs	rej_uniform_eta2_loop8
+        b.hs	Lrej_uniform_eta2_loop8
 
-rej_uniform_eta2_memory_copy:
+Lrej_uniform_eta2_memory_copy:
         cmp	x9, x4
         csel	x9, x9, x4, lo
         mov	w7, #0x199a             // =6554
@@ -97,7 +99,7 @@ rej_uniform_eta2_memory_copy:
         mov	x11, #0x0               // =0
         mov	x7, x8
 
-rej_uniform_eta2_final_copy:
+Lrej_uniform_eta2_final_copy:
         ldr	q16, [x7], #0x20
         ldur	q18, [x7, #-0x10]
         sqdmulh	v28.8h, v16.8h, v26.8h
@@ -116,9 +118,11 @@ rej_uniform_eta2_final_copy:
         stur	q19, [x0, #-0x10]
         add	x11, x11, #0x10
         cmp	x11, #0x100
-        b.lt	rej_uniform_eta2_final_copy
+        b.lt	Lrej_uniform_eta2_final_copy
         mov	x0, x9
         add	sp, sp, #0x240
+        .cfi_adjust_cfa_offset -0x240
         ret
+        .cfi_endproc
 
 #endif /* MLD_ARITH_BACKEND_AARCH64 && !MLD_CONFIG_MULTILEVEL_NO_SHARED */

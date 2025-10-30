@@ -32,6 +32,7 @@
 .global MLD_ASM_NAMESPACE(invntt_avx2)
 MLD_ASM_FN_SYMBOL(invntt_avx2)
 
+        .cfi_startproc
         vmovdqa	(%rsi), %ymm0
         vmovdqa	(%rdi), %ymm4
         vmovdqa	0x20(%rdi), %ymm5
@@ -2298,6 +2299,7 @@ MLD_ASM_FN_SYMBOL(invntt_avx2)
         vmovdqa	%ymm6, 0x160(%rdi)
         vmovdqa	%ymm7, 0x1e0(%rdi)
         retq
+        .cfi_endproc
 
 #endif /* MLD_ARITH_BACKEND_X86_64_DEFAULT && !MLD_CONFIG_MULTILEVEL_NO_SHARED \
         */
