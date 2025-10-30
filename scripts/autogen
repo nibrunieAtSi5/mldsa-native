@@ -1711,7 +1711,7 @@ def gen_citations(dry_run=False):
                 "Add a citation or remove from BIBLIOGRAPHY.yml."
             )
 
-    gen_bib_file(bibliography, dry_run=False)
+    gen_bib_file(bibliography, dry_run=dry_run)
 
 
 def _main():
