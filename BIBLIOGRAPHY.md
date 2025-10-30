@@ -14,6 +14,8 @@ source code and documentation.
   - National Institute of Standards and Technology
 * URL: https://csrc.nist.gov/projects/cryptographic-module-validation-program/fips-140-3-ig-announcements
 * Referenced from:
+  - [examples/bring_your_own_fips202/mldsa_native/config.h](examples/bring_your_own_fips202/mldsa_native/config.h)
+  - [examples/bring_your_own_fips202/mldsa_native/sign.c](examples/bring_your_own_fips202/mldsa_native/sign.c)
   - [integration/liboqs/config_aarch64.h](integration/liboqs/config_aarch64.h)
   - [integration/liboqs/config_c.h](integration/liboqs/config_c.h)
   - [integration/liboqs/config_x86_64.h](integration/liboqs/config_x86_64.h)
@@ -45,6 +47,15 @@ source code and documentation.
 * URL: https://csrc.nist.gov/pubs/fips/204/final
 * Referenced from:
   - [README.md](README.md)
+  - [examples/bring_your_own_fips202/mldsa_native/common.h](examples/bring_your_own_fips202/mldsa_native/common.h)
+  - [examples/bring_your_own_fips202/mldsa_native/config.h](examples/bring_your_own_fips202/mldsa_native/config.h)
+  - [examples/bring_your_own_fips202/mldsa_native/ntt.h](examples/bring_your_own_fips202/mldsa_native/ntt.h)
+  - [examples/bring_your_own_fips202/mldsa_native/poly.c](examples/bring_your_own_fips202/mldsa_native/poly.c)
+  - [examples/bring_your_own_fips202/mldsa_native/poly_kl.c](examples/bring_your_own_fips202/mldsa_native/poly_kl.c)
+  - [examples/bring_your_own_fips202/mldsa_native/polyvec.c](examples/bring_your_own_fips202/mldsa_native/polyvec.c)
+  - [examples/bring_your_own_fips202/mldsa_native/rounding.h](examples/bring_your_own_fips202/mldsa_native/rounding.h)
+  - [examples/bring_your_own_fips202/mldsa_native/sign.c](examples/bring_your_own_fips202/mldsa_native/sign.c)
+  - [examples/bring_your_own_fips202/mldsa_native/sign.h](examples/bring_your_own_fips202/mldsa_native/sign.h)
   - [mldsa/common.h](mldsa/common.h)
   - [mldsa/config.h](mldsa/config.h)
   - [mldsa/fips202/fips202.c](mldsa/fips202/fips202.c)
@@ -130,6 +141,9 @@ source code and documentation.
 * URL: https://github.com/pq-crystals/dilithium/tree/master/ref
 * Referenced from:
   - [README.md](README.md)
+  - [examples/bring_your_own_fips202/mldsa_native/ntt.c](examples/bring_your_own_fips202/mldsa_native/ntt.c)
+  - [examples/bring_your_own_fips202/mldsa_native/poly.c](examples/bring_your_own_fips202/mldsa_native/poly.c)
+  - [examples/bring_your_own_fips202/mldsa_native/poly_kl.c](examples/bring_your_own_fips202/mldsa_native/poly_kl.c)
   - [mldsa/ntt.c](mldsa/ntt.c)
   - [mldsa/poly.c](mldsa/poly.c)
   - [mldsa/poly_kl.c](mldsa/poly_kl.c)
@@ -205,6 +219,7 @@ source code and documentation.
   - Damien Stehlé
 * URL: https://pq-crystals.org/dilithium/data/dilithium-specification-round3-20210208.pdf
 * Referenced from:
+  - [examples/bring_your_own_fips202/mldsa_native/sign.c](examples/bring_your_own_fips202/mldsa_native/sign.c)
   - [mldsa/sign.c](mldsa/sign.c)
 
 ### `libmceliece`
@@ -215,6 +230,7 @@ source code and documentation.
   - Tung Chou
 * URL: https://lib.mceliece.org/
 * Referenced from:
+  - [examples/bring_your_own_fips202/mldsa_native/ct.h](examples/bring_your_own_fips202/mldsa_native/ct.h)
   - [mldsa/ct.h](mldsa/ct.h)
 
 ### `m1cycles`
@@ -247,6 +263,7 @@ source code and documentation.
   - Daniel J. Bernstein
 * URL: https://groups.google.com/a/list.nist.gov/g/pqc-forum/c/hqbtIGFKIpU/m/H14H0wOlBgAJ
 * Referenced from:
+  - [examples/bring_your_own_fips202/mldsa_native/ct.h](examples/bring_your_own_fips202/mldsa_native/ct.h)
   - [mldsa/ct.h](mldsa/ct.h)
 
 ### `supercop`
