@@ -1,0 +1,165 @@
+# Copyright (c) The mlkem-native project authors
+# Copyright (c) The mldsa-native project authors
+# SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
+
+# Metadata for test configuration files
+# Each entry describes how a test config differs from mldsa/config.h
+
+configs:
+  - path: test/no_asm_config.h
+    description: "Test configuration with no assembly code"
+    defines:
+      MLD_CONFIG_NO_ASM: true
+      MLD_CONFIG_CUSTOM_ZEROIZE:
+        content: |
+          #define MLD_CONFIG_CUSTOM_ZEROIZE
+          #if !defined(__ASSEMBLER__)
+          #include <stdint.h>
+          #include <string.h>
+          #include "../mldsa/sys.h"
+          static MLD_INLINE void mld_zeroize_native(void *ptr, size_t len)
+          {
+            explicit_bzero(ptr, len);
+          }
+          #endif
+
+  - path: test/custom_randombytes_config.h
+    description: "Test configuration with custom randombytes"
+    defines:
+      MLD_CONFIG_CUSTOM_RANDOMBYTES:
+        content: |
+          #define MLD_CONFIG_CUSTOM_RANDOMBYTES
+          #if !defined(__ASSEMBLER__)
+          #include <stdint.h>
+          #include "../mldsa/sys.h"
+          #include "notrandombytes/notrandombytes.h"
+          static MLD_INLINE void mld_randombytes(uint8_t *ptr, size_t len)
+          {
+            randombytes(ptr, len);
+          }
+          #endif /* !__ASSEMBLER__ */
+
+  - path: test/custom_zeroize_config.h
+    description: "Test configuration with custom zeroize"
+    defines:
+      MLD_CONFIG_CUSTOM_ZEROIZE:
+        content: |
+          #define MLD_CONFIG_CUSTOM_ZEROIZE
+          #if !defined(__ASSEMBLER__)
+          #include <stdint.h>
+          #include <string.h>
+          #include "../mldsa/sys.h"
+          static MLD_INLINE void mld_zeroize_native(void *ptr, size_t len)
+          {
+            explicit_bzero(ptr, len);
+          }
+          #endif
+
+  - path: test/custom_memcpy_config.h
+    description: "Test configuration with custom memcpy"
+    defines:
+      MLD_CONFIG_CUSTOM_MEMCPY:
+        content: |
+          #define MLD_CONFIG_CUSTOM_MEMCPY
+          #if !defined(__ASSEMBLER__)
+          #include <stddef.h>
+          #include <stdint.h>
+          #include "../mldsa/sys.h"
+          static MLD_INLINE void *mld_memcpy(void *dest, const void *src, size_t n)
+          {
+            /* Simple byte-by-byte copy implementation for testing */
+            unsigned char *d = (unsigned char *)dest;
+            const unsigned char *s = (const unsigned char *)src;
+            for (size_t i = 0; i < n; i++)
+            {
+              d[i] = s[i];
+            }
+            return dest;
+          }
+          #endif /* !__ASSEMBLER__ */
+
+  - path: test/custom_memset_config.h
+    description: "Test configuration with custom memset"
+    defines:
+      MLD_CONFIG_CUSTOM_MEMSET:
+        content: |
+          #define MLD_CONFIG_CUSTOM_MEMSET
+          #if !defined(__ASSEMBLER__)
+          #include <stddef.h>
+          #include <stdint.h>
+          #include "../mldsa/sys.h"
+          static MLD_INLINE void *mld_memset(void *s, int c, size_t n)
+          {
+            /* Simple byte-by-byte set implementation for testing */
+            unsigned char *ptr = (unsigned char *)s;
+            for (size_t i = 0; i < n; i++)
+            {
+              ptr[i] = (unsigned char)c;
+            }
+            return s;
+          }
+          #endif
+
+  - path: test/custom_stdlib_config.h
+    description: "Test configuration with custom stdlib functions"
+    defines:
+      MLD_CONFIG_CUSTOM_MEMCPY:
+        content: |
+          #define MLD_CONFIG_CUSTOM_MEMCPY
+          #if !defined(__ASSEMBLER__)
+          #include <stddef.h>
+          #include <stdint.h>
+          #include "../mldsa/sys.h"
+          static MLD_INLINE void *mld_memcpy(void *dest, const void *src, size_t n)
+          {
+            /* Simple byte-by-byte copy implementation for testing */
+            unsigned char *d = (unsigned char *)dest;
+            const unsigned char *s = (const unsigned char *)src;
+            for (size_t i = 0; i < n; i++)
+            {
+              d[i] = s[i];
+            }
+            return dest;
+          }
+          #endif /* !__ASSEMBLER__ */
+      MLD_CONFIG_CUSTOM_MEMSET:
+        content: |
+          #define MLD_CONFIG_CUSTOM_MEMSET
+          #if !defined(__ASSEMBLER__)
+          #include <stddef.h>
+          #include <stdint.h>
+          #include "../mldsa/sys.h"
+          static MLD_INLINE void *mld_memset(void *s, int c, size_t n)
+          {
+            /* Simple byte-by-byte set implementation for testing */
+            unsigned char *ptr = (unsigned char *)s;
+            for (size_t i = 0; i < n; i++)
+            {
+              ptr[i] = (unsigned char)c;
+            }
+            return s;
+          }
+          #endif
+
+  - path: test/break_pct_config.h
+    description: "Test configuration for PCT breakage testing"
+    defines:
+      MLD_CONFIG_KEYGEN_PCT: true
+      MLD_CONFIG_KEYGEN_PCT_BREAKAGE_TEST:
+        content: |
+          #define MLD_CONFIG_KEYGEN_PCT_BREAKAGE_TEST
+          #if !defined(__ASSEMBLER__)
+          #include <stdlib.h>
+          #include <string.h>
+          #include "../mldsa/sys.h"
+          static MLD_INLINE int mld_break_pct(void)
+          {
+            /* Break PCT if and only if MLD_BREAK_PCT is set to 1 */
+            const char *val = getenv("MLD_BREAK_PCT");
+            return val != NULL && strcmp(val, "1") == 0;
+          }
+          #endif
+
+
+  # Example configs
+
