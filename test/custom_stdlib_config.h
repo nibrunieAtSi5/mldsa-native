@@ -17,6 +17,22 @@
  *   https://csrc.nist.gov/pubs/fips/204/final
  */
 
+/*
+ * WARNING: This file is auto-generated from scripts/autogen
+ *          in the mldsa-native repository.
+ *          Do not modify it directly.
+ */
+
+/*
+ * Test configuration: Test configuration with custom stdlib functions
+ *
+ * This configuration differs from the default mldsa/src/config.h in the
+ * following places:
+ *   - MLD_CONFIG_CUSTOM_MEMCPY
+ *   - MLD_CONFIG_CUSTOM_MEMSET
+ */
+
+
 #ifndef MLD_CONFIG_H
 #define MLD_CONFIG_H
 
@@ -103,7 +119,7 @@
  * Name:        MLD_CONFIG_FILE
  *
  * Description: If defined, this is a header that will be included instead
- *              of this default configuration file mldsa/config.h.
+ *              of the default configuration file mldsa/config.h.
  *
  *              When you need to build mldsa-native in multiple configurations,
  *              using varying MLD_CONFIG_FILE can be more convenient
@@ -153,7 +169,6 @@
     !defined(MLD_CONFIG_FIPS202_BACKEND_FILE)
 #define MLD_CONFIG_FIPS202_BACKEND_FILE "fips202/native/auto.h"
 #endif
-
 /******************************************************************************
  * Name:        MLD_CONFIG_FIPS202_CUSTOM_HEADER
  *
@@ -189,7 +204,7 @@
 /******************************************************************************
  * Name:        MLD_CONFIG_CUSTOM_ZEROIZE
  *
- * Description: In compliance with @[FIPS204, Section 3.6.3], mldsa-native
+ * Description: In compliance with @[FIPS204, Section 3.6.3], mldsa-native,
  *              zeroizes intermediate stack buffers before returning from
  *              function calls.
  *
@@ -287,6 +302,33 @@ static MLD_INLINE void *mld_memset(void *s, int c, size_t n)
 }
 #endif /* !__ASSEMBLER__ */
 
+
+/******************************************************************************
+ * Name:        MLD_CONFIG_CUSTOM_RANDOMBYTES
+ *
+ * Description: mldsa-native does not provide a secure randombytes
+ *              implementation. Such an implementation has to provided by the
+ *              consumer.
+ *
+ *              If this option is not set, mldsa-native expects a function
+ *              void randombytes(uint8_t *out, size_t outlen).
+ *
+ *              Set this option and define `mld_randombytes` if you want to
+ *              use a custom method to sample randombytes with a different name
+ *              or signature.
+ *
+ *****************************************************************************/
+/* #define MLD_CONFIG_CUSTOM_RANDOMBYTES
+   #if !defined(__ASSEMBLER__)
+   #include <stdint.h>
+   #include "sys.h"
+   static MLD_INLINE void mld_randombytes(uint8_t *ptr, size_t len)
+   {
+       ... your implementation ...
+   }
+   #endif
+*/
+
 /******************************************************************************
  * Name:        MLD_CONFIG_KEYGEN_PCT
  *
@@ -324,7 +366,6 @@ static MLD_INLINE void *mld_memset(void *s, int c, size_t n)
    }
    #endif
 */
-
 
 /******************************************************************************
  * Name:        MLD_CONFIG_INTERNAL_API_QUALIFIER
@@ -415,7 +456,7 @@ static MLD_INLINE void *mld_memset(void *s, int c, size_t n)
  *
  *   PQCP_MLDSA_NATIVE_MLDSA<LEVEL>_
  *
- * e.g., PQCP_MLDSA_NATIVE_MLDSA65_
+ * e.g., PQCP_MLDSA_NATIVE_MLDSA44_
  */
 
 #if MLD_CONFIG_PARAMETER_SET == 44
@@ -425,4 +466,5 @@ static MLD_INLINE void *mld_memset(void *s, int c, size_t n)
 #elif MLD_CONFIG_PARAMETER_SET == 87
 #define MLD_DEFAULT_NAMESPACE_PREFIX PQCP_MLDSA_NATIVE_MLDSA87
 #endif
+
 #endif /* !MLD_CONFIG_H */

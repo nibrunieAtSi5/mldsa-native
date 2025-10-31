@@ -17,6 +17,21 @@
  *   https://csrc.nist.gov/pubs/fips/204/final
  */
 
+/*
+ * WARNING: This file is auto-generated from scripts/autogen
+ *          in the mldsa-native repository.
+ *          Do not modify it directly.
+ */
+
+/*
+ * Test configuration: Test configuration with custom zeroize
+ *
+ * This configuration differs from the default mldsa/src/config.h in the
+ * following places:
+ *   - MLD_CONFIG_CUSTOM_ZEROIZE
+ */
+
+
 #ifndef MLD_CONFIG_H
 #define MLD_CONFIG_H
 
@@ -103,7 +118,7 @@
  * Name:        MLD_CONFIG_FILE
  *
  * Description: If defined, this is a header that will be included instead
- *              of this default configuration file mldsa/config.h.
+ *              of the default configuration file mldsa/config.h.
  *
  *              When you need to build mldsa-native in multiple configurations,
  *              using varying MLD_CONFIG_FILE can be more convenient
@@ -153,7 +168,6 @@
     !defined(MLD_CONFIG_FIPS202_BACKEND_FILE)
 #define MLD_CONFIG_FIPS202_BACKEND_FILE "fips202/native/auto.h"
 #endif
-
 /******************************************************************************
  * Name:        MLD_CONFIG_FIPS202_CUSTOM_HEADER
  *
@@ -189,7 +203,7 @@
 /******************************************************************************
  * Name:        MLD_CONFIG_CUSTOM_ZEROIZE
  *
- * Description: In compliance with @[FIPS204, Section 3.6.3], mldsa-native
+ * Description: In compliance with @[FIPS204, Section 3.6.3], mldsa-native,
  *              zeroizes intermediate stack buffers before returning from
  *              function calls.
  *
@@ -225,7 +239,80 @@ static MLD_INLINE void mld_zeroize_native(void *ptr, size_t len)
 {
   explicit_bzero(ptr, len);
 }
-#endif
+#endif /* !__ASSEMBLER__ */
+
+
+/******************************************************************************
+ * Name:        MLD_CONFIG_CUSTOM_MEMCPY
+ *
+ * Description: Set this option and define `mld_memcpy` if you want to
+ *              use a custom method to copy memory instead of the standard
+ *              library memcpy function.
+ *
+ *              The custom implementation must have the same signature and
+ *              behavior as the standard memcpy function:
+ *              void *mld_memcpy(void *dest, const void *src, size_t n)
+ *
+ *****************************************************************************/
+/* #define MLD_CONFIG_CUSTOM_MEMCPY
+   #if !defined(__ASSEMBLER__)
+   #include <stdint.h>
+   #include "sys.h"
+   static MLD_INLINE void *mld_memcpy(void *dest, const void *src, size_t n)
+   {
+       ... your implementation ...
+   }
+   #endif
+*/
+
+/******************************************************************************
+ * Name:        MLD_CONFIG_CUSTOM_MEMSET
+ *
+ * Description: Set this option and define `mld_memset` if you want to
+ *              use a custom method to set memory instead of the standard
+ *              library memset function.
+ *
+ *              The custom implementation must have the same signature and
+ *              behavior as the standard memset function:
+ *              void *mld_memset(void *s, int c, size_t n)
+ *
+ *****************************************************************************/
+/* #define MLD_CONFIG_CUSTOM_MEMSET
+   #if !defined(__ASSEMBLER__)
+   #include <stdint.h>
+   #include "sys.h"
+   static MLD_INLINE void *mld_memset(void *s, int c, size_t n)
+   {
+       ... your implementation ...
+   }
+   #endif
+*/
+
+/******************************************************************************
+ * Name:        MLD_CONFIG_CUSTOM_RANDOMBYTES
+ *
+ * Description: mldsa-native does not provide a secure randombytes
+ *              implementation. Such an implementation has to provided by the
+ *              consumer.
+ *
+ *              If this option is not set, mldsa-native expects a function
+ *              void randombytes(uint8_t *out, size_t outlen).
+ *
+ *              Set this option and define `mld_randombytes` if you want to
+ *              use a custom method to sample randombytes with a different name
+ *              or signature.
+ *
+ *****************************************************************************/
+/* #define MLD_CONFIG_CUSTOM_RANDOMBYTES
+   #if !defined(__ASSEMBLER__)
+   #include <stdint.h>
+   #include "sys.h"
+   static MLD_INLINE void mld_randombytes(uint8_t *ptr, size_t len)
+   {
+       ... your implementation ...
+   }
+   #endif
+*/
 
 /******************************************************************************
  * Name:        MLD_CONFIG_KEYGEN_PCT
@@ -264,6 +351,45 @@ static MLD_INLINE void mld_zeroize_native(void *ptr, size_t len)
    }
    #endif
 */
+
+/******************************************************************************
+ * Name:        MLD_CONFIG_INTERNAL_API_QUALIFIER
+ *
+ * Description: If set, this option provides an additional function
+ *              qualifier to be added to declarations of internal API.
+ *
+ *              The primary use case for this option are single-CU builds,
+ *              in which case this option can be set to `static`.
+ *
+ *****************************************************************************/
+/* #define MLD_CONFIG_INTERNAL_API_QUALIFIER */
+
+/******************************************************************************
+ * Name:        MLD_CONFIG_EXTERNAL_API_QUALIFIER
+ *
+ * Description: If set, this option provides an additional function
+ *              qualifier to be added to declarations of mldsa-native's
+ *              public API.
+ *
+ *              The primary use case for this option are single-CU builds
+ *              where the public API exposed by mldsa-native is wrapped by
+ *              another API in the consuming application. In this case,
+ *              even mldsa-native's public API can be marked `static`.
+ *
+ *****************************************************************************/
+/* #define MLD_CONFIG_EXTERNAL_API_QUALIFIER */
+
+/******************************************************************************
+ * Name:        MLD_CONFIG_CT_TESTING_ENABLED
+ *
+ * Description: If set, mldsa-native annotates data as secret / public using
+ *              valgrind's annotations VALGRIND_MAKE_MEM_UNDEFINED and
+ *              VALGRIND_MAKE_MEM_DEFINED, enabling various checks for secret-
+ *              dependent control flow of variable time execution (depending
+ *              on the exact version of valgrind installed).
+ *
+ *****************************************************************************/
+/* #define MLD_CONFIG_CT_TESTING_ENABLED */
 
 /******************************************************************************
  * Name:        MLD_CONFIG_NO_ASM
@@ -315,7 +441,7 @@ static MLD_INLINE void mld_zeroize_native(void *ptr, size_t len)
  *
  *   PQCP_MLDSA_NATIVE_MLDSA<LEVEL>_
  *
- * e.g., PQCP_MLDSA_NATIVE_MLDSA65_
+ * e.g., PQCP_MLDSA_NATIVE_MLDSA44_
  */
 
 #if MLD_CONFIG_PARAMETER_SET == 44
@@ -325,4 +451,5 @@ static MLD_INLINE void mld_zeroize_native(void *ptr, size_t len)
 #elif MLD_CONFIG_PARAMETER_SET == 87
 #define MLD_DEFAULT_NAMESPACE_PREFIX PQCP_MLDSA_NATIVE_MLDSA87
 #endif
+
 #endif /* !MLD_CONFIG_H */

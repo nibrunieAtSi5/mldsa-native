@@ -103,7 +103,7 @@
  * Name:        MLD_CONFIG_FILE
  *
  * Description: If defined, this is a header that will be included instead
- *              of this default configuration file mldsa/config.h.
+ *              of the default configuration file mldsa/config.h.
  *
  *              When you need to build mldsa-native in multiple configurations,
  *              using varying MLD_CONFIG_FILE can be more convenient
