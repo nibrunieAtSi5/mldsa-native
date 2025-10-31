@@ -2,8 +2,8 @@
  * Copyright (c) The mldsa-native project authors
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
-#ifndef MLD_PARAMS_H
-#define MLD_PARAMS_H
+#ifndef MLD_SRC_PARAMS_H
+#define MLD_SRC_PARAMS_H
 
 #include "common.h"
 
@@ -77,4 +77,4 @@
   (MLDSA_CTILDEBYTES + MLDSA_L * MLDSA_POLYZ_PACKEDBYTES + \
    MLDSA_POLYVECH_PACKEDBYTES)
 
-#endif /* !MLD_PARAMS_H */
+#endif /* !MLD_SRC_PARAMS_H */

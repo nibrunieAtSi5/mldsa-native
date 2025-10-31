@@ -2,8 +2,8 @@
  * Copyright (c) The mldsa-native project authors
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
-#ifndef MLD_SYMMETRIC_H
-#define MLD_SYMMETRIC_H
+#ifndef MLD_SRC_SYMMETRIC_H
+#define MLD_SRC_SYMMETRIC_H
 
 #include <stdint.h>
 #include "cbmc.h"
@@ -64,4 +64,4 @@
                                (NBLOCKS), (CTX))
 #define mld_xof128_x4_release(CTX) mld_shake128x4_release((CTX))
 
-#endif /* !MLD_SYMMETRIC_H */
+#endif /* !MLD_SRC_SYMMETRIC_H */

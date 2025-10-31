@@ -13,8 +13,8 @@
  *   https://github.com/pq-crystals/dilithium/tree/master/avx2
  */
 
-#ifndef MLD_NATIVE_X86_64_SRC_CONSTS_H
-#define MLD_NATIVE_X86_64_SRC_CONSTS_H
+#ifndef MLD_SRC_NATIVE_X86_64_SRC_CONSTS_H
+#define MLD_SRC_NATIVE_X86_64_SRC_CONSTS_H
 /*
  * This file is derived from the public domain
  * AVX2 Dilithium implementation @[REF_AVX2].
@@ -36,4 +36,4 @@ typedef MLD_ALIGNED_INT32(624) qdata_t;
 extern const qdata_t mld_qdata;
 #endif /* !__ASSEMBLER__ */
 
-#endif /* !MLD_NATIVE_X86_64_SRC_CONSTS_H */
+#endif /* !MLD_SRC_NATIVE_X86_64_SRC_CONSTS_H */

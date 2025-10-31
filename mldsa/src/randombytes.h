@@ -2,8 +2,8 @@
  * Copyright (c) The mldsa-native project authors
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
-#ifndef MLD_RANDOMBYTES_H
-#define MLD_RANDOMBYTES_H
+#ifndef MLD_SRC_RANDOMBYTES_H
+#define MLD_SRC_RANDOMBYTES_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -19,4 +19,4 @@ __contract__(
   assigns(memory_slice(out, outlen))
 ) { randombytes(out, outlen); }
 #endif /* !MLD_CONFIG_CUSTOM_RANDOMBYTES */
-#endif /* !MLD_RANDOMBYTES_H */
+#endif /* !MLD_SRC_RANDOMBYTES_H */

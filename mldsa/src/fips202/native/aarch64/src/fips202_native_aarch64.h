@@ -3,8 +3,8 @@
  * Copyright (c) The mldsa-native project authors
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
-#ifndef MLD_FIPS202_NATIVE_AARCH64_SRC_FIPS202_NATIVE_AARCH64_H
-#define MLD_FIPS202_NATIVE_AARCH64_SRC_FIPS202_NATIVE_AARCH64_H
+#ifndef MLD_SRC_FIPS202_NATIVE_AARCH64_SRC_FIPS202_NATIVE_AARCH64_H
+#define MLD_SRC_FIPS202_NATIVE_AARCH64_SRC_FIPS202_NATIVE_AARCH64_H
 
 #include <stdint.h>
 #include "../../../../cbmc.h"
@@ -59,4 +59,4 @@ __contract__(
   assigns(memory_slice(state, sizeof(uint64_t) * 25 * 4))
 );
 
-#endif /* !MLD_FIPS202_NATIVE_AARCH64_SRC_FIPS202_NATIVE_AARCH64_H */
+#endif /* !MLD_SRC_FIPS202_NATIVE_AARCH64_SRC_FIPS202_NATIVE_AARCH64_H */

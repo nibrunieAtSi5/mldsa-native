@@ -3,8 +3,8 @@
  * Copyright (c) The mldsa-native project authors
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
-#ifndef MLD_DEBUG_H
-#define MLD_DEBUG_H
+#ifndef MLD_SRC_DEBUG_H
+#define MLD_SRC_DEBUG_H
 #include "common.h"
 
 #if defined(MLDSA_DEBUG)
@@ -128,4 +128,4 @@ void mld_debug_check_bounds(const char *file, int line, const int32_t *ptr,
 
 
 #endif /* !MLDSA_DEBUG && !CBMC */
-#endif /* !MLD_DEBUG_H */
+#endif /* !MLD_SRC_DEBUG_H */

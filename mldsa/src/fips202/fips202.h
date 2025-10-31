@@ -2,8 +2,8 @@
  * Copyright (c) The mldsa-native project authors
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
-#ifndef MLD_FIPS202_FIPS202_H
-#define MLD_FIPS202_FIPS202_H
+#ifndef MLD_SRC_FIPS202_FIPS202_H
+#define MLD_SRC_FIPS202_FIPS202_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -231,4 +231,4 @@ __contract__(
   assigns(memory_slice(out, outlen))
 );
 
-#endif /* !MLD_FIPS202_FIPS202_H */
+#endif /* !MLD_SRC_FIPS202_FIPS202_H */

@@ -12,8 +12,8 @@
  *   https://csrc.nist.gov/pubs/fips/204/final
  */
 
-#ifndef MLD_NTT_H
-#define MLD_NTT_H
+#ifndef MLD_SRC_NTT_H
+#define MLD_SRC_NTT_H
 
 #include <stdint.h>
 #include "cbmc.h"
@@ -77,4 +77,4 @@ __contract__(
   ensures(array_abs_bound(a, 0, MLDSA_N, MLD_INTT_BOUND))
 );
 
-#endif /* !MLD_NTT_H */
+#endif /* !MLD_SRC_NTT_H */

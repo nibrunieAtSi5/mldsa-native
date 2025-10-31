@@ -2,8 +2,8 @@
  * Copyright (c) The mldsa-native project authors
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
-#ifndef MLD_POLY_H
-#define MLD_POLY_H
+#ifndef MLD_SRC_POLY_H
+#define MLD_SRC_POLY_H
 
 #include <stdint.h>
 #include "cbmc.h"
@@ -699,4 +699,4 @@ __contract__(
   assigns(object_whole(r))
 );
 
-#endif /* !MLD_POLY_H */
+#endif /* !MLD_SRC_POLY_H */

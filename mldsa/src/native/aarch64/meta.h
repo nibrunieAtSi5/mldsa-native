@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
 
-#ifndef MLD_NATIVE_AARCH64_META_H
-#define MLD_NATIVE_AARCH64_META_H
+#ifndef MLD_SRC_NATIVE_AARCH64_META_H
+#define MLD_SRC_NATIVE_AARCH64_META_H
 
 /* Set of primitives that this backend replaces */
 #define MLD_USE_NATIVE_NTT
@@ -185,4 +185,4 @@ static MLD_INLINE void mld_polyvecl_pointwise_acc_montgomery_l7_native(
 }
 
 #endif /* !__ASSEMBLER__ */
-#endif /* !MLD_NATIVE_AARCH64_META_H */
+#endif /* !MLD_SRC_NATIVE_AARCH64_META_H */

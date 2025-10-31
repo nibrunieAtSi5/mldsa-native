@@ -13,8 +13,8 @@
  *   https://github.com/pq-crystals/dilithium/tree/master/avx2
  */
 
-#ifndef MLD_NATIVE_X86_64_SRC_ALIGN_H
-#define MLD_NATIVE_X86_64_SRC_ALIGN_H
+#ifndef MLD_SRC_NATIVE_X86_64_SRC_ALIGN_H
+#define MLD_SRC_NATIVE_X86_64_SRC_ALIGN_H
 
 /*
  * This file is derived from the public domain
@@ -31,4 +31,4 @@
     __m256i vec[(N + 7) / 8]; \
   }
 
-#endif /* !MLD_NATIVE_X86_64_SRC_ALIGN_H */
+#endif /* !MLD_SRC_NATIVE_X86_64_SRC_ALIGN_H */

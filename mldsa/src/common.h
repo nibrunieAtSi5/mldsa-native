@@ -12,8 +12,8 @@
  *   https://csrc.nist.gov/pubs/fips/204/final
  */
 
-#ifndef MLD_COMMON_H
-#define MLD_COMMON_H
+#ifndef MLD_SRC_COMMON_H
+#define MLD_SRC_COMMON_H
 
 #if defined(MLD_CONFIG_FILE)
 #include MLD_CONFIG_FILE
@@ -185,4 +185,4 @@ static MLD_INLINE void mld_zeroize(void *ptr, size_t len)
 
 
 
-#endif /* !MLD_COMMON_H */
+#endif /* !MLD_SRC_COMMON_H */

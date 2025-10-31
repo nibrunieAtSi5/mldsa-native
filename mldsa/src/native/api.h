@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
 
-#ifndef MLD_NATIVE_API_H
-#define MLD_NATIVE_API_H
+#ifndef MLD_SRC_NATIVE_API_H
+#define MLD_SRC_NATIVE_API_H
 /*
  * Native arithmetic interface
  *
@@ -376,4 +376,4 @@ static MLD_INLINE void mld_polyvecl_pointwise_acc_montgomery_l7_native(
     const int32_t v[MLDSA_L][MLDSA_N]);
 #endif /* MLD_USE_NATIVE_POLYVECL_POINTWISE_ACC_MONTGOMERY_L7 */
 
-#endif /* !MLD_NATIVE_API_H */
+#endif /* !MLD_SRC_NATIVE_API_H */

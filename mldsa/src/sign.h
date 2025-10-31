@@ -12,8 +12,8 @@
  *   https://csrc.nist.gov/pubs/fips/204/final
  */
 
-#ifndef MLD_SIGN_H
-#define MLD_SIGN_H
+#ifndef MLD_SRC_SIGN_H
+#define MLD_SRC_SIGN_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -585,4 +585,4 @@ __contract__(
   ensures(return_value == 0 || return_value == -1)
 );
 
-#endif /* !MLD_SIGN_H */
+#endif /* !MLD_SRC_SIGN_H */

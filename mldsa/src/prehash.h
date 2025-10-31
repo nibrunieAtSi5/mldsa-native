@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
 
-#ifndef MLD_PREHASH_H
-#define MLD_PREHASH_H
+#ifndef MLD_SRC_PREHASH_H
+#define MLD_SRC_PREHASH_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -54,4 +54,4 @@ size_t mld_format_pre_hash_message(
     uint8_t fmsg[MLD_PRE_HASH_MAX_FORMATTED_MESSAGE_BYTES], const uint8_t *ph,
     size_t phlen, const uint8_t *ctx, size_t ctxlen, mld_hash_alg_t hashAlg);
 
-#endif /* !MLD_PREHASH_H */
+#endif /* !MLD_SRC_PREHASH_H */

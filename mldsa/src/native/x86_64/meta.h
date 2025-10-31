@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
 
-#ifndef MLD_NATIVE_X86_64_META_H
-#define MLD_NATIVE_X86_64_META_H
+#ifndef MLD_SRC_NATIVE_X86_64_META_H
+#define MLD_SRC_NATIVE_X86_64_META_H
 
 /* Identifier for this backend so that source and assembly files
  * in the build can be appropriately guarded. */
@@ -191,4 +191,4 @@ static MLD_INLINE void mld_polyvecl_pointwise_acc_montgomery_l7_native(
 
 #endif /* !__ASSEMBLER__ */
 
-#endif /* !MLD_NATIVE_X86_64_META_H */
+#endif /* !MLD_SRC_NATIVE_X86_64_META_H */

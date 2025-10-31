@@ -17,8 +17,8 @@
  *   https://csrc.nist.gov/pubs/fips/204/final
  */
 
-#ifndef MLD_CONFIG_H
-#define MLD_CONFIG_H
+#ifndef MLD_SRC_CONFIG_H
+#define MLD_SRC_CONFIG_H
 
 /******************************************************************************
  * Name:        MLD_CONFIG_PARAMETER_SET
@@ -436,4 +436,4 @@
 #define MLD_DEFAULT_NAMESPACE_PREFIX PQCP_MLDSA_NATIVE_MLDSA87
 #endif
 
-#endif /* !MLD_CONFIG_H */
+#endif /* !MLD_SRC_CONFIG_H */

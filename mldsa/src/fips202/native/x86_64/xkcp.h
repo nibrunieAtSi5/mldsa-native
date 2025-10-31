@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
 
-#ifndef MLD_FIPS202_NATIVE_X86_64_XKCP_H
-#define MLD_FIPS202_NATIVE_X86_64_XKCP_H
+#ifndef MLD_SRC_FIPS202_NATIVE_X86_64_XKCP_H
+#define MLD_SRC_FIPS202_NATIVE_X86_64_XKCP_H
 
 #include "../../../common.h"
 
@@ -22,4 +22,4 @@ static MLD_INLINE void mld_keccak_f1600_x4_native(uint64_t *state)
 }
 #endif /* !__ASSEMBLER__ */
 
-#endif /* !MLD_FIPS202_NATIVE_X86_64_XKCP_H */
+#endif /* !MLD_SRC_FIPS202_NATIVE_X86_64_XKCP_H */

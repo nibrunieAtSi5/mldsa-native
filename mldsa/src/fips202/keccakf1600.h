@@ -3,8 +3,8 @@
  * Copyright (c) The mldsa-native project authors
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
-#ifndef MLD_FIPS202_KECCAKF1600_H
-#define MLD_FIPS202_KECCAKF1600_H
+#ifndef MLD_SRC_FIPS202_KECCAKF1600_H
+#define MLD_SRC_FIPS202_KECCAKF1600_H
 #include <stdint.h>
 #include "../cbmc.h"
 #include "../common.h"
@@ -98,4 +98,4 @@ __contract__(
     assigns(memory_slice(state, sizeof(uint64_t) * MLD_KECCAK_LANES))
 );
 
-#endif /* !MLD_FIPS202_KECCAKF1600_H */
+#endif /* !MLD_SRC_FIPS202_KECCAKF1600_H */

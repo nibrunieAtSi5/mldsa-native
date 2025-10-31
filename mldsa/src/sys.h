@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
 
-#ifndef MLD_SYS_H
-#define MLD_SYS_H
+#ifndef MLD_SRC_SYS_H
+#define MLD_SRC_SYS_H
 
 #if !defined(MLD_CONFIG_NO_ASM) && (defined(__GNUC__) || defined(__clang__))
 #define MLD_HAVE_INLINE_ASM
@@ -186,4 +186,4 @@
 #define MLD_MUST_CHECK_RETURN_VALUE
 #endif
 
-#endif /* !MLD_SYS_H */
+#endif /* !MLD_SRC_SYS_H */

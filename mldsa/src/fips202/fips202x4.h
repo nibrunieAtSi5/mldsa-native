@@ -3,8 +3,8 @@
  * Copyright (c) The mldsa-native project authors
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
-#ifndef MLD_FIPS202_FIPS202X4_H
-#define MLD_FIPS202_FIPS202X4_H
+#ifndef MLD_SRC_FIPS202_FIPS202X4_H
+#define MLD_SRC_FIPS202_FIPS202X4_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -104,4 +104,4 @@ void mld_shake256x4_init(mld_shake256x4ctx *state);
 void mld_shake256x4_release(mld_shake256x4ctx *state);
 
 
-#endif /* !MLD_FIPS202_FIPS202X4_H */
+#endif /* !MLD_SRC_FIPS202_FIPS202X4_H */

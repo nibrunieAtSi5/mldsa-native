@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
 
-#ifndef MLD_NATIVE_META_H
-#define MLD_NATIVE_META_H
+#ifndef MLD_SRC_NATIVE_META_H
+#define MLD_SRC_NATIVE_META_H
 
 /*
  * Default arithmetic backend
@@ -20,4 +20,4 @@
 #include "x86_64/meta.h"
 #endif
 
-#endif /* !MLD_NATIVE_META_H */
+#endif /* !MLD_SRC_NATIVE_META_H */

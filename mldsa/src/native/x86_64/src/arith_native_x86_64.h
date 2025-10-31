@@ -3,8 +3,8 @@
  * Copyright (c) The mldsa-native project authors
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
-#ifndef MLD_NATIVE_X86_64_SRC_ARITH_NATIVE_X86_64_H
-#define MLD_NATIVE_X86_64_SRC_ARITH_NATIVE_X86_64_H
+#ifndef MLD_SRC_NATIVE_X86_64_SRC_ARITH_NATIVE_X86_64_H
+#define MLD_SRC_NATIVE_X86_64_SRC_ARITH_NATIVE_X86_64_H
 #include "../../../common.h"
 
 #include <immintrin.h>
@@ -94,4 +94,4 @@ void mld_pointwise_acc_l5_avx2(__m256i *c, const __m256i *a, const __m256i *b,
 void mld_pointwise_acc_l7_avx2(__m256i *c, const __m256i *a, const __m256i *b,
                                const __m256i *qdata);
 
-#endif /* !MLD_NATIVE_X86_64_SRC_ARITH_NATIVE_X86_64_H */
+#endif /* !MLD_SRC_NATIVE_X86_64_SRC_ARITH_NATIVE_X86_64_H */

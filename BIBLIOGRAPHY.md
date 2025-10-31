@@ -14,13 +14,13 @@ source code and documentation.
   - National Institute of Standards and Technology
 * URL: https://csrc.nist.gov/projects/cryptographic-module-validation-program/fips-140-3-ig-announcements
 * Referenced from:
-  - [examples/bring_your_own_fips202/mldsa_native/config.h](examples/bring_your_own_fips202/mldsa_native/config.h)
-  - [examples/bring_your_own_fips202/mldsa_native/sign.c](examples/bring_your_own_fips202/mldsa_native/sign.c)
+  - [examples/bring_your_own_fips202/mldsa_native/src/config.h](examples/bring_your_own_fips202/mldsa_native/src/config.h)
+  - [examples/bring_your_own_fips202/mldsa_native/src/sign.c](examples/bring_your_own_fips202/mldsa_native/src/sign.c)
   - [integration/liboqs/config_aarch64.h](integration/liboqs/config_aarch64.h)
   - [integration/liboqs/config_c.h](integration/liboqs/config_c.h)
   - [integration/liboqs/config_x86_64.h](integration/liboqs/config_x86_64.h)
-  - [mldsa/config.h](mldsa/config.h)
-  - [mldsa/sign.c](mldsa/sign.c)
+  - [mldsa/src/config.h](mldsa/src/config.h)
+  - [mldsa/src/sign.c](mldsa/src/sign.c)
   - [test/break_pct_config.h](test/break_pct_config.h)
   - [test/custom_memcpy_config.h](test/custom_memcpy_config.h)
   - [test/custom_memset_config.h](test/custom_memset_config.h)
@@ -47,28 +47,28 @@ source code and documentation.
 * URL: https://csrc.nist.gov/pubs/fips/204/final
 * Referenced from:
   - [README.md](README.md)
-  - [examples/bring_your_own_fips202/mldsa_native/common.h](examples/bring_your_own_fips202/mldsa_native/common.h)
-  - [examples/bring_your_own_fips202/mldsa_native/config.h](examples/bring_your_own_fips202/mldsa_native/config.h)
   - [examples/bring_your_own_fips202/mldsa_native/mldsa_native.h](examples/bring_your_own_fips202/mldsa_native/mldsa_native.h)
-  - [examples/bring_your_own_fips202/mldsa_native/ntt.h](examples/bring_your_own_fips202/mldsa_native/ntt.h)
-  - [examples/bring_your_own_fips202/mldsa_native/poly.c](examples/bring_your_own_fips202/mldsa_native/poly.c)
-  - [examples/bring_your_own_fips202/mldsa_native/poly_kl.c](examples/bring_your_own_fips202/mldsa_native/poly_kl.c)
-  - [examples/bring_your_own_fips202/mldsa_native/polyvec.c](examples/bring_your_own_fips202/mldsa_native/polyvec.c)
-  - [examples/bring_your_own_fips202/mldsa_native/rounding.h](examples/bring_your_own_fips202/mldsa_native/rounding.h)
-  - [examples/bring_your_own_fips202/mldsa_native/sign.c](examples/bring_your_own_fips202/mldsa_native/sign.c)
-  - [examples/bring_your_own_fips202/mldsa_native/sign.h](examples/bring_your_own_fips202/mldsa_native/sign.h)
-  - [mldsa/common.h](mldsa/common.h)
-  - [mldsa/config.h](mldsa/config.h)
-  - [mldsa/fips202/fips202.c](mldsa/fips202/fips202.c)
-  - [mldsa/fips202/fips202x4.c](mldsa/fips202/fips202x4.c)
+  - [examples/bring_your_own_fips202/mldsa_native/src/common.h](examples/bring_your_own_fips202/mldsa_native/src/common.h)
+  - [examples/bring_your_own_fips202/mldsa_native/src/config.h](examples/bring_your_own_fips202/mldsa_native/src/config.h)
+  - [examples/bring_your_own_fips202/mldsa_native/src/ntt.h](examples/bring_your_own_fips202/mldsa_native/src/ntt.h)
+  - [examples/bring_your_own_fips202/mldsa_native/src/poly.c](examples/bring_your_own_fips202/mldsa_native/src/poly.c)
+  - [examples/bring_your_own_fips202/mldsa_native/src/poly_kl.c](examples/bring_your_own_fips202/mldsa_native/src/poly_kl.c)
+  - [examples/bring_your_own_fips202/mldsa_native/src/polyvec.c](examples/bring_your_own_fips202/mldsa_native/src/polyvec.c)
+  - [examples/bring_your_own_fips202/mldsa_native/src/rounding.h](examples/bring_your_own_fips202/mldsa_native/src/rounding.h)
+  - [examples/bring_your_own_fips202/mldsa_native/src/sign.c](examples/bring_your_own_fips202/mldsa_native/src/sign.c)
+  - [examples/bring_your_own_fips202/mldsa_native/src/sign.h](examples/bring_your_own_fips202/mldsa_native/src/sign.h)
   - [mldsa/mldsa_native.h](mldsa/mldsa_native.h)
-  - [mldsa/ntt.h](mldsa/ntt.h)
-  - [mldsa/poly.c](mldsa/poly.c)
-  - [mldsa/poly_kl.c](mldsa/poly_kl.c)
-  - [mldsa/polyvec.c](mldsa/polyvec.c)
-  - [mldsa/rounding.h](mldsa/rounding.h)
-  - [mldsa/sign.c](mldsa/sign.c)
-  - [mldsa/sign.h](mldsa/sign.h)
+  - [mldsa/src/common.h](mldsa/src/common.h)
+  - [mldsa/src/config.h](mldsa/src/config.h)
+  - [mldsa/src/fips202/fips202.c](mldsa/src/fips202/fips202.c)
+  - [mldsa/src/fips202/fips202x4.c](mldsa/src/fips202/fips202x4.c)
+  - [mldsa/src/ntt.h](mldsa/src/ntt.h)
+  - [mldsa/src/poly.c](mldsa/src/poly.c)
+  - [mldsa/src/poly_kl.c](mldsa/src/poly_kl.c)
+  - [mldsa/src/polyvec.c](mldsa/src/polyvec.c)
+  - [mldsa/src/rounding.h](mldsa/src/rounding.h)
+  - [mldsa/src/sign.c](mldsa/src/sign.c)
+  - [mldsa/src/sign.h](mldsa/src/sign.h)
   - [test/break_pct_config.h](test/break_pct_config.h)
   - [test/custom_memcpy_config.h](test/custom_memcpy_config.h)
   - [test/custom_memset_config.h](test/custom_memset_config.h)
@@ -88,9 +88,9 @@ source code and documentation.
   - [dev/fips202/aarch64/auto.h](dev/fips202/aarch64/auto.h)
   - [dev/fips202/aarch64/src/keccak_f1600_x1_v84a_asm.S](dev/fips202/aarch64/src/keccak_f1600_x1_v84a_asm.S)
   - [dev/fips202/aarch64/src/keccak_f1600_x2_v84a_asm.S](dev/fips202/aarch64/src/keccak_f1600_x2_v84a_asm.S)
-  - [mldsa/fips202/native/aarch64/auto.h](mldsa/fips202/native/aarch64/auto.h)
-  - [mldsa/fips202/native/aarch64/src/keccak_f1600_x1_v84a_asm.S](mldsa/fips202/native/aarch64/src/keccak_f1600_x1_v84a_asm.S)
-  - [mldsa/fips202/native/aarch64/src/keccak_f1600_x2_v84a_asm.S](mldsa/fips202/native/aarch64/src/keccak_f1600_x2_v84a_asm.S)
+  - [mldsa/src/fips202/native/aarch64/auto.h](mldsa/src/fips202/native/aarch64/auto.h)
+  - [mldsa/src/fips202/native/aarch64/src/keccak_f1600_x1_v84a_asm.S](mldsa/src/fips202/native/aarch64/src/keccak_f1600_x1_v84a_asm.S)
+  - [mldsa/src/fips202/native/aarch64/src/keccak_f1600_x2_v84a_asm.S](mldsa/src/fips202/native/aarch64/src/keccak_f1600_x2_v84a_asm.S)
 
 ### `KyberSlash`
 
@@ -141,8 +141,8 @@ source code and documentation.
 * Referenced from:
   - [dev/aarch64_clean/src/intt.S](dev/aarch64_clean/src/intt.S)
   - [dev/aarch64_clean/src/ntt.S](dev/aarch64_clean/src/ntt.S)
-  - [mldsa/native/aarch64/src/intt.S](mldsa/native/aarch64/src/intt.S)
-  - [mldsa/native/aarch64/src/ntt.S](mldsa/native/aarch64/src/ntt.S)
+  - [mldsa/src/native/aarch64/src/intt.S](mldsa/src/native/aarch64/src/intt.S)
+  - [mldsa/src/native/aarch64/src/ntt.S](mldsa/src/native/aarch64/src/ntt.S)
 
 ### `REF`
 
@@ -159,12 +159,12 @@ source code and documentation.
 * URL: https://github.com/pq-crystals/dilithium/tree/master/ref
 * Referenced from:
   - [README.md](README.md)
-  - [examples/bring_your_own_fips202/mldsa_native/ntt.c](examples/bring_your_own_fips202/mldsa_native/ntt.c)
-  - [examples/bring_your_own_fips202/mldsa_native/poly.c](examples/bring_your_own_fips202/mldsa_native/poly.c)
-  - [examples/bring_your_own_fips202/mldsa_native/poly_kl.c](examples/bring_your_own_fips202/mldsa_native/poly_kl.c)
-  - [mldsa/ntt.c](mldsa/ntt.c)
-  - [mldsa/poly.c](mldsa/poly.c)
-  - [mldsa/poly_kl.c](mldsa/poly_kl.c)
+  - [examples/bring_your_own_fips202/mldsa_native/src/ntt.c](examples/bring_your_own_fips202/mldsa_native/src/ntt.c)
+  - [examples/bring_your_own_fips202/mldsa_native/src/poly.c](examples/bring_your_own_fips202/mldsa_native/src/poly.c)
+  - [examples/bring_your_own_fips202/mldsa_native/src/poly_kl.c](examples/bring_your_own_fips202/mldsa_native/src/poly_kl.c)
+  - [mldsa/src/ntt.c](mldsa/src/ntt.c)
+  - [mldsa/src/poly.c](mldsa/src/poly.c)
+  - [mldsa/src/poly_kl.c](mldsa/src/poly_kl.c)
 
 ### `REF_AVX2`
 
@@ -201,27 +201,27 @@ source code and documentation.
   - [dev/x86_64/src/rej_uniform_avx2.c](dev/x86_64/src/rej_uniform_avx2.c)
   - [dev/x86_64/src/rej_uniform_eta2_avx2.c](dev/x86_64/src/rej_uniform_eta2_avx2.c)
   - [dev/x86_64/src/rej_uniform_eta4_avx2.c](dev/x86_64/src/rej_uniform_eta4_avx2.c)
-  - [mldsa/native/x86_64/src/align.h](mldsa/native/x86_64/src/align.h)
-  - [mldsa/native/x86_64/src/consts.c](mldsa/native/x86_64/src/consts.c)
-  - [mldsa/native/x86_64/src/consts.h](mldsa/native/x86_64/src/consts.h)
-  - [mldsa/native/x86_64/src/intt.S](mldsa/native/x86_64/src/intt.S)
-  - [mldsa/native/x86_64/src/ntt.S](mldsa/native/x86_64/src/ntt.S)
-  - [mldsa/native/x86_64/src/nttunpack.S](mldsa/native/x86_64/src/nttunpack.S)
-  - [mldsa/native/x86_64/src/pointwise.S](mldsa/native/x86_64/src/pointwise.S)
-  - [mldsa/native/x86_64/src/pointwise_acc_l4.S](mldsa/native/x86_64/src/pointwise_acc_l4.S)
-  - [mldsa/native/x86_64/src/pointwise_acc_l5.S](mldsa/native/x86_64/src/pointwise_acc_l5.S)
-  - [mldsa/native/x86_64/src/pointwise_acc_l7.S](mldsa/native/x86_64/src/pointwise_acc_l7.S)
-  - [mldsa/native/x86_64/src/poly_caddq_avx2.c](mldsa/native/x86_64/src/poly_caddq_avx2.c)
-  - [mldsa/native/x86_64/src/poly_chknorm_avx2.c](mldsa/native/x86_64/src/poly_chknorm_avx2.c)
-  - [mldsa/native/x86_64/src/poly_decompose_32_avx2.c](mldsa/native/x86_64/src/poly_decompose_32_avx2.c)
-  - [mldsa/native/x86_64/src/poly_decompose_88_avx2.c](mldsa/native/x86_64/src/poly_decompose_88_avx2.c)
-  - [mldsa/native/x86_64/src/poly_use_hint_32_avx2.c](mldsa/native/x86_64/src/poly_use_hint_32_avx2.c)
-  - [mldsa/native/x86_64/src/poly_use_hint_88_avx2.c](mldsa/native/x86_64/src/poly_use_hint_88_avx2.c)
-  - [mldsa/native/x86_64/src/polyz_unpack_17_avx2.c](mldsa/native/x86_64/src/polyz_unpack_17_avx2.c)
-  - [mldsa/native/x86_64/src/polyz_unpack_19_avx2.c](mldsa/native/x86_64/src/polyz_unpack_19_avx2.c)
-  - [mldsa/native/x86_64/src/rej_uniform_avx2.c](mldsa/native/x86_64/src/rej_uniform_avx2.c)
-  - [mldsa/native/x86_64/src/rej_uniform_eta2_avx2.c](mldsa/native/x86_64/src/rej_uniform_eta2_avx2.c)
-  - [mldsa/native/x86_64/src/rej_uniform_eta4_avx2.c](mldsa/native/x86_64/src/rej_uniform_eta4_avx2.c)
+  - [mldsa/src/native/x86_64/src/align.h](mldsa/src/native/x86_64/src/align.h)
+  - [mldsa/src/native/x86_64/src/consts.c](mldsa/src/native/x86_64/src/consts.c)
+  - [mldsa/src/native/x86_64/src/consts.h](mldsa/src/native/x86_64/src/consts.h)
+  - [mldsa/src/native/x86_64/src/intt.S](mldsa/src/native/x86_64/src/intt.S)
+  - [mldsa/src/native/x86_64/src/ntt.S](mldsa/src/native/x86_64/src/ntt.S)
+  - [mldsa/src/native/x86_64/src/nttunpack.S](mldsa/src/native/x86_64/src/nttunpack.S)
+  - [mldsa/src/native/x86_64/src/pointwise.S](mldsa/src/native/x86_64/src/pointwise.S)
+  - [mldsa/src/native/x86_64/src/pointwise_acc_l4.S](mldsa/src/native/x86_64/src/pointwise_acc_l4.S)
+  - [mldsa/src/native/x86_64/src/pointwise_acc_l5.S](mldsa/src/native/x86_64/src/pointwise_acc_l5.S)
+  - [mldsa/src/native/x86_64/src/pointwise_acc_l7.S](mldsa/src/native/x86_64/src/pointwise_acc_l7.S)
+  - [mldsa/src/native/x86_64/src/poly_caddq_avx2.c](mldsa/src/native/x86_64/src/poly_caddq_avx2.c)
+  - [mldsa/src/native/x86_64/src/poly_chknorm_avx2.c](mldsa/src/native/x86_64/src/poly_chknorm_avx2.c)
+  - [mldsa/src/native/x86_64/src/poly_decompose_32_avx2.c](mldsa/src/native/x86_64/src/poly_decompose_32_avx2.c)
+  - [mldsa/src/native/x86_64/src/poly_decompose_88_avx2.c](mldsa/src/native/x86_64/src/poly_decompose_88_avx2.c)
+  - [mldsa/src/native/x86_64/src/poly_use_hint_32_avx2.c](mldsa/src/native/x86_64/src/poly_use_hint_32_avx2.c)
+  - [mldsa/src/native/x86_64/src/poly_use_hint_88_avx2.c](mldsa/src/native/x86_64/src/poly_use_hint_88_avx2.c)
+  - [mldsa/src/native/x86_64/src/polyz_unpack_17_avx2.c](mldsa/src/native/x86_64/src/polyz_unpack_17_avx2.c)
+  - [mldsa/src/native/x86_64/src/polyz_unpack_19_avx2.c](mldsa/src/native/x86_64/src/polyz_unpack_19_avx2.c)
+  - [mldsa/src/native/x86_64/src/rej_uniform_avx2.c](mldsa/src/native/x86_64/src/rej_uniform_avx2.c)
+  - [mldsa/src/native/x86_64/src/rej_uniform_eta2_avx2.c](mldsa/src/native/x86_64/src/rej_uniform_eta2_avx2.c)
+  - [mldsa/src/native/x86_64/src/rej_uniform_eta4_avx2.c](mldsa/src/native/x86_64/src/rej_uniform_eta4_avx2.c)
 
 ### `Round3_Spec`
 
@@ -237,8 +237,8 @@ source code and documentation.
   - Damien Stehlé
 * URL: https://pq-crystals.org/dilithium/data/dilithium-specification-round3-20210208.pdf
 * Referenced from:
-  - [examples/bring_your_own_fips202/mldsa_native/sign.c](examples/bring_your_own_fips202/mldsa_native/sign.c)
-  - [mldsa/sign.c](mldsa/sign.c)
+  - [examples/bring_your_own_fips202/mldsa_native/src/sign.c](examples/bring_your_own_fips202/mldsa_native/src/sign.c)
+  - [mldsa/src/sign.c](mldsa/src/sign.c)
 
 ### `SLOTHY_Paper`
 
@@ -252,8 +252,8 @@ source code and documentation.
 * Referenced from:
   - [dev/aarch64_clean/src/intt.S](dev/aarch64_clean/src/intt.S)
   - [dev/aarch64_clean/src/ntt.S](dev/aarch64_clean/src/ntt.S)
-  - [mldsa/native/aarch64/src/intt.S](mldsa/native/aarch64/src/intt.S)
-  - [mldsa/native/aarch64/src/ntt.S](mldsa/native/aarch64/src/ntt.S)
+  - [mldsa/src/native/aarch64/src/intt.S](mldsa/src/native/aarch64/src/intt.S)
+  - [mldsa/src/native/aarch64/src/ntt.S](mldsa/src/native/aarch64/src/ntt.S)
 
 ### `libmceliece`
 
@@ -263,8 +263,8 @@ source code and documentation.
   - Tung Chou
 * URL: https://lib.mceliece.org/
 * Referenced from:
-  - [examples/bring_your_own_fips202/mldsa_native/ct.h](examples/bring_your_own_fips202/mldsa_native/ct.h)
-  - [mldsa/ct.h](mldsa/ct.h)
+  - [examples/bring_your_own_fips202/mldsa_native/src/ct.h](examples/bring_your_own_fips202/mldsa_native/src/ct.h)
+  - [mldsa/src/ct.h](mldsa/src/ct.h)
 
 ### `m1cycles`
 
@@ -286,8 +286,8 @@ source code and documentation.
   - Ko Stoffelen
 * URL: https://github.com/mupq/mupq
 * Referenced from:
-  - [mldsa/fips202/fips202.c](mldsa/fips202/fips202.c)
-  - [mldsa/fips202/keccakf1600.c](mldsa/fips202/keccakf1600.c)
+  - [mldsa/src/fips202/fips202.c](mldsa/src/fips202/fips202.c)
+  - [mldsa/src/fips202/keccakf1600.c](mldsa/src/fips202/keccakf1600.c)
 
 ### `optblocker`
 
@@ -296,8 +296,8 @@ source code and documentation.
   - Daniel J. Bernstein
 * URL: https://groups.google.com/a/list.nist.gov/g/pqc-forum/c/hqbtIGFKIpU/m/H14H0wOlBgAJ
 * Referenced from:
-  - [examples/bring_your_own_fips202/mldsa_native/ct.h](examples/bring_your_own_fips202/mldsa_native/ct.h)
-  - [mldsa/ct.h](mldsa/ct.h)
+  - [examples/bring_your_own_fips202/mldsa_native/src/ct.h](examples/bring_your_own_fips202/mldsa_native/src/ct.h)
+  - [mldsa/src/ct.h](mldsa/src/ct.h)
 
 ### `supercop`
 
@@ -306,8 +306,8 @@ source code and documentation.
   - Daniel J. Bernstein
 * URL: http://bench.cr.yp.to/supercop.html
 * Referenced from:
-  - [mldsa/fips202/fips202.c](mldsa/fips202/fips202.c)
-  - [mldsa/fips202/keccakf1600.c](mldsa/fips202/keccakf1600.c)
+  - [mldsa/src/fips202/fips202.c](mldsa/src/fips202/fips202.c)
+  - [mldsa/src/fips202/keccakf1600.c](mldsa/src/fips202/keccakf1600.c)
 
 ### `surf`
 
@@ -343,5 +343,5 @@ source code and documentation.
   - Peter Schwabe
 * URL: https://keccak.team/2015/tweetfips202.html
 * Referenced from:
-  - [mldsa/fips202/fips202.c](mldsa/fips202/fips202.c)
-  - [mldsa/fips202/keccakf1600.c](mldsa/fips202/keccakf1600.c)
+  - [mldsa/src/fips202/fips202.c](mldsa/src/fips202/fips202.c)
+  - [mldsa/src/fips202/keccakf1600.c](mldsa/src/fips202/keccakf1600.c)

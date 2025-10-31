@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
 
-#ifndef MLD_CBMC_H
-#define MLD_CBMC_H
+#ifndef MLD_SRC_CBMC_H
+#define MLD_SRC_CBMC_H
 /***************************************************
  * Basic replacements for __CPROVER_XXX contracts
  ***************************************************/
@@ -142,4 +142,4 @@
 
 #endif /* CBMC */
 
-#endif /* !MLD_CBMC_H */
+#endif /* !MLD_SRC_CBMC_H */

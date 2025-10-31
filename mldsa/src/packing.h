@@ -2,8 +2,8 @@
  * Copyright (c) The mldsa-native project authors
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
-#ifndef MLD_PACKING_H
-#define MLD_PACKING_H
+#ifndef MLD_SRC_PACKING_H
+#define MLD_SRC_PACKING_H
 
 #include <stdint.h>
 #include "polyvec.h"
@@ -200,4 +200,4 @@ __contract__(
     array_bound(h->vec[k1].coeffs, 0, MLDSA_N, 0, 2)))
   ensures(return_value >= 0 && return_value <= 1)
 );
-#endif /* !MLD_PACKING_H */
+#endif /* !MLD_SRC_PACKING_H */

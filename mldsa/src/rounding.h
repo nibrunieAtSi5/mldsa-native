@@ -12,8 +12,8 @@
  *   https://csrc.nist.gov/pubs/fips/204/final
  */
 
-#ifndef MLD_ROUNDING_H
-#define MLD_ROUNDING_H
+#ifndef MLD_SRC_ROUNDING_H
+#define MLD_SRC_ROUNDING_H
 
 #include <stdint.h>
 #include "cbmc.h"
@@ -182,4 +182,4 @@ __contract__(
 }
 
 
-#endif /* !MLD_ROUNDING_H */
+#endif /* !MLD_SRC_ROUNDING_H */

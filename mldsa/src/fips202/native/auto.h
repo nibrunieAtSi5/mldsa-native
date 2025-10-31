@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
 
-#ifndef MLD_FIPS202_NATIVE_AUTO_H
-#define MLD_FIPS202_NATIVE_AUTO_H
+#ifndef MLD_SRC_FIPS202_NATIVE_AUTO_H
+#define MLD_SRC_FIPS202_NATIVE_AUTO_H
 
 /*
  * Default FIPS202 backend
@@ -20,4 +20,4 @@
 #include "x86_64/xkcp.h"
 #endif
 
-#endif /* !MLD_FIPS202_NATIVE_AUTO_H */
+#endif /* !MLD_SRC_FIPS202_NATIVE_AUTO_H */

@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
 
-#ifndef MLD_NATIVE_AARCH64_SRC_ARITH_NATIVE_AARCH64_H
-#define MLD_NATIVE_AARCH64_SRC_ARITH_NATIVE_AARCH64_H
+#ifndef MLD_SRC_NATIVE_AARCH64_SRC_ARITH_NATIVE_AARCH64_H
+#define MLD_SRC_NATIVE_AARCH64_SRC_ARITH_NATIVE_AARCH64_H
 
 #include <stdint.h>
 #include "../../../common.h"
@@ -113,4 +113,4 @@ void mld_polyvecl_pointwise_acc_montgomery_l5_asm(int32_t *, const int32_t *,
 void mld_polyvecl_pointwise_acc_montgomery_l7_asm(int32_t *, const int32_t *,
                                                   const int32_t *);
 
-#endif /* !MLD_NATIVE_AARCH64_SRC_ARITH_NATIVE_AARCH64_H */
+#endif /* !MLD_SRC_NATIVE_AARCH64_SRC_ARITH_NATIVE_AARCH64_H */

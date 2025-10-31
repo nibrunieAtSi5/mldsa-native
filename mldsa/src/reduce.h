@@ -2,8 +2,8 @@
  * Copyright (c) The mldsa-native project authors
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
-#ifndef MLD_REDUCE_H
-#define MLD_REDUCE_H
+#ifndef MLD_SRC_REDUCE_H
+#define MLD_SRC_REDUCE_H
 
 #include <stdint.h>
 #include "cbmc.h"
@@ -129,4 +129,4 @@ __contract__(
 }
 
 
-#endif /* !MLD_REDUCE_H */
+#endif /* !MLD_SRC_REDUCE_H */

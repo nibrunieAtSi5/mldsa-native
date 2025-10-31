@@ -2,8 +2,8 @@
  * Copyright (c) The mldsa-native project authors
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
-#ifndef MLD_POLYVEC_H
-#define MLD_POLYVEC_H
+#ifndef MLD_SRC_POLYVEC_H
+#define MLD_SRC_POLYVEC_H
 
 #include <stdint.h>
 #include "cbmc.h"
@@ -794,4 +794,4 @@ __contract__(
                  array_abs_bound(t->vec[k0].coeffs, 0, MLDSA_N, MLDSA_Q)))
 );
 
-#endif /* !MLD_POLYVEC_H */
+#endif /* !MLD_SRC_POLYVEC_H */

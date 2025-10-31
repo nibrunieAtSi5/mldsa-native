@@ -18,8 +18,8 @@
  *   https://groups.google.com/a/list.nist.gov/g/pqc-forum/c/hqbtIGFKIpU/m/H14H0wOlBgAJ
  */
 
-#ifndef MLD_CT_H
-#define MLD_CT_H
+#ifndef MLD_SRC_CT_H
+#define MLD_SRC_CT_H
 
 #include <stdint.h>
 #include "cbmc.h"
@@ -233,4 +233,4 @@ __contract__(
 }
 
 
-#endif /* !MLD_CT_H */
+#endif /* !MLD_SRC_CT_H */
