@@ -28,7 +28,7 @@
 #define crypto_sign_signature_internal MLD_NAMESPACE_KL(signature_internal)
 #define crypto_sign_signature MLD_NAMESPACE_KL(signature)
 #define crypto_sign_signature_extmu MLD_NAMESPACE_KL(signature_extmu)
-#define crypto_sign MLD_NAMESPACE_KL(crypto_sign)
+#define crypto_sign MLD_NAMESPACE_KL(sign)
 #define crypto_sign_verify_internal MLD_NAMESPACE_KL(verify_internal)
 #define crypto_sign_verify MLD_NAMESPACE_KL(verify)
 #define crypto_sign_verify_extmu MLD_NAMESPACE_KL(verify_extmu)

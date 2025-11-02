@@ -61,6 +61,8 @@ MLD_SOURCE=$(wildcard					\
 	mldsa_native/mldsa/**/**/*.c		\
 	mldsa_native/mldsa/**/**/**/*.c)
 
+INC=-Imldsa_native/mldsa/
+
 # Part B:
 #
 # Random number generator
@@ -102,7 +104,7 @@ $(BINARY_NAME_FULL_87): CFLAGS += -DMLD_CONFIG_PARAMETER_SET=87
 $(BINARIES_FULL): $(ALL_SOURCE)
 	echo "$@"
 	mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $(INC) $^ -o $@
 
 all: build
 

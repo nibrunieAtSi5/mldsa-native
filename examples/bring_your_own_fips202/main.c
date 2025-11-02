@@ -13,8 +13,9 @@
  * This requires specifying the parameter set and namespace prefix
  * used for the build.
  */
-
-#include "../../mldsa/sign.h"
+#define MLD_CONFIG_API_PARAMETER_SET MLD_CONFIG_PARAMETER_SET
+#define MLD_CONFIG_API_NAMESPACE_PREFIX mldsa
+#include <mldsa_native.h>
 #include "expected_signatures.h"
 #include "test_only_rng/notrandombytes.h"
 
