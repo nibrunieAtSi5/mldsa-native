@@ -126,6 +126,22 @@ source code and documentation.
 * Referenced from:
   - [README.md](README.md)
 
+### `NeonNTT`
+
+* Neon NTT: Faster Dilithium, Kyber, and Saber on Cortex-A72 and Apple M1
+* Author(s):
+  - Hanno Becker
+  - Vincent Hwang
+  - Matthias J. Kannwischer
+  - Bo-Yin Yang
+  - Shang-Yi Yang
+* URL: https://eprint.iacr.org/2021/986
+* Referenced from:
+  - [dev/aarch64_clean/src/intt.S](dev/aarch64_clean/src/intt.S)
+  - [dev/aarch64_clean/src/ntt.S](dev/aarch64_clean/src/ntt.S)
+  - [mldsa/native/aarch64/src/intt.S](mldsa/native/aarch64/src/intt.S)
+  - [mldsa/native/aarch64/src/ntt.S](mldsa/native/aarch64/src/ntt.S)
+
 ### `REF`
 
 * CRYSTALS-Dilithium reference implementation
@@ -221,6 +237,21 @@ source code and documentation.
 * Referenced from:
   - [examples/bring_your_own_fips202/mldsa_native/sign.c](examples/bring_your_own_fips202/mldsa_native/sign.c)
   - [mldsa/sign.c](mldsa/sign.c)
+
+### `SLOTHY_Paper`
+
+* Fast and Clean: Auditable high-performance assembly via constraint solving
+* Author(s):
+  - Amin Abdulrahman
+  - Hanno Becker
+  - Matthias J. Kannwischer
+  - Fabien Klein
+* URL: https://eprint.iacr.org/2022/1303
+* Referenced from:
+  - [dev/aarch64_clean/src/intt.S](dev/aarch64_clean/src/intt.S)
+  - [dev/aarch64_clean/src/ntt.S](dev/aarch64_clean/src/ntt.S)
+  - [mldsa/native/aarch64/src/intt.S](mldsa/native/aarch64/src/intt.S)
+  - [mldsa/native/aarch64/src/ntt.S](mldsa/native/aarch64/src/ntt.S)
 
 ### `libmceliece`
 

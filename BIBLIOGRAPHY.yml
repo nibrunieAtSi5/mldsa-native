@@ -83,6 +83,26 @@
   - Stehlé, Damien
   url: https://pq-crystals.org/dilithium/data/dilithium-specification-round3-20210208.pdf
 
+- id: SLOTHY_Paper
+  name: "Fast and Clean: Auditable high-performance assembly via constraint solving"
+  short: SLOTHY paper
+  author:
+  - Abdulrahman, Amin
+  - Becker, Hanno
+  - Kannwischer, Matthias J.
+  - Klein, Fabien
+  url: https://eprint.iacr.org/2022/1303
+
+- id: NeonNTT
+  name: "Neon NTT: Faster Dilithium, Kyber, and Saber on Cortex-A72 and Apple M1"
+  year: 2022
+  url: https://eprint.iacr.org/2021/986
+  author:
+  - Becker, Hanno
+  - Hwang, Vincent
+  - Kannwischer, Matthias J.
+  - Yang, Bo-Yin
+  - Yang, Shang-Yi
 - id: mupq
   name: Common files for pqm4, pqm3, pqriscv
   author: 
