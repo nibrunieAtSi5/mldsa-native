@@ -69,7 +69,7 @@
 /******************************* Key sizes ************************************/
 
 /* Sizes of cryptographic material, per parameter set */
-/* See mldsa/params.h for the arithmetic expressions giving rise to these */
+/* See mldsa/src/params.h for the arithmetic expressions giving rise to these */
 /* check-magic: off */
 #define MLDSA44_SECRETKEYBYTES 2560
 #define MLDSA44_PUBLICKEYBYTES 1312
