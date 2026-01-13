@@ -13,6 +13,8 @@
 #define MLD_KECCAK_LANES 25
 #define MLD_KECCAK_WAY 4
 
+extern uint64_t mld_keccakf1600_permute_count;
+
 /*
  * WARNING:
  * The contents of this structure, including the placement
