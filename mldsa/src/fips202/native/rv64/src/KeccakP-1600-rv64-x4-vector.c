@@ -404,31 +404,53 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
         }
         // Store results back using strided store
         // __riscv_vsse64_v_u64m1(&state[0], stride, A_0_0, vl);
-	store_lane(0, 0, A_0_0);
+        store_lane(0, 0, A_0_0);
         // __riscv_vsse64_v_u64m1(&state[1], stride, A_0_1, vl);
+        store_lane(0, 1, A_0_1);
         // __riscv_vsse64_v_u64m1(&state[2], stride, A_0_2, vl);
+        store_lane(0, 2, A_0_2);
         // __riscv_vsse64_v_u64m1(&state[3], stride, A_0_3, vl);
+        store_lane(0, 3, A_0_3);
         // __riscv_vsse64_v_u64m1(&state[4], stride, A_0_4, vl);
+        store_lane(0, 4, A_0_4);
         // __riscv_vsse64_v_u64m1(&state[5], stride, A_1_0, vl);
-        // __riscv_vsse64_v_u64m1(&state[6], stride, A_1_1, vl);
+        store_lane(1, 0, A_1_0);
         // __riscv_vsse64_v_u64m1(&state[7], stride, A_1_2, vl);
+        store_lane(1, 2, A_1_2);
         // __riscv_vsse64_v_u64m1(&state[8], stride, A_1_3, vl);
+        store_lane(1, 3, A_1_3);
         // __riscv_vsse64_v_u64m1(&state[9], stride, A_1_4, vl);
+        store_lane(1, 4, A_1_4);
         // __riscv_vsse64_v_u64m1(&state[10], stride, A_2_0, vl);
+        store_lane(2, 0, A_2_0);
         // __riscv_vsse64_v_u64m1(&state[11], stride, A_2_1, vl);
+        store_lane(2, 1, A_2_1);
         // __riscv_vsse64_v_u64m1(&state[12], stride, A_2_2, vl);
+        store_lane(2, 2, A_2_2);
         // __riscv_vsse64_v_u64m1(&state[13], stride, A_2_3, vl);
+        store_lane(2, 3, A_2_3);
         // __riscv_vsse64_v_u64m1(&state[14], stride, A_2_4, vl);
+        store_lane(2, 4, A_2_4);
         // __riscv_vsse64_v_u64m1(&state[15], stride, A_3_0, vl);
+        store_lane(3, 0, A_3_0);
         // __riscv_vsse64_v_u64m1(&state[16], stride, A_3_1, vl);
+        store_lane(3, 1, A_3_1);
         // __riscv_vsse64_v_u64m1(&state[17], stride, A_3_2, vl);
+        store_lane(3, 2, A_3_2);
         // __riscv_vsse64_v_u64m1(&state[18], stride, A_3_3, vl);
+        store_lane(3, 3, A_3_3);
         // __riscv_vsse64_v_u64m1(&state[19], stride, A_3_4, vl);
+        store_lane(3, 4, A_3_4);
         // __riscv_vsse64_v_u64m1(&state[20], stride, A_4_0, vl);
+        store_lane(4, 0, A_4_0);
         // __riscv_vsse64_v_u64m1(&state[21], stride, A_4_1, vl);
+        store_lane(4, 1, A_4_1);
         // __riscv_vsse64_v_u64m1(&state[22], stride, A_4_2, vl);
+        store_lane(4, 2, A_4_2);
         // __riscv_vsse64_v_u64m1(&state[23], stride, A_4_3, vl);
+        store_lane(4, 3, A_4_3);
         // __riscv_vsse64_v_u64m1(&state[24], stride, A_4_4, vl);
+        store_lane(4, 4, A_4_4);
 
 
         // updating avl
