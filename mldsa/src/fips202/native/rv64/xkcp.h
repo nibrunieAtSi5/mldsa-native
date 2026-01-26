@@ -23,6 +23,11 @@ static MLD_INLINE int mld_keccak_f1600_x1_native(uint64_t *state)
   KeccakP1600_StatePermute(state);
   return MLD_NATIVE_FUNC_SUCCESS;
 }
+
+/* Include x4 scalar implementation */
+#include "x4_scalar.h"
+
 #endif /* !__ASSEMBLER__ */
 
 #endif /* !MLD_FIPS202_NATIVE_RV64_XKCP_H */
+
