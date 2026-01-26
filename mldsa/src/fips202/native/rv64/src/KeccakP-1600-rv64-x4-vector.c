@@ -30,14 +30,19 @@ static const uint64_t RC[24] = {
     0x8000000080008081, 0x8000000000008080,
     0x0000000080000001, 0x0000000080008008
 };
+static inline vuint64m1_t __riscv_vnot_v_u64m1(vuint64m1_t v, size_t vl)
+{
+    return __riscv_vxor_vx_u64m1(v, UINT64_MAX, vl);
+}
+
 
 /** RISC-V vector rotate right (if Zvkb is not implemented, can be emulated with RVV 1.0 operations) */
-static inline vuint64m1_t __riscv_vror_vx_u64m1(vuint64m1_t v, uint64_t shamt, size_t vl)
+__attribute__((unused)) static inline vuint64m1_t __riscv_vror_vx_u64m1(vuint64m1_t v, uint64_t shamt, size_t vl)
 {
     return __riscv_vor_vv_u64m1(__riscv_vsrl_vx_u64m1(v, shamt, vl), __riscv_vsll_vx_u64m1(v, 64 - shamt, vl), vl);
 }
 
-static inline vuint64m1_t __riscv_vror_vv_u64m1(vuint64m1_t v, vuint64m1_t shamt, size_t vl)
+__attribute__((unused)) static inline vuint64m1_t __riscv_vror_vv_u64m1(vuint64m1_t v, vuint64m1_t shamt, size_t vl)
 {
     return __riscv_vor_vv_u64m1(__riscv_vsrl_vv_u64m1(v, shamt, vl), __riscv_vsll_vv_u64m1(v, __riscv_vrsub_vx_u64m1(shamt, 64, vl), vl), vl);
 }
@@ -48,7 +53,7 @@ static inline vuint64m1_t __riscv_vrol_vx_u64m1(vuint64m1_t v, uint64_t shamt, s
     return __riscv_vor_vv_u64m1(__riscv_vsll_vx_u64m1(v, shamt, vl), __riscv_vsrl_vx_u64m1(v, 64 - shamt, vl), vl);
 }
 
-static inline vuint64m1_t __riscv_vrol_vv_u64m1(vuint64m1_t v, vuint64m1_t shamt, size_t vl)
+__attribute__((unused)) static inline vuint64m1_t __riscv_vrol_vv_u64m1(vuint64m1_t v, vuint64m1_t shamt, size_t vl)
 {
     return __riscv_vor_vv_u64m1(__riscv_vsll_vv_u64m1(v, shamt, vl), __riscv_vsrl_vv_u64m1(v, __riscv_vrsub_vx_u64m1(shamt, 64, vl), vl), vl);
 }
@@ -65,6 +70,7 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
     const ptrdiff_t stride = MLD_KECCAK_LANES * sizeof(uint64_t); // 25 * 8 = 200 bytes
 
     #define load_lane(x, y) __riscv_vlse64_v_u64m1(&state[(x) + 5 * (y)], stride, vl)
+    #define store_lane(x, y, value) __riscv_vsse64_v_u64m1(&state[(x) + 5 * (y)], stride, value, vl)
 
     for (; avl > 0;) {
         size_t vl = __riscv_vsetvl_e64m1(avl); // Process 4 elements at a time
@@ -288,7 +294,7 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             A_1_1 = __riscv_vrol_vx_u64m1(T_22, 20, vl);
             // // u64 T_24 = A_1_0;
             // A_1_0 = ROL(T_23, 44);
-            vuint64m1_t T_24 = A_1_0;
+            // vuint64m1_t T_24 = A_1_0;
             A_1_0 = __riscv_vrol_vx_u64m1(T_23, 44, vl);
             // u64 C_0_0 = A_0_0;
             vuint64m1_t C_0_0 = A_0_0;
@@ -301,15 +307,15 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             // u64 C_0_4 = A_4_0;
             vuint64m1_t C_0_4 = A_4_0;
             // A_0_0 = C_0_0 ^ (~C_0_1 & C_0_2);
-            A_0_0 = __riscv_vxor_vv_u64m1(C_0_0, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_0_1, vl), C_0_2, vl), vl);
+            A_0_0 = __riscv_vxor_vv_u64m1(C_0_0, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_0_1, vl), C_0_2, vl), vl);
             // A_1_0 = C_0_1 ^ (~C_0_2 & C_0_3);
-            A_1_0 = __riscv_vxor_vv_u64m1(C_0_1, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_0_2, vl), C_0_3, vl), vl);
+            A_1_0 = __riscv_vxor_vv_u64m1(C_0_1, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_0_2, vl), C_0_3, vl), vl);
             // A_2_0 = C_0_2 ^ (~C_0_3 & C_0_4);
-            A_2_0 = __riscv_vxor_vv_u64m1(C_0_2, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_0_3, vl), C_0_4, vl), vl);
+            A_2_0 = __riscv_vxor_vv_u64m1(C_0_2, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_0_3, vl), C_0_4, vl), vl);
             // A_3_0 = C_0_3 ^ (~C_0_4 & C_0_0);
-            A_3_0 = __riscv_vxor_vv_u64m1(C_0_3, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_0_4, vl), C_0_0, vl), vl);
+            A_3_0 = __riscv_vxor_vv_u64m1(C_0_3, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_0_4, vl), C_0_0, vl), vl);
             // A_4_0 = C_0_4 ^ (~C_0_0 & C_0_1);
-            A_4_0 = __riscv_vxor_vv_u64m1(C_0_4, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_0_0, vl), C_0_1, vl), vl);
+            A_4_0 = __riscv_vxor_vv_u64m1(C_0_4, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_0_0, vl), C_0_1, vl), vl);
             // u64 C_1_0 = A_0_1;
             vuint64m1_t C_1_0 = A_0_1;
             // u64 C_1_1 = A_1_1;
@@ -321,15 +327,15 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             // u64 C_1_4 = A_4_1;
             vuint64m1_t C_1_4 = A_4_1;
             // A_0_1 = C_1_0 ^ (~C_1_1 & C_1_2);
-            A_0_1 = __riscv_vxor_vv_u64m1(C_1_0, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_1_1, vl), C_1_2, vl), vl);
+            A_0_1 = __riscv_vxor_vv_u64m1(C_1_0, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_1_1, vl), C_1_2, vl), vl);
             // A_1_1 = C_1_1 ^ (~C_1_2 & C_1_3);
-            A_1_1 = __riscv_vxor_vv_u64m1(C_1_1, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_1_2, vl), C_1_3, vl), vl);
+            A_1_1 = __riscv_vxor_vv_u64m1(C_1_1, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_1_2, vl), C_1_3, vl), vl);
             // A_2_1 = C_1_2 ^ (~C_1_3 & C_1_4);
-            A_2_1 = __riscv_vxor_vv_u64m1(C_1_2, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_1_3, vl), C_1_4, vl), vl);
+            A_2_1 = __riscv_vxor_vv_u64m1(C_1_2, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_1_3, vl), C_1_4, vl), vl);
             // A_3_1 = C_1_3 ^ (~C_1_4 & C_1_0);
-            A_3_1 = __riscv_vxor_vv_u64m1(C_1_3, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_1_4, vl), C_1_0, vl), vl);
+            A_3_1 = __riscv_vxor_vv_u64m1(C_1_3, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_1_4, vl), C_1_0, vl), vl);
             // A_4_1 = C_1_4 ^ (~C_1_0 & C_1_1);
-            A_4_1 = __riscv_vxor_vv_u64m1(C_1_4, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_1_0, vl), C_1_1, vl), vl);
+            A_4_1 = __riscv_vxor_vv_u64m1(C_1_4, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_1_0, vl), C_1_1, vl), vl);
             // u64 C_2_0 = A_0_2;
             vuint64m1_t C_2_0 = A_0_2;
             // u64 C_2_1 = A_1_2;
@@ -341,15 +347,15 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             // u64 C_2_4 = A_4_2;
             vuint64m1_t C_2_4 = A_4_2;
             // A_0_2 = C_2_0 ^ (~C_2_1 & C_2_2);
-            A_0_2 = __riscv_vxor_vv_u64m1(C_2_0, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_2_1, vl), C_2_2, vl), vl);
+            A_0_2 = __riscv_vxor_vv_u64m1(C_2_0, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_2_1, vl), C_2_2, vl), vl);
             // A_1_2 = C_2_1 ^ (~C_2_2 & C_2_3);
-            A_1_2 = __riscv_vxor_vv_u64m1(C_2_1, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_2_2, vl), C_2_3, vl), vl);
+            A_1_2 = __riscv_vxor_vv_u64m1(C_2_1, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_2_2, vl), C_2_3, vl), vl);
             // A_2_2 = C_2_2 ^ (~C_2_3 & C_2_4);
-            A_2_2 = __riscv_vxor_vv_u64m1(C_2_2, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_2_3, vl), C_2_4, vl), vl);
+            A_2_2 = __riscv_vxor_vv_u64m1(C_2_2, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_2_3, vl), C_2_4, vl), vl);
             // A_3_2 = C_2_3 ^ (~C_2_4 & C_2_0);
-            A_3_2 = __riscv_vxor_vv_u64m1(C_2_3, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_2_4, vl), C_2_0, vl), vl);
+            A_3_2 = __riscv_vxor_vv_u64m1(C_2_3, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_2_4, vl), C_2_0, vl), vl);
             // A_4_2 = C_2_4 ^ (~C_2_0 & C_2_1);
-            A_4_2 = __riscv_vxor_vv_u64m1(C_2_4, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_2_0, vl), C_2_1, vl), vl);
+            A_4_2 = __riscv_vxor_vv_u64m1(C_2_4, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_2_0, vl), C_2_1, vl), vl);
             // u64 C_3_0 = A_0_3;
             vuint64m1_t C_3_0 = A_0_3;
             // u64 C_3_1 = A_1_3;
@@ -361,15 +367,15 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             // u64 C_3_4 = A_4_3;
             vuint64m1_t C_3_4 = A_4_3;
             // A_0_3 = C_3_0 ^ (~C_3_1 & C_3_2);
-            A_0_3 = __riscv_vxor_vv_u64m1(C_3_0, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_3_1, vl), C_3_2, vl), vl);
+            A_0_3 = __riscv_vxor_vv_u64m1(C_3_0, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_3_1, vl), C_3_2, vl), vl);
             // A_1_3 = C_3_1 ^ (~C_3_2 & C_3_3);
-            A_1_3 = __riscv_vxor_vv_u64m1(C_3_1, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_3_2, vl), C_3_3, vl), vl);
+            A_1_3 = __riscv_vxor_vv_u64m1(C_3_1, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_3_2, vl), C_3_3, vl), vl);
             // A_2_3 = C_3_2 ^ (~C_3_3 & C_3_4);
-            A_2_3 = __riscv_vxor_vv_u64m1(C_3_2, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_3_3, vl), C_3_4, vl), vl);
+            A_2_3 = __riscv_vxor_vv_u64m1(C_3_2, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_3_3, vl), C_3_4, vl), vl);
             // A_3_3 = C_3_3 ^ (~C_3_4 & C_3_0);
-            A_3_3 = __riscv_vxor_vv_u64m1(C_3_3, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_3_4, vl), C_3_0, vl), vl);
+            A_3_3 = __riscv_vxor_vv_u64m1(C_3_3, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_3_4, vl), C_3_0, vl), vl);
             // A_4_3 = C_3_4 ^ (~C_3_0 & C_3_1);
-            A_4_3 = __riscv_vxor_vv_u64m1(C_3_4, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_3_0, vl), C_3_1, vl), vl);
+            A_4_3 = __riscv_vxor_vv_u64m1(C_3_4, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_3_0, vl), C_3_1, vl), vl);
             // u64 C_4_0 = A_0_4;
             vuint64m1_t C_4_0 = A_0_4;
             // u64 C_4_1 = A_1_4;
@@ -381,47 +387,48 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             // u64 C_4_4 = A_4_4;
             vuint64m1_t C_4_4 = A_4_4;
             // A_0_4 = C_4_0 ^ (~C_4_1 & C_4_2);
-            A_0_4 = __riscv_vxor_vv_u64m1(C_4_0, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_4_1, vl), C_4_2, vl), vl);
+            A_0_4 = __riscv_vxor_vv_u64m1(C_4_0, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_4_1, vl), C_4_2, vl), vl);
             // A_1_4 = C_4_1 ^ (~C_4_2 & C_4_3);
-            A_1_4 = __riscv_vxor_vv_u64m1(C_4_1, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_4_2, vl), C_4_3, vl), vl);
+            A_1_4 = __riscv_vxor_vv_u64m1(C_4_1, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_4_2, vl), C_4_3, vl), vl);
             // A_2_4 = C_4_2 ^ (~C_4_3 & C_4_4);
-            A_2_4 = __riscv_vxor_vv_u64m1(C_4_2, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_4_3, vl), C_4_4, vl), vl);
+            A_2_4 = __riscv_vxor_vv_u64m1(C_4_2, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_4_3, vl), C_4_4, vl), vl);
             // A_3_4 = C_4_3 ^ (~C_4_4 & C_4_0);
-            A_3_4 = __riscv_vxor_vv_u64m1(C_4_3, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_4_4, vl), C_4_0, vl), vl);
+            A_3_4 = __riscv_vxor_vv_u64m1(C_4_3, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_4_4, vl), C_4_0, vl), vl);
             // A_4_4 = C_4_4 ^ (~C_4_0 & C_4_1);
-            A_4_4 = __riscv_vxor_vv_u64m1(C_4_4, __riscv_vand_vv_u64m1(__riscv_vnot_u64m1(C_4_0, vl), C_4_1, vl), vl);
+            A_4_4 = __riscv_vxor_vv_u64m1(C_4_4, __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(C_4_0, vl), C_4_1, vl), vl);
             // /*ι*/ // XL(0,0,RC[i]);
             // A_0_0 ^= RC[i];
             // using tail undisturbed policy to make sure only the first element is modified
-            A_0_0 = __riscv_vxor_vv_u64m1_tu(A_0_0, RC[round], 1);
+            A_0_0 = __riscv_vxor_vx_u64m1_tu(A_0_0, A_0_0, RC[round], 1);
             
         }
         // Store results back using strided store
-        __riscv_vsse64_v_u64m1(&state[0], stride, A_0_0, vl);
-        __riscv_vsse64_v_u64m1(&state[1], stride, A_0_1, vl);
-        __riscv_vsse64_v_u64m1(&state[2], stride, A_0_2, vl);
-        __riscv_vsse64_v_u64m1(&state[3], stride, A_0_3, vl);
-        __riscv_vsse64_v_u64m1(&state[4], stride, A_0_4, vl);
-        __riscv_vsse64_v_u64m1(&state[5], stride, A_1_0, vl);
-        __riscv_vsse64_v_u64m1(&state[6], stride, A_1_1, vl);
-        __riscv_vsse64_v_u64m1(&state[7], stride, A_1_2, vl);
-        __riscv_vsse64_v_u64m1(&state[8], stride, A_1_3, vl);
-        __riscv_vsse64_v_u64m1(&state[9], stride, A_1_4, vl);
-        __riscv_vsse64_v_u64m1(&state[10], stride, A_2_0, vl);
-        __riscv_vsse64_v_u64m1(&state[11], stride, A_2_1, vl);
-        __riscv_vsse64_v_u64m1(&state[12], stride, A_2_2, vl);
-        __riscv_vsse64_v_u64m1(&state[13], stride, A_2_3, vl);
-        __riscv_vsse64_v_u64m1(&state[14], stride, A_2_4, vl);
-        __riscv_vsse64_v_u64m1(&state[15], stride, A_3_0, vl);
-        __riscv_vsse64_v_u64m1(&state[16], stride, A_3_1, vl);
-        __riscv_vsse64_v_u64m1(&state[17], stride, A_3_2, vl);
-        __riscv_vsse64_v_u64m1(&state[18], stride, A_3_3, vl);
-        __riscv_vsse64_v_u64m1(&state[19], stride, A_3_4, vl);
-        __riscv_vsse64_v_u64m1(&state[20], stride, A_4_0, vl);
-        __riscv_vsse64_v_u64m1(&state[21], stride, A_4_1, vl);
-        __riscv_vsse64_v_u64m1(&state[22], stride, A_4_2, vl);
-        __riscv_vsse64_v_u64m1(&state[23], stride, A_4_3, vl);
-        __riscv_vsse64_v_u64m1(&state[24], stride, A_4_4, vl);
+        // __riscv_vsse64_v_u64m1(&state[0], stride, A_0_0, vl);
+	store_lane(0, 0, A_0_0);
+        // __riscv_vsse64_v_u64m1(&state[1], stride, A_0_1, vl);
+        // __riscv_vsse64_v_u64m1(&state[2], stride, A_0_2, vl);
+        // __riscv_vsse64_v_u64m1(&state[3], stride, A_0_3, vl);
+        // __riscv_vsse64_v_u64m1(&state[4], stride, A_0_4, vl);
+        // __riscv_vsse64_v_u64m1(&state[5], stride, A_1_0, vl);
+        // __riscv_vsse64_v_u64m1(&state[6], stride, A_1_1, vl);
+        // __riscv_vsse64_v_u64m1(&state[7], stride, A_1_2, vl);
+        // __riscv_vsse64_v_u64m1(&state[8], stride, A_1_3, vl);
+        // __riscv_vsse64_v_u64m1(&state[9], stride, A_1_4, vl);
+        // __riscv_vsse64_v_u64m1(&state[10], stride, A_2_0, vl);
+        // __riscv_vsse64_v_u64m1(&state[11], stride, A_2_1, vl);
+        // __riscv_vsse64_v_u64m1(&state[12], stride, A_2_2, vl);
+        // __riscv_vsse64_v_u64m1(&state[13], stride, A_2_3, vl);
+        // __riscv_vsse64_v_u64m1(&state[14], stride, A_2_4, vl);
+        // __riscv_vsse64_v_u64m1(&state[15], stride, A_3_0, vl);
+        // __riscv_vsse64_v_u64m1(&state[16], stride, A_3_1, vl);
+        // __riscv_vsse64_v_u64m1(&state[17], stride, A_3_2, vl);
+        // __riscv_vsse64_v_u64m1(&state[18], stride, A_3_3, vl);
+        // __riscv_vsse64_v_u64m1(&state[19], stride, A_3_4, vl);
+        // __riscv_vsse64_v_u64m1(&state[20], stride, A_4_0, vl);
+        // __riscv_vsse64_v_u64m1(&state[21], stride, A_4_1, vl);
+        // __riscv_vsse64_v_u64m1(&state[22], stride, A_4_2, vl);
+        // __riscv_vsse64_v_u64m1(&state[23], stride, A_4_3, vl);
+        // __riscv_vsse64_v_u64m1(&state[24], stride, A_4_4, vl);
 
 
         // updating avl
