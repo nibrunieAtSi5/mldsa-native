@@ -404,10 +404,10 @@ static void mld_keccakf1600_permute_c(uint64_t *state)
   state[24] = Asu;
 }
 
-uint64_t mld_keccakf1600_permute_count = 0;
+// uint64_t mld_keccakf1600_permute_count = 0;
 
 void mld_keccakf1600_permute(uint64_t *state) {
-  mld_keccakf1600_permute_count++;
+  // mld_keccakf1600_permute_count++;
 #if defined(MLD_USE_FIPS202_X1_NATIVE)
   if (mld_keccak_f1600_x1_native(state) == MLD_NATIVE_FUNC_SUCCESS)
   {

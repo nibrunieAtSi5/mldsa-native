@@ -72,6 +72,8 @@ static void print_percentiles(const char *txt, uint64_t cyc[NTESTS])
   printf("\n");
 }
 
+// extern uint64_t mld_keccakf1600_permute_count;
+
 static int bench(void)
 {
   uint8_t pk[MLDSA_CRYPTO_PUBLICKEYBYTES];
@@ -101,7 +103,7 @@ static int bench(void)
       ret |= crypto_sign_keypair_internal(pk, sk, kg_rand);
     }
 
-    mld_keccakf1600_permute_count = 0;
+    // mld_keccakf1600_permute_count = 0;
     t0 = get_cyclecounter();
     for (j = 0; j < NITERATIONS; j++)
     {
@@ -109,9 +111,9 @@ static int bench(void)
     }
     t1 = get_cyclecounter();
     cycles_kg[i] = t1 - t0;
-    if (i == 0)
-      printf("keypair keccakf1600_permute count: %" PRIu64 "\n",
-             mld_keccakf1600_permute_count / NITERATIONS);
+    // if (i == 0)
+    //  printf("keypair keccakf1600_permute count: %" PRIu64 "\n",
+    //         mld_keccakf1600_permute_count / NITERATIONS);
 
     /* Signing */
     mld_randombytes(ctx, CTXLEN);
@@ -127,7 +129,7 @@ static int bench(void)
       ret |= crypto_sign_signature_internal(sig, &siglen, m, MLEN, pre,
                                             CTXLEN + 2, sig_rand, sk, 0);
     }
-    mld_keccakf1600_permute_count = 0;
+    // mld_keccakf1600_permute_count = 0;
     t0 = get_cyclecounter();
     for (j = 0; j < NITERATIONS; j++)
     {
@@ -136,16 +138,16 @@ static int bench(void)
     }
     t1 = get_cyclecounter();
     cycles_sign[i] = t1 - t0;
-    if (i == 0)
-      printf("sign keccakf1600_permute count: %" PRIu64 "\n",
-             mld_keccakf1600_permute_count / NITERATIONS);
+    // if (i == 0)
+    //   printf("sign keccakf1600_permute count: %" PRIu64 "\n",
+    //          mld_keccakf1600_permute_count / NITERATIONS);
 
     /* Verification */
     for (j = 0; j < NWARMUP; j++)
     {
       ret |= crypto_sign_verify(sig, siglen, m, MLEN, ctx, CTXLEN, pk);
     }
-    mld_keccakf1600_permute_count = 0;
+    // mld_keccakf1600_permute_count = 0;
     t0 = get_cyclecounter();
     for (j = 0; j < NITERATIONS; j++)
     {
@@ -153,9 +155,9 @@ static int bench(void)
     }
     t1 = get_cyclecounter();
     cycles_verify[i] = t1 - t0;
-    if (i == 0)
-      printf("verify keccakf1600_permute count: %" PRIu64 "\n",
-             mld_keccakf1600_permute_count / NITERATIONS);
+    // if (i == 0)
+    //  printf("verify keccakf1600_permute count: %" PRIu64 "\n",
+    //          mld_keccakf1600_permute_count / NITERATIONS);
 
     CHECK(ret == 0);
   }
