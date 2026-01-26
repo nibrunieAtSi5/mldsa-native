@@ -37,6 +37,10 @@ static inline vuint64m1_t __riscv_vror_vx_u64m1(vuint64m1_t v, uint64_t shamt, s
     return __riscv_vror_vv_u64m1(__riscv_vsrl_vx_u64m1(v, shamt, vl), __riscv_vsll_vx_u64m1(v, 64 - shamt, vl), vl);
 }
 
+static inline vuint64m1_t __riscv_vror_vv_u64m1(vuint64m1_t v, vuint64m1_t shamt, size_t vl)
+{
+    return __riscv_vror_vv_u64m1(__riscv_vsrl_vv_u64m1(v, shamt, vl), __riscv_vsll_vv_u64m1(v, 64 - shamt, vl), vl);
+}
 /* RVV-based x4 vectorized Keccak permutation
  * Processes 4 Keccak states in parallel using RISC-V Vector extension
  * state: pointer to array of 4*25 uint64_t elements (100 elements total)
