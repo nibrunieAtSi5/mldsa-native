@@ -15,6 +15,7 @@
 #include <stdint.h>
 #include "../api.h"
 
+#define KECCAK_SYMBOL
 void KeccakP1600_StatePermute(uint64_t *state);
 
 #define MLD_USE_FIPS202_X1_NATIVE

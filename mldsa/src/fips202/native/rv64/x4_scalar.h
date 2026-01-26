@@ -16,9 +16,10 @@
 
 #define MLD_KECCAK_LANES 25
 
-/* Check if RVV (RISC-V Vector Extension) is available */
-#if defined(__riscv_vector)
 #include "src/KeccakP-1600-rv64-x4-vector.h"
+
+/* Check if RVV (RISC-V Vector Extension) is available */
+#if 0 // defined(__riscv_vector)
 
 static MLD_INLINE int mld_keccak_f1600_x4_native(uint64_t *state)
 {

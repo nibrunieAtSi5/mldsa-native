@@ -30,10 +30,16 @@ static const uint64_t RC[24] = {
     0x8000000080008081, 0x8000000000008080,
     0x0000000080000001, 0x0000000080008008
 };
+
+
+// It looks like gcc has already a definition of this (alias) intrinsic and complains
+// of a shadowed definition if it gets redefined
+#if defined(__clang)
 static inline vuint64m1_t __riscv_vnot_v_u64m1(vuint64m1_t v, size_t vl)
 {
     return __riscv_vxor_vx_u64m1(v, UINT64_MAX, vl);
 }
+#endif
 
 
 /** RISC-V vector rotate right (if Zvkb is not implemented, can be emulated with RVV 1.0 operations) */
