@@ -143,6 +143,10 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
         Ame = __riscv_vlse64_v_u64m1(&state[16], stride, vl);
         // Ami = state[17];
         Ami = __riscv_vlse64_v_u64m1(&state[17], stride, vl);
+        // Amo = state[18];
+        Amo = __riscv_vlse64_v_u64m1(&state[18], stride, vl);
+        // Amu = state[19];
+        Amu = __riscv_vlse64_v_u64m1(&state[19], stride, vl);
         // Asa = state[20];
         Asa = __riscv_vlse64_v_u64m1(&state[20], stride, vl);
         // Ase = state[21];
