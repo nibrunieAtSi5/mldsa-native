@@ -459,7 +459,7 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             Aba = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCe, vl), BCi, vl);
             Aba = __riscv_vxor_vv_u64m1(Aba, BCa, vl);
             // Aba ^= KeccakF_RoundConstants[round + 1];
-            Aba = __riscv_vxor_vx_u64m1_tu(Aba, Aba, RC[round + 1], 1);
+            Aba = __riscv_vxor_vx_u64m1_tu(Aba, Aba, RC[round + 1], vl);
             // Abe = BCe ^ ((~BCi) & BCo);
             Abe = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCi, vl), BCo, vl);
             Abe = __riscv_vxor_vv_u64m1(Abe, BCe, vl);
