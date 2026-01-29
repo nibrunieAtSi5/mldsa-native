@@ -45,30 +45,30 @@ static inline vuint64m1_t __riscv_vnot_v_u64m1(vuint64m1_t v, size_t vl)
 /** RISC-V vector rotate right (if Zvkb is not implemented, can be emulated with RVV 1.0 operations) */
 __attribute__((unused)) static inline vuint64m1_t __riscv_vror_vx_u64m1(vuint64m1_t v, uint64_t shamt, size_t vl)
 {
-    return __riscv_vor_vv_u64m1(__riscv_vsrl_vx_u64m1(v, shamt, vl), __riscv_vsll_vx_u64m1(v, 64 - shamt, vl), vl);
+    return __riscv_vadd_vv_u64m1(__riscv_vsrl_vx_u64m1(v, shamt, vl), __riscv_vsll_vx_u64m1(v, 64 - shamt, vl), vl);
 }
 
 __attribute__((unused)) static inline vuint64m1_t __riscv_vror_vv_u64m1(vuint64m1_t v, vuint64m1_t shamt, size_t vl)
 {
-    return __riscv_vor_vv_u64m1(__riscv_vsrl_vv_u64m1(v, shamt, vl), __riscv_vsll_vv_u64m1(v, __riscv_vrsub_vx_u64m1(shamt, 64, vl), vl), vl);
+    return __riscv_vadd_vv_u64m1(__riscv_vsrl_vv_u64m1(v, shamt, vl), __riscv_vsll_vv_u64m1(v, __riscv_vrsub_vx_u64m1(shamt, 64, vl), vl), vl);
 }
 
 /** RISC-V vector rotate left (if Zvkb is not implemented, can be emulated with RVV 1.0 operations) */
 static inline vuint64m1_t __riscv_vrol_vx_u64m1(vuint64m1_t v, uint64_t shamt, size_t vl)
 {
-    return __riscv_vor_vv_u64m1(__riscv_vsll_vx_u64m1(v, shamt, vl), __riscv_vsrl_vx_u64m1(v, 64 - shamt, vl), vl);
+    return __riscv_vadd_vv_u64m1(__riscv_vsll_vx_u64m1(v, shamt, vl), __riscv_vsrl_vx_u64m1(v, 64 - shamt, vl), vl);
 }
 
 /** RISC-V vector rotate left and xor (if Zvkb is not implemented, can be emulated with RVV 1.0 operations) */
 static inline vuint64m1_t __riscv_vrolnxor_vxv_u64m1(vuint64m1_t v, uint64_t shamt, vuint64m1_t acc, size_t vl)
 {
     vuint64m1_t tmp = __riscv_vxor_vv_u64m1(__riscv_vsll_vx_u64m1(v, shamt, vl), acc, vl);
-    return __riscv_vor_vv_u64m1(tmp, __riscv_vsrl_vx_u64m1(v, 64 - shamt, vl), vl);
+    return __riscv_vadd_vv_u64m1(tmp, __riscv_vsrl_vx_u64m1(v, 64 - shamt, vl), vl);
 }
 
 __attribute__((unused)) static inline vuint64m1_t __riscv_vrol_vv_u64m1(vuint64m1_t v, vuint64m1_t shamt, size_t vl)
 {
-    return __riscv_vor_vv_u64m1(__riscv_vsll_vv_u64m1(v, shamt, vl), __riscv_vsrl_vv_u64m1(v, __riscv_vrsub_vx_u64m1(shamt, 64, vl), vl), vl);
+    return __riscv_vadd_vv_u64m1(__riscv_vsll_vv_u64m1(v, shamt, vl), __riscv_vsrl_vv_u64m1(v, __riscv_vrsub_vx_u64m1(shamt, 64, vl), vl), vl);
 }
 	
 /* RVV-based x4 vectorized Keccak permutation
