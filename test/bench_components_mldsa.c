@@ -59,6 +59,8 @@ static int bench(void)
 
   /* keccak */
   BENCH("keccakf1600_permute", mld_keccakf1600_permute((uint64_t *)data0))
+  BENCH("keccakf1600x4_permute", mld_keccakf1600x4_permute((uint64_t *)data0))
+
 
   /* ntt */
   BENCH("poly_ntt", mld_poly_ntt((mld_poly *)data0))
