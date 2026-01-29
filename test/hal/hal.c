@@ -160,7 +160,13 @@ void enable_cyclecounter(void)
   memset(&pe, 0, sizeof(struct perf_event_attr));
   pe.type = PERF_TYPE_HARDWARE;
   pe.size = sizeof(struct perf_event_attr);
+#if defined(PERF_INSN)
+  /* Count instructions instead of cycles */
+  pe.config = PERF_COUNT_HW_INSTRUCTIONS;
+#else
+  /* Count CPU cycles (default behavior) */
   pe.config = PERF_COUNT_HW_CPU_CYCLES;
+#endif
   pe.disabled = 1;
   pe.exclude_kernel = 1;
   pe.exclude_hv = 1;
@@ -179,9 +185,9 @@ void disable_cyclecounter(void)
 
 uint64_t get_cyclecounter(void)
 {
-  long long cpu_cycles;
+  long long count;
   ioctl(perf_fd, PERF_EVENT_IOC_DISABLE, 0);
-  ssize_t read_count = read(perf_fd, &cpu_cycles, sizeof(cpu_cycles));
+  ssize_t read_count = read(perf_fd, &count, sizeof(count));
   if (read_count < 0)
   {
     perror("read");
@@ -194,7 +200,7 @@ uint64_t get_cyclecounter(void)
     exit(EXIT_FAILURE);
   }
   ioctl(perf_fd, PERF_EVENT_IOC_ENABLE, 0);
-  return (uint64_t)cpu_cycles;
+  return (uint64_t)count;
 }
 #elif defined(MAC_CYCLES)
 /* Based on @[m1cycles] */
