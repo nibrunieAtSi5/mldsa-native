@@ -59,6 +59,13 @@ static inline vuint64m1_t __riscv_vrol_vx_u64m1(vuint64m1_t v, uint64_t shamt, s
     return __riscv_vor_vv_u64m1(__riscv_vsll_vx_u64m1(v, shamt, vl), __riscv_vsrl_vx_u64m1(v, 64 - shamt, vl), vl);
 }
 
+/** RISC-V vector rotate left and xor (if Zvkb is not implemented, can be emulated with RVV 1.0 operations) */
+static inline vuint64m1_t __riscv_vrolnxor_vxv_u64m1(vuint64m1_t v, uint64_t shamt, vuint64m1_t acc, size_t vl)
+{
+    vuint64m1_t tmp = __riscv_vxor_vv_u64m1(__riscv_vsll_vx_u64m1(v, shamt, vl), acc, vl);
+    return __riscv_vor_vv_u64m1(tmp, __riscv_vsrl_vx_u64m1(v, 64 - shamt, vl), vl);
+}
+
 __attribute__((unused)) static inline vuint64m1_t __riscv_vrol_vv_u64m1(vuint64m1_t v, vuint64m1_t shamt, size_t vl)
 {
     return __riscv_vor_vv_u64m1(__riscv_vsll_vv_u64m1(v, shamt, vl), __riscv_vsrl_vv_u64m1(v, __riscv_vrsub_vx_u64m1(shamt, 64, vl), vl), vl);
@@ -164,47 +171,43 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
         {
             // /* prepareTheta */
             // BCa = Aba ^ Aga ^ Aka ^ Ama ^ Asa;
+            vuint64m1_t tmp;
             BCa = __riscv_vxor_vv_u64m1(Aba, Aga, vl);
-            BCa = __riscv_vxor_vv_u64m1(BCa, Aka, vl);
-            BCa = __riscv_vxor_vv_u64m1(BCa, Ama, vl);
+            tmp = __riscv_vxor_vv_u64m1(Ama, Aka, vl);
+            BCa = __riscv_vxor_vv_u64m1(BCa, tmp, vl);
             BCa = __riscv_vxor_vv_u64m1(BCa, Asa, vl);
             // BCe = Abe ^ Age ^ Ake ^ Ame ^ Ase;
             BCe = __riscv_vxor_vv_u64m1(Abe, Age, vl);
-            BCe = __riscv_vxor_vv_u64m1(BCe, Ake, vl);
-            BCe = __riscv_vxor_vv_u64m1(BCe, Ame, vl);
+            tmp = __riscv_vxor_vv_u64m1(Ame, Ake, vl);
+            BCe = __riscv_vxor_vv_u64m1(BCe, tmp, vl);
             BCe = __riscv_vxor_vv_u64m1(BCe, Ase, vl);
             // BCi = Abi ^ Agi ^ Aki ^ Ami ^ Asi;
             BCi = __riscv_vxor_vv_u64m1(Abi, Agi, vl);
-            BCi = __riscv_vxor_vv_u64m1(BCi, Aki, vl);
-            BCi = __riscv_vxor_vv_u64m1(BCi, Ami, vl);
+            tmp = __riscv_vxor_vv_u64m1(Ami, Aki, vl);
+            BCi = __riscv_vxor_vv_u64m1(BCi, tmp, vl);
             BCi = __riscv_vxor_vv_u64m1(BCi, Asi, vl);
             // BCo = Abo ^ Ago ^ Ako ^ Amo ^ Aso;
             BCo = __riscv_vxor_vv_u64m1(Abo, Ago, vl);
-            BCo = __riscv_vxor_vv_u64m1(BCo, Ako, vl);
-            BCo = __riscv_vxor_vv_u64m1(BCo, Amo, vl);
+            tmp = __riscv_vxor_vv_u64m1(Amo, Ako, vl);
+            BCo = __riscv_vxor_vv_u64m1(BCo, tmp, vl);
             BCo = __riscv_vxor_vv_u64m1(BCo, Aso, vl);
             // BCu = Abu ^ Agu ^ Aku ^ Amu ^ Asu;
             BCu = __riscv_vxor_vv_u64m1(Abu, Agu, vl);
-            BCu = __riscv_vxor_vv_u64m1(BCu, Aku, vl);
-            BCu = __riscv_vxor_vv_u64m1(BCu, Amu, vl);
+            tmp = __riscv_vxor_vv_u64m1(Amu, Aku, vl);
+            BCu = __riscv_vxor_vv_u64m1(BCu, tmp, vl);
             BCu = __riscv_vxor_vv_u64m1(BCu, Asu, vl);
 
             // /* thetaRhoPiChiIotaPrepareTheta(round, A, E) */
             // Da = BCu ^ ROL64(BCe, 1);
-            Da = __riscv_vrol_vx_u64m1(BCu, 1, vl);
-            Da = __riscv_vxor_vv_u64m1(Da, BCe, vl);
+            Da = __riscv_vrolnxor_vxv_u64m1(BCe, 1, BCu, vl);
             // De = BCa ^ ROL64(BCi, 1);
-            De = __riscv_vrol_vx_u64m1(BCa, 1, vl);
-            De = __riscv_vxor_vv_u64m1(De, BCi, vl);
+            De = __riscv_vrolnxor_vxv_u64m1(BCi, 1, BCa, vl);
             // Di = BCe ^ ROL64(BCo, 1);
-            Di = __riscv_vrol_vx_u64m1(BCe, 1, vl);
-            Di = __riscv_vxor_vv_u64m1(Di, BCo, vl);
+            Di = __riscv_vrolnxor_vxv_u64m1(BCo, 1, BCe, vl);
             // Do = BCi ^ ROL64(BCu, 1);
-            Do = __riscv_vrol_vx_u64m1(BCi, 1, vl);
-            Do = __riscv_vxor_vv_u64m1(Do, BCu, vl);
+            Do = __riscv_vrolnxor_vxv_u64m1(BCu, 1, BCi, vl);
             // Du = BCo ^ ROL64(BCa, 1);
-            Du = __riscv_vrol_vx_u64m1(BCo, 1, vl);
-            Du = __riscv_vxor_vv_u64m1(Du, BCa, vl);
+            Du = __riscv_vrolnxor_vxv_u64m1(BCa, 1, BCo, vl);
 
             // Aba ^= Da;
             Aba = __riscv_vxor_vv_u64m1(Aba, Da, vl);
