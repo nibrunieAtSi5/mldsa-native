@@ -72,6 +72,10 @@ ifeq ($(CYCLES),PERF)
 	CFLAGS += -DPERF_CYCLES
 endif
 
+ifeq ($(CYCLES),PERF_INSN)
+	CFLAGS += -DPERF_CYCLES -DPERF_INSN
+endif
+
 ifeq ($(CYCLES),MAC)
 	CFLAGS += -DMAC_CYCLES
 endif
