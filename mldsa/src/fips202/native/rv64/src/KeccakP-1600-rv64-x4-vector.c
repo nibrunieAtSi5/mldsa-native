@@ -8,7 +8,7 @@
 
 #include "../../../../common.h"
 
-#if defined(__riscv_vector)
+#if 1 // defined(__riscv_vector)
 
 #include <stdint.h>
 #include <riscv_vector.h>
@@ -70,6 +70,22 @@ __attribute__((unused)) static inline vuint64m1_t __riscv_vrol_vv_u64m1(vuint64m
 {
     return __riscv_vadd_vv_u64m1(__riscv_vsll_vv_u64m1(v, shamt, vl), __riscv_vsrl_vv_u64m1(v, __riscv_vrsub_vx_u64m1(shamt, 64, vl), vl), vl);
 }
+
+/** RISC-V vector implementation of AND-NOT and XOR operations
+ * The idea is to build a 3-operation tree rather than a 3-operation chain
+ * Example: Eba = BCa ^ ((~BCe) & BCi);
+ */
+ __attribute__((unused)) static inline vuint64m1_t __riscv_vandnot_xor_vvv_u64m1(vuint64m1_t a, vuint64m1_t b, vuint64m1_t c, size_t vl)
+ {
+#if 1
+    vuint64m1_t lhs = __riscv_vxor_vv_u64m1(a, c, vl);
+    vuint64m1_t rhs = __riscv_vand_vv_u64m1(b, c, vl);   
+    return __riscv_vxor_vv_u64m1(lhs, rhs, vl);
+#else
+    vuint64m1_t tmp = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(b, vl), c, vl);
+    return __riscv_vxor_vv_u64m1(a, tmp, vl);
+#endif
+ }
 	
 /* RVV-based x4 vectorized Keccak permutation
  * Processes 4 Keccak states in parallel using RISC-V Vector extension
@@ -230,22 +246,17 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             // BCu = ROL64(Asu, 14);
             BCu = __riscv_vrol_vx_u64m1(Asu, 14, vl);
             // Eba = BCa ^ ((~BCe) & BCi);
-            Eba = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCe, vl), BCi, vl);
-            Eba = __riscv_vxor_vv_u64m1(Eba, BCa, vl);
+            Eba = __riscv_vandnot_xor_vvv_u64m1(BCa, BCe, BCi, vl);
             // Eba ^= KeccakF_RoundConstants[round];
             Eba = __riscv_vxor_vx_u64m1(Eba, RC[round], vl);
             // Ebe = BCe ^ ((~BCi) & BCo);
-            Ebe = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCi, vl), BCo, vl);
-            Ebe = __riscv_vxor_vv_u64m1(Ebe, BCe, vl);
+            Ebe = __riscv_vandnot_xor_vvv_u64m1(BCe, BCi, BCo, vl);
             // Ebi = BCi ^ ((~BCo) & BCu);
-            Ebi = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCo, vl), BCu, vl);
-            Ebi = __riscv_vxor_vv_u64m1(Ebi, BCi, vl);
+            Ebi = __riscv_vandnot_xor_vvv_u64m1(BCi, BCo, BCu, vl);
             // Ebo = BCo ^ ((~BCu) & BCa);
-            Ebo = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCu, vl), BCa, vl);
-            Ebo = __riscv_vxor_vv_u64m1(Ebo, BCo, vl);
+            Ebo = __riscv_vandnot_xor_vvv_u64m1(BCo, BCu, BCa, vl);
             // Ebu = BCu ^ ((~BCa) & BCe);
-            Ebu = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCa, vl), BCe, vl);
-            Ebu = __riscv_vxor_vv_u64m1(Ebu, BCu, vl);
+            Ebu = __riscv_vandnot_xor_vvv_u64m1(BCu, BCa, BCe, vl);
 
             // Abo ^= Do;
             Abo = __riscv_vxor_vv_u64m1(Abo, Do, vl);
@@ -268,20 +279,15 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             // BCu = ROL64(Asi, 61);
             BCu = __riscv_vrol_vx_u64m1(Asi, 61, vl);
             // Ega = BCa ^ ((~BCe) & BCi);
-            Ega = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCe, vl), BCi, vl);
-            Ega = __riscv_vxor_vv_u64m1(Ega, BCa, vl);
+            Ega = __riscv_vandnot_xor_vvv_u64m1(BCa, BCe, BCi, vl);
             // Ege = BCe ^ ((~BCi) & BCo);
-            Ege = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCi, vl), BCo, vl);
-            Ege = __riscv_vxor_vv_u64m1(Ege, BCe, vl);
+            Ege = __riscv_vandnot_xor_vvv_u64m1(BCe, BCi, BCo, vl);
             // Egi = BCi ^ ((~BCo) & BCu);
-            Egi = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCo, vl), BCu, vl);
-            Egi = __riscv_vxor_vv_u64m1(Egi, BCi, vl);
+            Egi = __riscv_vandnot_xor_vvv_u64m1(BCi, BCo, BCu, vl);
             // Ego = BCo ^ ((~BCu) & BCa);
-            Ego = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCu, vl), BCa, vl);
-            Ego = __riscv_vxor_vv_u64m1(Ego, BCo, vl);
+            Ego = __riscv_vandnot_xor_vvv_u64m1(BCo, BCu, BCa, vl);
             // Egu = BCu ^ ((~BCa) & BCe);
-            Egu = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCa, vl), BCe, vl);
-            Egu = __riscv_vxor_vv_u64m1(Egu, BCu, vl);
+            Egu = __riscv_vandnot_xor_vvv_u64m1(BCu, BCa, BCe, vl);
 
             // Abe ^= De;
             Abe = __riscv_vxor_vv_u64m1(Abe, De, vl);
@@ -304,20 +310,15 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             // BCu = ROL64(Asa, 18);
             BCu = __riscv_vrol_vx_u64m1(Asa, 18, vl);
             // Eka = BCa ^ ((~BCe) & BCi);
-            Eka = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCe, vl), BCi, vl);
-            Eka = __riscv_vxor_vv_u64m1(Eka, BCa, vl);
+            Eka = __riscv_vandnot_xor_vvv_u64m1(BCa, BCe, BCi, vl);
             // Eke = BCe ^ ((~BCi) & BCo);
-            Eke = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCi, vl), BCo, vl);
-            Eke = __riscv_vxor_vv_u64m1(Eke, BCe, vl);
+            Eke = __riscv_vandnot_xor_vvv_u64m1(BCe, BCi, BCo, vl);
             // Eki = BCi ^ ((~BCo) & BCu);
-            Eki = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCo, vl), BCu, vl);
-            Eki = __riscv_vxor_vv_u64m1(Eki, BCi, vl);
+            Eki = __riscv_vandnot_xor_vvv_u64m1(BCi, BCo, BCu, vl);
             // Eko = BCo ^ ((~BCu) & BCa);
-            Eko = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCu, vl), BCa, vl);
-            Eko = __riscv_vxor_vv_u64m1(Eko, BCo, vl);
+            Eko = __riscv_vandnot_xor_vvv_u64m1(BCo, BCu, BCa, vl);
             // Eku = BCu ^ ((~BCa) & BCe);
-            Eku = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCa, vl), BCe, vl);
-            Eku = __riscv_vxor_vv_u64m1(Eku, BCu, vl);
+            Eku = __riscv_vandnot_xor_vvv_u64m1(BCu, BCa, BCe, vl);
 
             // Abu ^= Du;
             Abu = __riscv_vxor_vv_u64m1(Abu, Du, vl);
@@ -340,20 +341,15 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             // BCu = ROL64(Aso, 56);
             BCu = __riscv_vrol_vx_u64m1(Aso, 56, vl);
             // Ema = BCa ^ ((~BCe) & BCi);
-            Ema = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCe, vl), BCi, vl);
-            Ema = __riscv_vxor_vv_u64m1(Ema, BCa, vl);
+            Ema = __riscv_vandnot_xor_vvv_u64m1(BCa, BCe, BCi, vl);
             // Eme = BCe ^ ((~BCi) & BCo);
-            Eme = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCi, vl), BCo, vl);
-            Eme = __riscv_vxor_vv_u64m1(Eme, BCe, vl);
+            Eme = __riscv_vandnot_xor_vvv_u64m1(BCe, BCi, BCo, vl);
             // Emi = BCi ^ ((~BCo) & BCu);
-            Emi = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCo, vl), BCu, vl);
-            Emi = __riscv_vxor_vv_u64m1(Emi, BCi, vl);
+            Emi = __riscv_vandnot_xor_vvv_u64m1(BCi, BCo, BCu, vl);
             // Emo = BCo ^ ((~BCu) & BCa);
-            Emo = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCu, vl), BCa, vl);
-            Emo = __riscv_vxor_vv_u64m1(Emo, BCo, vl);
+            Emo = __riscv_vandnot_xor_vvv_u64m1(BCo, BCu, BCa, vl);
             // Emu = BCu ^ ((~BCa) & BCe);
-            Emu = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCa, vl), BCe, vl);
-            Emu = __riscv_vxor_vv_u64m1(Emu, BCu, vl);
+            Emu = __riscv_vandnot_xor_vvv_u64m1(BCu, BCa, BCe, vl);
 
             // Abi ^= Di;
             Abi = __riscv_vxor_vv_u64m1(Abi, Di, vl);
@@ -376,20 +372,15 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             // BCu = ROL64(Ase, 2);
             BCu = __riscv_vrol_vx_u64m1(Ase, 2, vl);
             // Esa = BCa ^ ((~BCe) & BCi);
-            Esa = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCe, vl), BCi, vl);
-            Esa = __riscv_vxor_vv_u64m1(Esa, BCa, vl);
+            Esa = __riscv_vandnot_xor_vvv_u64m1(BCa, BCe, BCi, vl);
             // Ese = BCe ^ ((~BCi) & BCo);
-            Ese = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCi, vl), BCo, vl);
-            Ese = __riscv_vxor_vv_u64m1(Ese, BCe, vl);
+            Ese = __riscv_vandnot_xor_vvv_u64m1(BCe, BCi, BCo, vl);
             // Esi = BCi ^ ((~BCo) & BCu);
-            Esi = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCo, vl), BCu, vl);
-            Esi = __riscv_vxor_vv_u64m1(Esi, BCi, vl);
+            Esi = __riscv_vandnot_xor_vvv_u64m1(BCi, BCo, BCu, vl);
             // Eso = BCo ^ ((~BCu) & BCa);
-            Eso = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCu, vl), BCa, vl);
-            Eso = __riscv_vxor_vv_u64m1(Eso, BCo, vl);
+            Eso = __riscv_vandnot_xor_vvv_u64m1(BCo, BCu, BCa, vl);
             // Esu = BCu ^ ((~BCa) & BCe);
-            Esu = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCa, vl), BCe, vl);
-            Esu = __riscv_vxor_vv_u64m1(Esu, BCu, vl);
+            Esu = __riscv_vandnot_xor_vvv_u64m1(BCu, BCa, BCe, vl);
 
             // /* prepareTheta */
             // BCa = Eba ^ Ega ^ Eka ^ Ema ^ Esa;
@@ -456,22 +447,17 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             // BCu = ROL64(Esu, 14);
             BCu = __riscv_vrol_vx_u64m1(Esu, 14, vl);
             // Aba = BCa ^ ((~BCe) & BCi);
-            Aba = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCe, vl), BCi, vl);
-            Aba = __riscv_vxor_vv_u64m1(Aba, BCa, vl);
+            Aba = __riscv_vandnot_xor_vvv_u64m1(BCa, BCe, BCi, vl);
             // Aba ^= KeccakF_RoundConstants[round + 1];
             Aba = __riscv_vxor_vx_u64m1_tu(Aba, Aba, RC[round + 1], vl);
             // Abe = BCe ^ ((~BCi) & BCo);
-            Abe = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCi, vl), BCo, vl);
-            Abe = __riscv_vxor_vv_u64m1(Abe, BCe, vl);
+            Abe = __riscv_vandnot_xor_vvv_u64m1(BCe, BCi, BCo, vl);
             // Abi = BCi ^ ((~BCo) & BCu);
-            Abi = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCo, vl), BCu, vl);
-            Abi = __riscv_vxor_vv_u64m1(Abi, BCi, vl);
+            Abi = __riscv_vandnot_xor_vvv_u64m1(BCi, BCo, BCu, vl);
             // Abo = BCo ^ ((~BCu) & BCa);
-            Abo = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCu, vl), BCa, vl);
-            Abo = __riscv_vxor_vv_u64m1(Abo, BCo, vl);
+            Abo = __riscv_vandnot_xor_vvv_u64m1(BCo, BCu, BCa, vl);
             // Abu = BCu ^ ((~BCa) & BCe);
-            Abu = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCa, vl), BCe, vl);
-            Abu = __riscv_vxor_vv_u64m1(Abu, BCu, vl);
+            Abu = __riscv_vandnot_xor_vvv_u64m1(BCu, BCa, BCe, vl);
             
 
             // Ebo ^= Do;
@@ -495,20 +481,15 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             // BCu = ROL64(Esi, 61);
             BCu = __riscv_vrol_vx_u64m1(Esi, 61, vl);
             // Aga = BCa ^ ((~BCe) & BCi);
-            Aga = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCe, vl), BCi, vl);
-            Aga = __riscv_vxor_vv_u64m1(Aga, BCa, vl);
+            Aga = __riscv_vandnot_xor_vvv_u64m1(BCa, BCe, BCi, vl);
             // Age = BCe ^ ((~BCi) & BCo);
-            Age = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCi, vl), BCo, vl);
-            Age = __riscv_vxor_vv_u64m1(Age, BCe, vl);
+            Age = __riscv_vandnot_xor_vvv_u64m1(BCe, BCi, BCo, vl);
             // Agi = BCi ^ ((~BCo) & BCu);
-            Agi = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCo, vl), BCu, vl);
-            Agi = __riscv_vxor_vv_u64m1(Agi, BCi, vl);
+            Agi = __riscv_vandnot_xor_vvv_u64m1(BCi, BCo, BCu, vl);
             // Ago = BCo ^ ((~BCu) & BCa);
-            Ago = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCu, vl), BCa, vl);
-            Ago = __riscv_vxor_vv_u64m1(Ago, BCo, vl);
+            Ago = __riscv_vandnot_xor_vvv_u64m1(BCo, BCu, BCa, vl);
             // Agu = BCu ^ ((~BCa) & BCe);
-            Agu = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCa, vl), BCe, vl);
-            Agu = __riscv_vxor_vv_u64m1(Agu, BCu, vl);
+            Agu = __riscv_vandnot_xor_vvv_u64m1(BCu, BCa, BCe, vl);
 
             // Ebe ^= De;
             Ebe = __riscv_vxor_vv_u64m1(Ebe, De, vl);
@@ -531,20 +512,15 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             // BCu = ROL64(Esa, 18);
             BCu = __riscv_vrol_vx_u64m1(Esa, 18, vl);
             // Aka = BCa ^ ((~BCe) & BCi);
-            Aka = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCe, vl), BCi, vl);
-            Aka = __riscv_vxor_vv_u64m1(Aka, BCa, vl);
+            Aka = __riscv_vandnot_xor_vvv_u64m1(BCa, BCe, BCi, vl);
             // Ake = BCe ^ ((~BCi) & BCo);
-            Ake = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCi, vl), BCo, vl);
-            Ake = __riscv_vxor_vv_u64m1(Ake, BCe, vl);
+            Ake = __riscv_vandnot_xor_vvv_u64m1(BCe, BCi, BCo, vl);
             // Aki = BCi ^ ((~BCo) & BCu);
-            Aki = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCo, vl), BCu, vl);
-            Aki = __riscv_vxor_vv_u64m1(Aki, BCi, vl);
+            Aki = __riscv_vandnot_xor_vvv_u64m1(BCi, BCo, BCu, vl);
             // Ako = BCo ^ ((~BCu) & BCa);
-            Ako = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCu, vl), BCa, vl);
-            Ako = __riscv_vxor_vv_u64m1(Ako, BCo, vl);
+            Ako = __riscv_vandnot_xor_vvv_u64m1(BCo, BCu, BCa, vl);
             // Aku = BCu ^ ((~BCa) & BCe);
-            Aku = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCa, vl), BCe, vl);
-            Aku = __riscv_vxor_vv_u64m1(Aku, BCu, vl);
+            Aku = __riscv_vandnot_xor_vvv_u64m1(BCu, BCa, BCe, vl);
 
             // Ebu ^= Du;
             Ebu = __riscv_vxor_vv_u64m1(Ebu, Du, vl);
@@ -567,20 +543,15 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             // BCu = ROL64(Eso, 56);
             BCu = __riscv_vrol_vx_u64m1(Eso, 56, vl);
             // Ama = BCa ^ ((~BCe) & BCi);
-            Ama = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCe, vl), BCi, vl);
-            Ama = __riscv_vxor_vv_u64m1(Ama, BCa, vl);
+            Ama = __riscv_vandnot_xor_vvv_u64m1(BCa, BCe, BCi, vl);
             // Ame = BCe ^ ((~BCi) & BCo);
-            Ame = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCi, vl), BCo, vl);
-            Ame = __riscv_vxor_vv_u64m1(Ame, BCe, vl);
+            Ame = __riscv_vandnot_xor_vvv_u64m1(BCe, BCi, BCo, vl);
             // Ami = BCi ^ ((~BCo) & BCu);
-            Ami = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCo, vl), BCu, vl);
-            Ami = __riscv_vxor_vv_u64m1(Ami, BCi, vl);
+            Ami = __riscv_vandnot_xor_vvv_u64m1(BCi, BCo, BCu, vl);
             // Amo = BCo ^ ((~BCu) & BCa);
-            Amo = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCu, vl), BCa, vl);
-            Amo = __riscv_vxor_vv_u64m1(Amo, BCo, vl);
+            Amo = __riscv_vandnot_xor_vvv_u64m1(BCo, BCu, BCa, vl);
             // Amu = BCu ^ ((~BCa) & BCe);
-            Amu = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCa, vl), BCe, vl);
-            Amu = __riscv_vxor_vv_u64m1(Amu, BCu, vl);
+            Amu = __riscv_vandnot_xor_vvv_u64m1(BCu, BCa, BCe, vl);
 
             // Ebi ^= Di;
             Ebi = __riscv_vxor_vv_u64m1(Ebi, Di, vl);
@@ -603,20 +574,15 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
             // BCu = ROL64(Ese, 2);
             BCu = __riscv_vrol_vx_u64m1(Ese, 2, vl);
             // Asa = BCa ^ ((~BCe) & BCi);
-            Asa = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCe, vl), BCi, vl);
-            Asa = __riscv_vxor_vv_u64m1(Asa, BCa, vl);
+            Asa = __riscv_vandnot_xor_vvv_u64m1(BCa, BCe, BCi, vl);
             // Ase = BCe ^ ((~BCi) & BCo);
-            Ase = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCi, vl), BCo, vl);
-            Ase = __riscv_vxor_vv_u64m1(Ase, BCe, vl);
+            Ase = __riscv_vandnot_xor_vvv_u64m1(BCe, BCi, BCo, vl);
             // Asi = BCi ^ ((~BCo) & BCu);
-            Asi = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCo, vl), BCu, vl);
-            Asi = __riscv_vxor_vv_u64m1(Asi, BCi, vl);
+            Asi = __riscv_vandnot_xor_vvv_u64m1(BCi, BCo, BCu, vl);
             // Aso = BCo ^ ((~BCu) & BCa);
-            Aso = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCu, vl), BCa, vl);
-            Aso = __riscv_vxor_vv_u64m1(Aso, BCo, vl);
+            Aso = __riscv_vandnot_xor_vvv_u64m1(BCo, BCu, BCa, vl);
             // Asu = BCu ^ ((~BCa) & BCe);
-            Asu = __riscv_vand_vv_u64m1(__riscv_vnot_v_u64m1(BCa, vl), BCe, vl);
-            Asu = __riscv_vxor_vv_u64m1(Asu, BCu, vl);
+            Asu = __riscv_vandnot_xor_vvv_u64m1(BCu, BCa, BCe, vl);
         }
 
         // Store result states back using strided store
