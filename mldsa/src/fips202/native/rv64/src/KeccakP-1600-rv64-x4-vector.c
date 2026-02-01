@@ -8,7 +8,7 @@
 
 #include "../../../../common.h"
 
-#if 1 // defined(__riscv_vector)
+#if defined(__riscv_vector)
 
 #include <stdint.h>
 #include <riscv_vector.h>
@@ -77,7 +77,7 @@ __attribute__((unused)) static inline vuint64m1_t __riscv_vrol_vv_u64m1(vuint64m
  */
  __attribute__((unused)) static inline vuint64m1_t __riscv_vandnot_xor_vvv_u64m1(vuint64m1_t a, vuint64m1_t b, vuint64m1_t c, size_t vl)
  {
-#if 1
+#if 0
     vuint64m1_t lhs = __riscv_vxor_vv_u64m1(a, c, vl);
     vuint64m1_t rhs = __riscv_vand_vv_u64m1(b, c, vl);   
     return __riscv_vxor_vv_u64m1(lhs, rhs, vl);
@@ -93,7 +93,7 @@ __attribute__((unused)) static inline vuint64m1_t __riscv_vrol_vv_u64m1(vuint64m
  *        organized as state[0..24] for first state, state[25..49] for second, etc.
  *        States are CONTIGUOUS, not interleaved.
  */
-void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
+__attribute__((unused)) void KeccakP1600_StatePermute_x4_vector_c(uint64_t *state)
 {
     size_t avl = 4; // 4 elements should be processed at a time
     const ptrdiff_t stride = MLD_KECCAK_LANES * sizeof(uint64_t); // 25 * 8 = 200 bytes
@@ -646,9 +646,9 @@ void KeccakP1600_StatePermute_x4_vector(uint64_t *state)
 }
 
 /* Wrapper that calls x4 vector version on the 4 states */
-void KeccakP1600_StatePermute_x4_vector_wrapper(uint64_t *state)
+__attribute__((unused)) static void KeccakP1600_StatePermute_x4_vector_wrapper_c(uint64_t *state)
 {
-    KeccakP1600_StatePermute_x4_vector(state);
+    KeccakP1600_StatePermute_x4_vector_c(state);
 }
 
 #else /* !__riscv_vector */

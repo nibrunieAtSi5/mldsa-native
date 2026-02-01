@@ -11,6 +11,7 @@
 
 /* RVV-based x4 vectorized Keccak permutation */
 void KeccakP1600_StatePermute_x4_vector(uint64_t *state);
+void KeccakP1600_StatePermute_x4_vector_c(uint64_t *state);
 void KeccakP1600_StatePermute_x4_vector_wrapper(uint64_t *state);
 
 #endif /* KECCAKP_1600_RV64_X4_VECTOR_H */
