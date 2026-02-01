@@ -20,4 +20,8 @@
 #include "x86_64/xkcp.h"
 #endif
 
+#if defined(MLD_SYS_RISCV64)
+#include "rv64/xkcp.h"
+#endif
+
 #endif /* !MLD_FIPS202_NATIVE_AUTO_H */

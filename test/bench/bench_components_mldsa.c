@@ -3,6 +3,7 @@
  * Copyright (c) The mlkem-native project authors
  * SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
  */
+#include "../mldsa/src/fips202/keccakf1600.h"
 #include <inttypes.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -67,6 +68,11 @@ static int bench(void)
   uint64_t cyc[NTESTS];
   unsigned i, j;
   uint64_t t0, t1;
+
+  /* keccak */
+  BENCH("keccakf1600_permute", mld_keccakf1600_permute((uint64_t *)data0))
+  BENCH("keccakf1600x4_permute", mld_keccakf1600x4_permute((uint64_t *)data0))
+
 
   /* ntt */
   BENCH("poly_ntt", mld_poly_ntt((mld_poly *)data0))
