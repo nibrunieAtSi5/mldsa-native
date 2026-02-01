@@ -178,7 +178,7 @@ lib: $(BUILD_DIR)/libmldsa.a $(BUILD_DIR)/libmldsa44.a $(BUILD_DIR)/libmldsa65.a
 # building benchmarking binaries
 check_defined = $(if $(value $1),, $(error $2))
 check-defined-CYCLES:
-	@:$(call check_defined,CYCLES,CYCLES undefined. Benchmarking requires setting one of NO PMU PERF MAC)
+	@:$(call check_defined,CYCLES,CYCLES undefined. Benchmarking requires setting one of NO PMU PERF PERF_INSN MAC)
 
 bench_44: check-defined-CYCLES \
 	$(MLDSA44_DIR)/bin/bench_mldsa44
