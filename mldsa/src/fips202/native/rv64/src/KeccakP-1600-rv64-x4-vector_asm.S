@@ -177,27 +177,34 @@ KeccakP1600_StatePermute_x4_vector:     # @KeccakP1600_StatePermute_x4_vector
 	vxor.vv	v2, v0, v16
 	vxor.vv	v1, v1, v2
 	vxor.vv	v7, v1, v15
+
 	vadd.vv	v1, v3, v3
 	vxor.vv	v1, v1, v7
 	vsrl.vx	v2, v3, a5
 	vadd.vv	v1, v1, v2
+
 	vadd.vv	v2, v4, v4
 	vxor.vv	v2, v2, v5
 	vsrl.vx	v8, v4, a5
 	vadd.vv	v2, v2, v8
+
 	vxor.vv	v8, v6, v29
+
 	vadd.vv	v6, v8, v8
 	vxor.vv	v3, v6, v3
 	vsrl.vx	v6, v8, a5
 	vadd.vv	v3, v3, v6
+
 	vadd.vv	v6, v7, v7
 	vxor.vv	v4, v6, v4
 	vsrl.vx	v6, v7, a5
 	vadd.vv	v4, v4, v6
+
 	vadd.vv	v6, v5, v5
 	vxor.vv	v8, v6, v8
 	vsrl.vx	v5, v5, a5
 	vadd.vv	v5, v8, v5
+	
 	vxor.vv	v8, v19, v1
 	vxor.vv	v19, v30, v2
 	vsll.vx	v30, v19, t5
@@ -459,10 +466,12 @@ KeccakP1600_StatePermute_x4_vector:     # @KeccakP1600_StatePermute_x4_vector
 	vnot.v	v10, v2
 	vand.vv	v10, v10, v7
 	vxor.vv	v10, v8, v10
+
 	vxor.vv	v8, v30, v4
 	vsll.vi	v30, v8, 28
 	vsrl.vx	v8, v8, a3
 	vadd.vv	v8, v30, v8
+
 	vxor.vv	v25, v25, v5
 	vsll.vi	v30, v25, 20
 	vsrl.vx	v25, v25, t5
