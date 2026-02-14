@@ -140,12 +140,12 @@ static void print_i32_array(const char *label, const int32_t *array, size_t len)
   }
 }
 
-static void generate_i32_array_zeros(int32_t *data, size_t len)
+__attribute__((unused)) static void generate_i32_array_zeros(int32_t *data, size_t len)
 {
   memset(data, 0, len * sizeof(int32_t));
 }
 
-static void generate_i32_array_single(int32_t *data, size_t len, size_t pos,
+__attribute__((unused)) static void generate_i32_array_single(int32_t *data, size_t len, size_t pos,
                                       int32_t value)
 {
   memset(data, 0, len * sizeof(int32_t));
@@ -157,7 +157,7 @@ static void generate_i32_array_single(int32_t *data, size_t len, size_t pos,
  *
  * The lower bound is inclusive, the upper bound exclusive, matching
  * the CBMC assertions in the code base. */
-static void generate_i32_array_ranged(int32_t *data, size_t len, int min_incl,
+__attribute__((unused)) static void generate_i32_array_ranged(int32_t *data, size_t len, int min_incl,
                                       int max_excl)
 {
   size_t i;
@@ -170,7 +170,7 @@ static void generate_i32_array_ranged(int32_t *data, size_t len, int min_incl,
   }
 }
 
-static int compare_i32_arrays(const int32_t *a, const int32_t *b, unsigned len,
+__attribute__((unused)) static int compare_i32_arrays(const int32_t *a, const int32_t *b, unsigned len,
                               const char *test_name, const int32_t *input)
 {
   unsigned i;
